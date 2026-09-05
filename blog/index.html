@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
     <style>
-        /* ===== 全局重置 & 变量（与 post.html 一致） ===== */
+        /* ===== 全局重置 & 变量（完全未改动） ===== */
         * {
             margin: 0;
             padding: 0;
@@ -93,7 +93,7 @@
             scrollbar-color: var(--color-red) var(--color-bg);
         }
 
-        /* ===== 导航栏（采用 post.html 的样式） ===== */
+        /* ===== 导航栏 ===== */
         .navbar {
             position: fixed;
             top: 0;
@@ -131,7 +131,7 @@
             flex-shrink: 0;
         }
         .nav-brand .nav-logo {
-            height: 34px;
+            height: 48px;
             width: auto;
             display: block;
             transition: transform var(--transition-fast);
@@ -256,14 +256,8 @@
             animation: headerFadeIn 0.9s 0.2s forwards cubic-bezier(0.22, 1, 0.36, 1);
         }
         @keyframes headerFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
         .page-header .container {
             display: flex;
@@ -288,7 +282,7 @@
             letter-spacing: 0.2px;
         }
 
-        /* ===== 按钮（与 post.html 一致） ===== */
+        /* ===== 按钮 ===== */
         .btn-red {
             display: inline-block;
             padding: 10px 28px;
@@ -739,14 +733,8 @@
         .blog-card:nth-child(7) { animation-delay: 0.35s; }
         .blog-card:nth-child(8) { animation-delay: 0.4s; }
         @keyframes cardPopIn {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.97);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(30px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .blog-card:hover {
             transform: translateY(-8px) scale(1.02);
@@ -1149,7 +1137,7 @@
             color: var(--color-border);
         }
 
-        /* ===== 弹窗系统（完整保留） ===== */
+        /* ===== 弹窗系统 ===== */
         .custom-modal-overlay {
             display: none;
             position: fixed;
@@ -1270,14 +1258,8 @@
         .custom-modal-overlay.open .custom-modal-box>*:nth-child(4) { animation-delay: 0.18s; }
         .custom-modal-overlay.open .custom-modal-box>*:nth-child(5) { animation-delay: 0.22s; }
         @keyframes modalPopIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.92) translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
+            0% { opacity: 0; transform: scale(0.92) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         /* 投稿弹窗 */
@@ -1572,7 +1554,7 @@
             letter-spacing: 0.2px;
         }
 
-        /* 个人档案投稿弹窗 */
+        /* 个人档案投稿弹窗（保留完整功能） */
         .archive-modal-box {
             max-width: 660px;
             background: var(--color-surface);
@@ -1619,14 +1601,8 @@
             display: block;
         }
         @keyframes stepFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(16px) scale(0.97);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(16px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .archive-step h3 {
             font-weight: 700;
@@ -1939,7 +1915,9 @@
             color: var(--color-text-light);
         }
 
-        /* 个人档案展示弹窗 */
+        /* ============================================================
+           个人档案展示弹窗
+           ============================================================ */
         .profile-modal-box {
             max-width: 900px;
             width: 94%;
@@ -1951,9 +1929,9 @@
             opacity: 0;
             transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
             max-height: 90vh;
-            overflow: hidden;
+            overflow: visible;
             display: grid;
-            grid-template-columns: 1fr 1.6fr;
+            grid-template-columns: 1fr 1.8fr;
             position: relative;
         }
         .custom-modal-overlay.open .profile-modal-box {
@@ -1964,6 +1942,7 @@
             transform: scale(0.92) translateY(20px);
             opacity: 0;
         }
+
         .profile-modal-box .close-btn {
             position: absolute;
             top: 12px;
@@ -1981,207 +1960,373 @@
             color: var(--color-text);
             transform: rotate(90deg);
         }
+
+        /* ---- 弹窗标题 ---- */
+        .profile-modal-title-wrap {
+            position: absolute;
+            top: -28px;
+            left: 24px;
+            z-index: 20;
+            transform: skewX(-6deg);
+            background: var(--color-red);
+            padding: 4px 20px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .profile-modal-title-wrap .title-inner {
+            display: inline-block;
+            transform: skewX(6deg);
+            font-weight: 700;
+            font-size: 18px;
+            color: #fff;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .profile-modal-title-wrap .title-inner .en {
+            font-weight: 400;
+            font-size: 11px;
+            color: rgba(255,255,255,0.8);
+            margin-left: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        /* 左栏：背景图 + 遮罩 */
         .profile-left {
-            padding: 32px 28px;
+            position: relative;
+            padding: 28px 20px 20px 24px;
             background: var(--color-bg);
             display: flex;
             flex-direction: column;
             overflow-y: auto;
             border-right: 1px solid var(--color-border);
+            padding-top: 50px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
-        .profile-left .avatar-wrap {
+        .profile-left::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .profile-left > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-left .profile-header {
             display: flex;
-            justify-content: center;
+            align-items: center;
+            gap: 16px;
             margin-bottom: 12px;
         }
+        .profile-left .avatar-wrap {
+            flex-shrink: 0;
+        }
         .profile-left .avatar-wrap img {
-            width: 80px;
-            height: 80px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             border: 3px solid var(--color-red);
             object-fit: cover;
             background: var(--color-bg);
         }
         .profile-left .avatar-wrap .avatar-placeholder {
-            width: 80px;
-            height: 80px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             border: 3px solid var(--color-border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 28px;
             color: var(--color-text-muted);
             background: var(--color-bg);
         }
+        .profile-left .name-area {
+            flex: 1;
+            min-width: 0;
+        }
         .profile-left .display-name {
             font-weight: 700;
-            font-size: 22px;
-            text-align: center;
+            font-size: 20px;
             color: var(--color-text);
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
         }
         .profile-left .uid {
             font-size: 12px;
             color: var(--color-text-muted);
-            text-align: center;
             font-family: monospace;
             margin-top: 2px;
         }
+
         .profile-left .bio-text {
             font-size: 14px;
             color: var(--color-text-light);
-            text-align: center;
-            margin-top: 8px;
             line-height: 1.6;
-            padding: 0 4px;
+            margin: 4px 0 12px 0;
+            padding: 0;
         }
-        .profile-left .identity-badge {
-            display: inline-block;
-            margin: 12px auto 0;
-            padding: 4px 18px;
-            background: rgba(192, 57, 43, 0.12);
-            border: 1px solid var(--color-border);
-            color: var(--color-text-light);
-            font-size: 13px;
-            font-weight: 500;
+
+        .profile-left .enroll-area {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+            padding: 6px 0;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .profile-left .enroll-area .label {
+            font-size: 12px;
+            color: var(--color-text-muted);
             letter-spacing: 0.5px;
-            transform: skewX(-4deg);
         }
-        .profile-left .identity-badge .inner {
-            display: inline-block;
-            transform: skewX(4deg);
+        .profile-left .enroll-area .value {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--color-text);
         }
-        .profile-left .countdown-box {
-            margin-top: 14px;
-            padding: 10px 12px;
-            background: var(--color-surface);
-            border: 1px solid var(--color-border);
-            text-align: center;
-        }
-        .profile-left .countdown-box .label {
-            font-size: 11px;
-            color: var(--color-text-muted);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .profile-left .countdown-box .number {
-            font-weight: 800;
-            font-size: 28px;
+        .profile-left .enroll-area .countdown {
+            margin-left: auto;
+            font-size: 14px;
             color: var(--color-red);
-            letter-spacing: 2px;
-            font-family: monospace;
+            font-weight: 600;
         }
-        .profile-left .countdown-box .unit {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            margin-left: 4px;
+        .profile-left .enroll-area .countdown .num {
+            font-size: 18px;
+            font-weight: 800;
         }
+
+        .profile-left .honor-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+        .profile-left .honor-area .honor-tag {
+            display: inline-block;
+            padding: 2px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border-radius: 2px;
+            background: var(--color-gray-light);
+            color: var(--color-text-light);
+            border: 1px solid var(--color-border);
+        }
+        .profile-left .honor-area .honor-tag.level-1 { border-color: #5cb85c; color: #5cb85c; }
+        .profile-left .honor-area .honor-tag.level-2 { border-color: #5bc0de; color: #5bc0de; }
+        .profile-left .honor-area .honor-tag.level-3 { border-color: #f0ad4e; color: #f0ad4e; }
+        .profile-left .honor-area .honor-tag.level-4 { border-color: #d9534f; color: #d9534f; }
+        .profile-left .honor-area .honor-tag.level-5 { border-color: var(--color-gold); color: var(--color-gold); }
+        .profile-left .honor-area .honor-tag.img-tag {
+            padding: 0;
+            border: none;
+            background: transparent;
+            height: 28px;
+            width: 28px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+        .profile-left .honor-area .honor-tag.img-tag img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* ---- 右栏 ---- */
         .profile-right {
-            padding: 32px 28px;
-            overflow-y: auto;
+            position: relative;
+            padding: 28px 16px 20px 16px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
+            padding-top: 50px;
+            background: transparent;
         }
+        .profile-right::before {
+            display: none;
+        }
+        .profile-right > * {
+            position: relative;
+            z-index: 1;
+        }
+
         .profile-right .section-title {
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--color-text);
             margin: 0 0 6px 0;
             border-bottom: 1px solid var(--color-border);
             padding-bottom: 4px;
             letter-spacing: 0.3px;
+            flex-shrink: 0;
         }
         .profile-right .section-title:not(:first-child) {
-            margin-top: 14px;
+            margin-top: 12px;
         }
-        .profile-right .work-list {
-            flex: 1;
-            overflow-y: auto;
+
+        .profile-right .scroll-wrapper {
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .profile-right .scroll-container {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 4px 0 8px 0;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
-        .profile-right .work-card {
+        .profile-right .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .profile-right .scroll-container .work-card {
+            flex: 0 0 200px;
             background: var(--color-bg);
             border: 1px solid var(--color-border);
-            padding: 10px 14px;
+            padding: 10px 12px;
             transition: border-color var(--transition-fast), transform var(--transition-fast);
-            opacity: 0;
-            transform: translateY(12px) scale(0.98);
-            animation: workCardIn 0.4s forwards cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            min-height: 120px;
+            cursor: default;
         }
-        .profile-right .work-card:nth-child(1) { animation-delay: 0.05s; }
-        .profile-right .work-card:nth-child(2) { animation-delay: 0.1s; }
-        .profile-right .work-card:nth-child(3) { animation-delay: 0.15s; }
-        .profile-right .work-card:nth-child(4) { animation-delay: 0.2s; }
-        .profile-right .work-card:nth-child(5) { animation-delay: 0.25s; }
-        @keyframes workCardIn {
-            0% {
-                opacity: 0;
-                transform: translateY(12px) scale(0.98);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        .profile-right .work-card:hover {
+        .profile-right .scroll-container .work-card:hover {
             border-color: var(--color-red);
-            transform: translateX(2px);
+            transform: translateY(-2px);
         }
-        .profile-right .work-card .w-title {
+        .profile-right .scroll-container .work-card .w-title {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--color-text);
             letter-spacing: 0.2px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
-        .profile-right .work-card .w-title .badge {
-            font-size: 9px;
+        .profile-right .scroll-container .work-card .w-title .badge {
+            font-size: 8px;
             font-weight: 600;
             letter-spacing: 1px;
             color: var(--color-red);
-            margin-right: 4px;
+            margin-right: 3px;
             text-transform: uppercase;
         }
-        .profile-right .work-card .w-meta {
-            font-size: 11px;
+        .profile-right .scroll-container .work-card .w-meta {
+            font-size: 10px;
             color: var(--color-text-muted);
             margin-top: 2px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
         }
-        .profile-right .work-card .w-summary {
-            font-size: 12px;
+        .profile-right .scroll-container .work-card .w-summary {
+            font-size: 11px;
             color: var(--color-text-light);
             margin-top: 4px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            line-height: 1.5;
+            line-height: 1.4;
+            flex: 1;
         }
-        .profile-right .work-card .w-cover {
+        .profile-right .scroll-container .work-card .w-cover {
             width: 100%;
             aspect-ratio: 16/9;
             background: var(--color-bg);
             overflow: hidden;
-            margin-top: 6px;
+            margin-top: 4px;
         }
-        .profile-right .work-card .w-cover img {
+        .profile-right .scroll-container .work-card .w-cover img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .profile-right .empty-msg {
+        /* 阅读全文按钮 */
+        .profile-right .scroll-container .work-card .w-readmore {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--color-red);
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            transition: border-color var(--transition-fast), color var(--transition-fast);
+            padding-bottom: 1px;
+            letter-spacing: 0.3px;
+            align-self: flex-start;
+        }
+        .profile-right .scroll-container .work-card .w-readmore:hover {
+            border-bottom-color: var(--color-red);
+            color: var(--color-red-light);
+        }
+
+        .profile-right .scroll-container .empty-msg {
             color: var(--color-text-muted);
             font-size: 13px;
             text-align: center;
             padding: 12px 0;
+            width: 100%;
+            flex-shrink: 0;
         }
+
+        .profile-right .scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            width: 22px;
+            height: 22px;
+            background: rgba(18, 18, 18, 0.85);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: background var(--transition-fast), color var(--transition-fast);
+            backdrop-filter: blur(6px);
+            user-select: none;
+            border-radius: 50%;
+        }
+        .profile-right .scroll-arrow:hover {
+            background: var(--color-red);
+            color: #fff;
+        }
+        .profile-right .scroll-arrow.prev { left: 0; }
+        .profile-right .scroll-arrow.next { right: 0; }
+
+        .profile-right .custom-scrollbar {
+            width: 100%;
+            height: 4px;
+            background: var(--color-border);
+            border-radius: 2px;
+            margin-top: 4px;
+            position: relative;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .profile-right .custom-scrollbar .thumb {
+            height: 100%;
+            background: var(--color-red);
+            border-radius: 2px;
+            width: 20%;
+            position: relative;
+            transition: width 0.1s;
+        }
+
         .profile-right .btn-group {
             display: flex;
             gap: 12px;
@@ -2189,6 +2334,7 @@
             margin-top: 12px;
             padding-top: 12px;
             border-top: 1px solid var(--color-border);
+            flex-shrink: 0;
         }
         .profile-right .btn-group .btn-red {
             flex: 1;
@@ -2408,7 +2554,7 @@
             min-width: 80px;
         }
 
-        /* 法律文件弹窗 */
+        /* 法律文件弹窗（⚖ 已移除） */
         .legal-modal-box {
             max-width: 580px;
             background: var(--color-surface);
@@ -2447,12 +2593,7 @@
             color: var(--color-text);
             transform: rotate(90deg);
         }
-        .legal-modal-box .modal-icon {
-            font-size: 28px;
-            margin-bottom: 6px;
-            display: block;
-            color: var(--color-red);
-        }
+        /* 移除了 .modal-icon */
         .legal-modal-box h3 {
             font-weight: 700;
             font-size: 22px;
@@ -2469,6 +2610,8 @@
             padding: 4px 0;
             margin-bottom: 16px;
             letter-spacing: 0.2px;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
         .legal-modal-box .btn-group {
             display: flex;
@@ -2495,7 +2638,6 @@
             .blog-grid { grid-template-columns: repeat(3, 1fr); }
             .profile-modal-box { grid-template-columns: 1fr; max-height: 92vh; }
             .profile-left { border-right: none; border-bottom: 1px solid var(--color-border); }
-            .profile-left .countdown-box .number { font-size: 22px; }
         }
         @media (max-width: 820px) {
             .nav-links { display: none; }
@@ -2514,8 +2656,8 @@
             .custom-modal-box { max-width: 400px; padding: 24px 20px 20px; }
             .archive-modal-box { max-width: 440px; padding: 24px 20px 20px; }
             .profile-modal-box { max-width: 96%; max-height: 92vh; }
-            .profile-left { padding: 20px 16px; }
-            .profile-right { padding: 20px 16px; }
+            .profile-left { padding: 16px 14px; }
+            .profile-right { padding: 16px 14px; }
             .modify-modal-box { max-width: 400px; padding: 24px 20px 20px; }
             .ref-modal-box { max-width: 400px; padding: 24px 20px 20px; }
             .legal-modal-box { max-width: 400px; padding: 24px 20px 20px; }
@@ -2523,6 +2665,7 @@
             .archive-step .avatar-group { flex-direction: column; align-items: stretch; }
             .archive-step .avatar-group .avatar-controls { flex-wrap: wrap; }
             .archive-step .avatar-group .avatar-controls input { min-width: 0; }
+            .profile-right .scroll-container .work-card { flex: 0 0 160px; }
         }
         @media (max-width: 600px) {
             .container { padding: 0 16px; }
@@ -2549,9 +2692,8 @@
             .archive-modal-box h3 { font-size: 20px; }
             .profile-modal-box { max-width: 96%; max-height: 92vh; }
             .profile-left .avatar-wrap img,
-            .profile-left .avatar-wrap .avatar-placeholder { width: 60px; height: 60px; }
-            .profile-left .display-name { font-size: 18px; }
-            .profile-left .countdown-box .number { font-size: 20px; }
+            .profile-left .avatar-wrap .avatar-placeholder { width: 48px; height: 48px; }
+            .profile-left .display-name { font-size: 17px; }
             .modify-modal-box { max-width: 96%; padding: 20px 16px 18px; }
             .modify-modal-box h3 { font-size: 20px; }
             .ref-modal-box { max-width: 96%; padding: 20px 16px 18px; }
@@ -2565,6 +2707,8 @@
             .profile-modal-box .close-btn { top: 8px; right: 12px; font-size: 18px; }
             .archive-step .template-box .copy-btn { position: relative; top: auto; right: auto; margin-top: 8px; width: 100%; }
             .archive-step .template-box .template-content { max-height: 140px; }
+            .profile-left .enroll-area .countdown .num { font-size: 15px; }
+            .profile-right .scroll-container .work-card { flex: 0 0 140px; }
         }
     </style>
 </head>
@@ -2576,8 +2720,7 @@
     <!-- ===== 导航栏 ===== -->
     <nav class="navbar" id="navbar">
         <div class="nav-brand">
-            <img src="https://user-assets.sxlcdn.com/images/1138507/FhCXs-LZKrWamSitya0Xk0lUtnCg.png?imageMogr2/strip/auto-orient/thumbnail/1200x9000%3E/quality/90!/format/png" alt="建宸高级中学校徽" class="nav-logo" />
-            建宸高级中学
+            <img src="https://www.hnfudu.com/images/product/202606/02/211_input_1780391475532610.png?cache=1780389371" alt="建宸高级中学校徽" class="nav-logo" />
         </div>
         <ul class="nav-links">
             <li><a href="/index.html">主站</a></li>
@@ -2616,7 +2759,7 @@
         <div class="container">
             <div class="search-wrap">
                 <div class="inner">
-                    <input type="text" id="searchInput" placeholder="搜索文章标题、作者、标签..." />
+                    <input type="text" id="searchInput" placeholder="搜索文章标题、作者、分类..." />
                     <button class="search-btn" id="searchBtn">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                     </button>
@@ -2813,11 +2956,11 @@
                 <div class="form-group">
                     <label>身份 <span class="required">*</span></label>
                     <select id="archiveIdentity">
-                        <option value="高一">高一 · 启程</option>
-                        <option value="高二">高二 · 蓄力</option>
-                        <option value="高三" selected>高三 · 冲刺</option>
-                        <option value="毕业生">毕业生 · 远航</option>
-                        <option value="访客">访客 · 浏览</option>
+                        <option value="高一">高一 - 启程</option>
+                        <option value="高二">高二 - 蓄力</option>
+                        <option value="高三" selected>高三 - 冲刺</option>
+                        <option value="毕业生">毕业生 - 远航</option>
+                        <option value="访客">访客 - 浏览</option>
                     </select>
                     <div class="hint">用于计算高考倒计时（访客不显示）</div>
                 </div>
@@ -2908,32 +3051,55 @@
     <div class="custom-modal-overlay" id="profileModal">
         <div class="profile-modal-box">
             <button class="close-btn" id="profileCloseBtn">✕</button>
-            <div class="profile-left" id="profileLeft">
-                <div class="avatar-wrap" id="profileAvatarWrap">
-                    <div class="avatar-placeholder">✦</div>
-                </div>
-                <div class="display-name" id="profileName">未设置网名</div>
-                <div class="uid" id="profileUid">编号：待分配</div>
-                <div class="bio-text" id="profileBio">这个人很懒，什么都没有写。</div>
-                <div class="identity-badge" id="profileIdentity"><span class="inner">高三 · 冲刺</span></div>
-                <div class="countdown-box" id="profileCountdown">
-                    <div class="label">距离高考</div>
-                    <div><span class="number" id="profileCountdownNum">280</span><span class="unit">天</span></div>
-                </div>
+
+            <div class="profile-modal-title-wrap">
+                <span class="title-inner">个人档案 <span class="en">Profile</span></span>
             </div>
+
+            <div class="profile-left" id="profileLeft">
+                <div class="profile-header">
+                    <div class="avatar-wrap" id="profileAvatarWrap">
+                        <div class="avatar-placeholder">✦</div>
+                    </div>
+                    <div class="name-area">
+                        <div class="display-name" id="profileName">未设置网名</div>
+                        <div class="uid" id="profileUid">编号：待分配</div>
+                    </div>
+                </div>
+                <div class="bio-text" id="profileBio">这个人很懒，什么都没有写。</div>
+                <div class="enroll-area" id="profileEnrollArea">
+                    <span class="label">年级</span>
+                    <span class="value" id="profileEnroll">—</span>
+                    <span class="countdown" id="profileCountdown"><span class="num" id="profileCountdownNum">—</span> 天后高考</span>
+                </div>
+                <div class="honor-area" id="profileHonorArea"></div>
+            </div>
+
             <div class="profile-right" id="profileRight">
                 <div class="section-title">宸光博客</div>
-                <div class="work-list" id="profileBlogList">
-                    <div class="empty-msg">暂无关联博客</div>
+                <div class="scroll-wrapper">
+                    <div class="scroll-container" id="profileBlogList"></div>
+                    <button class="scroll-arrow prev" data-target="profileBlogList">‹</button>
+                    <button class="scroll-arrow next" data-target="profileBlogList">›</button>
                 </div>
+                <div class="custom-scrollbar" data-target="profileBlogList"><div class="thumb"></div></div>
+
                 <div class="section-title">明德专栏</div>
-                <div class="work-list" id="profileMingdeList">
-                    <div class="empty-msg">暂无关联专栏</div>
+                <div class="scroll-wrapper">
+                    <div class="scroll-container" id="profileMingdeList"></div>
+                    <button class="scroll-arrow prev" data-target="profileMingdeList">‹</button>
+                    <button class="scroll-arrow next" data-target="profileMingdeList">›</button>
                 </div>
+                <div class="custom-scrollbar" data-target="profileMingdeList"><div class="thumb"></div></div>
+
                 <div class="section-title">树洞留言墙</div>
-                <div class="work-list" id="profileWallList">
-                    <div class="empty-msg">暂无关联留言</div>
+                <div class="scroll-wrapper">
+                    <div class="scroll-container" id="profileWallList"></div>
+                    <button class="scroll-arrow prev" data-target="profileWallList">‹</button>
+                    <button class="scroll-arrow next" data-target="profileWallList">›</button>
                 </div>
+                <div class="custom-scrollbar" data-target="profileWallList"><div class="thumb"></div></div>
+
                 <div class="btn-group">
                     <button class="btn-red" id="profileModifyBtn"><span class="inner">修改档案 <span class="en">Modify</span></span></button>
                     <button class="btn-outline-red" id="profileCloseBtn2"><span class="inner">关闭 <span class="en">Close</span></span></button>
@@ -2996,11 +3162,10 @@
         </div>
     </div>
 
-    <!-- 法律文件弹窗 -->
+    <!-- 法律文件弹窗（无⚖） -->
     <div class="custom-modal-overlay" id="legalModal">
         <div class="legal-modal-box">
             <button class="close-btn" id="legalCloseBtn">✕</button>
-            <span class="modal-icon" id="legalIcon">⚖</span>
             <h3 id="legalTitle">法律文件</h3>
             <div class="legal-content" id="legalContent">加载中...</div>
             <div class="btn-group">
@@ -3047,6 +3212,17 @@
                 return '佚名';
             }
 
+            function extractCategoriesFromBody(body) {
+                if (!body) return [];
+                const match = body.match(/分类[：:]\s*(.+?)(?:\n|$)/);
+                if (match) {
+                    return match[1].split(/[，,、\s]+/).filter(function(t) { return t.trim().length > 0; }).map(function(t) {
+                        return t.trim();
+                    });
+                }
+                return [];
+            }
+
             function extractTagsFromBody(body) {
                 if (!body) return [];
                 const match = body.match(/标签[：:]\s*(.+)/);
@@ -3082,7 +3258,9 @@
 
             function stripTitleBadge(title) {
                 if (!title) return '';
-                return title.replace(/^\[精选\]\s*/, '');
+                let cleaned = title.replace(/^\[精选\]\s*/, '');
+                cleaned = cleaned.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+                return cleaned;
             }
 
             function getFirstImage(body) {
@@ -3094,11 +3272,12 @@
                 const body = issue.body || '';
                 const title = issue.title || '无标题';
                 const author = extractAuthor(body);
+                const categories = extractCategoriesFromBody(body);
                 const tags = extractTagsFromBody(body);
                 const date = issue.created_at ? issue.created_at.slice(0, 10) : '未知日期';
                 const cover = getFirstImage(body);
                 const link = extractExternalLink(body);
-                const content = body.replace(/作者[：:].*?(?:\n|$)/, '').replace(/标签[：:].*?(?:\n|$)/, '').trim();
+                const content = body.replace(/作者[：:].*?(?:\n|$)/, '').replace(/分类[：:].*?(?:\n|$)/, '').replace(/标签[：:].*?(?:\n|$)/, '').trim();
 
                 return {
                     id: issue.number,
@@ -3108,6 +3287,7 @@
                     author: author,
                     cover: cover || '',
                     link: link || '',
+                    categories: categories,
                     tags: tags,
                     body: body,
                     issueNumber: issue.number,
@@ -3115,7 +3295,7 @@
                 };
             }
 
-            // ---- 获取数据 ----
+            // ---- 获取博客文章（一次性加载） ----
             async function fetchPosts() {
                 if (isLoading) return;
                 isLoading = true;
@@ -3143,7 +3323,7 @@
 
                     allTagsSet = new Set(['全部']);
                     allPosts.forEach(function(p) {
-                        p.tags.forEach(function(t) { allTagsSet.add(t); });
+                        p.categories.forEach(function(c) { allTagsSet.add(c); });
                     });
 
                     renderTags();
@@ -3155,6 +3335,7 @@
                         '<div class="empty-state"><span class="icon">⚠</span><h3>加载失败</h3><p>无法连接到 GitHub API，请稍后重试。<br>' +
                         err.message + '</p></div>';
                     allPosts = [];
+                    allTagsSet = new Set(['全部']);
                     renderTags();
                     renderPosts();
                 } finally {
@@ -3162,9 +3343,14 @@
                 }
             }
 
-            // ---- 渲染标签 ----
+            // ---- 渲染标签（包含"全部"） ----
             function renderTags() {
-                const html = Array.from(allTagsSet).map(function(tag) {
+                const tagsArray = Array.from(allTagsSet);
+                if (tagsArray.length === 0) {
+                    tagContainer.innerHTML = '';
+                    return;
+                }
+                const html = tagsArray.map(function(tag) {
                     const active = tag === currentTag ? 'active' : '';
                     return '<button class="tag-btn ' + active + '" data-tag="' + tag + '"><span class="inner">' + tag +
                         '</span></button>';
@@ -3206,7 +3392,7 @@
                 let filtered = allPosts.slice();
                 if (currentTag !== '全部') {
                     filtered = filtered.filter(function(p) {
-                        return p.tags.some(function(t) { return t === currentTag; });
+                        return p.categories.some(function(c) { return c === currentTag; });
                     });
                 }
                 if (searchQuery.trim()) {
@@ -3263,7 +3449,7 @@
                                     ${badgeHtml}
                                 </div>
                                 <div class="card-body">
-                                    <div class="topic-tag">${item.tags.length > 0 ? item.tags[0] : '随笔'}</div>
+                                    <div class="topic-tag">${item.categories.length > 0 ? item.categories[0] : '随笔'}</div>
                                     <h4>${displayTitle}</h4>
                                     <div class="summary">${item.content.slice(0, 80)}${item.content.length > 80 ? '…' : ''}</div>
                                     ${tagsHtml}
@@ -3277,7 +3463,7 @@
                     });
                     blogGrid.innerHTML = html;
 
-                    // ---- 作者点击事件（不变） ----
+                    // ---- 作者点击事件 ----
                     blogGrid.querySelectorAll('.author-link').forEach(function(el) {
                         el.addEventListener('click', function(e) {
                             e.stopPropagation();
@@ -3290,7 +3476,7 @@
                         });
                     });
 
-                    // ---- ★ 修改阅读全文逻辑 ★ ----
+                    // ---- 阅读全文逻辑 ----
                     blogGrid.querySelectorAll('.link[data-id]').forEach(function(el) {
                         el.addEventListener('click', function() {
                             const id = parseInt(this.dataset.id);
@@ -3298,21 +3484,17 @@
                             const link = this.dataset.link;
                             const post = allPosts.find(function(p) { return p.id === id; });
 
-                            // 如果是外部链接（星宸学社），直接打开
                             if (action === 'external' && link) {
                                 window.open(link, '_blank');
                                 return;
                             }
 
                             if (post) {
-                                // 检查正文中是否包含 [直链网页https://...] 格式
                                 const content = post.content || '';
                                 const match = content.match(/\[直链网页(https?:\/\/[^\s\]]+)\]/);
                                 if (match) {
-                                    // 直接打开匹配到的链接
                                     window.open(match[1], '_blank');
                                 } else {
-                                    // 否则跳转到 post.html
                                     window.location.href = 'post.html?id=' + post.id;
                                 }
                             }
@@ -3381,25 +3563,59 @@
                 if (e.key === 'Enter') doSearch();
             });
 
-            // ---- 个人档案存储 ----
-            function getArchives() {
+            // ============================================================
+            // ★★★ 个人档案机制（从 GitHub Issues 拉取） ★★★
+            // ============================================================
+            async function fetchArchivesFromGitHub() {
+                const url =
+                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=个人档案&state=all&per_page=100`;
                 try {
-                    return JSON.parse(localStorage.getItem('stellar_archives') || '[]');
-                } catch (e) { return []; }
-            }
-
-            function saveArchives(archives) {
-                localStorage.setItem('stellar_archives', JSON.stringify(archives));
+                    const response = await fetch(url, {
+                        headers: { 'Accept': 'application/vnd.github.v3+json' }
+                    });
+                    if (!response.ok) throw new Error('GitHub API 请求失败');
+                    const issues = await response.json();
+                    return issues.map(issue => {
+                        const body = issue.body || '';
+                        const code = body.match(/编号[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || 'JC-2026-' + String(issue
+                            .number).padStart(4, '0');
+                        const realName = body.match(/真实姓名[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        const idField = body.match(/ID[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        const password = body.match(/密码[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        const bio = body.match(/简介[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        const avatarType = body.match(/头像类型[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        const avatarId = body.match(/头像ID[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        const honorRaw = body.match(/荣誉[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        const backgroundRaw = body.match(/背景[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        const honors = honorRaw ? honorRaw.split(',').map(function(h) { return h.trim(); }).filter(
+                            function(h) { return h.length > 0; }) : [];
+                        return {
+                            nickname: issue.title.trim(),
+                            code: code,
+                            realName: realName,
+                            idField: idField,
+                            password: password,
+                            bio: bio,
+                            avatarType: avatarType,
+                            avatarId: avatarId,
+                            honors: honors,
+                            background: backgroundRaw
+                        };
+                    });
+                } catch (err) {
+                    console.warn('加载个人档案失败，返回空数组:', err);
+                    return [];
+                }
             }
 
             // ---- 查找个人档案并展示 ----
-            function findAndShowProfile(authorName) {
+            async function findAndShowProfile(authorName) {
                 if (!authorName || authorName === '佚名') {
                     showAlert('提示', '该作者暂无个人档案。', '📋');
                     return;
                 }
 
-                const archives = getArchives();
+                const archives = await fetchArchivesFromGitHub();
                 const found = archives.find(function(a) {
                     return a.nickname === authorName || a.realName === authorName;
                 });
@@ -3418,118 +3634,295 @@
                             isFeatured: isFeatured(p.title)
                         };
                     });
-
                     showProfileModal(found, works);
                 } else {
                     showAlert('提示', '未找到 "' + authorName + '" 的个人档案。\n请先投稿个人档案。', '📋');
                 }
             }
 
-            // ---- 展示个人档案弹窗 ----
+            // ---- 展示个人档案弹窗（带容错） ----
             function showProfileModal(profile, works) {
-                const profileName = document.getElementById('profileName');
-                const profileUid = document.getElementById('profileUid');
-                const profileBio = document.getElementById('profileBio');
-                const profileIdentity = document.getElementById('profileIdentity');
-                const profileCountdownNum = document.getElementById('profileCountdownNum');
-                const profileAvatarWrap = document.getElementById('profileAvatarWrap');
-                const profileBlogList = document.getElementById('profileBlogList');
-                const profileMingdeList = document.getElementById('profileMingdeList');
-                const profileWallList = document.getElementById('profileWallList');
-
-                profileName.textContent = profile.nickname || '未设置网名';
-                profileUid.textContent = '编号：' + (profile.code || '待分配');
-                profileBio.textContent = profile.bio || '这个人很懒，什么都没有写。';
-
-                const identityMap = {
-                    '高一': '高一 · 启程',
-                    '高二': '高二 · 蓄力',
-                    '高三': '高三 · 冲刺',
-                    '毕业生': '毕业生 · 远航',
-                    '访客': '访客 · 浏览'
-                };
-                profileIdentity.innerHTML = '<span class="inner">' + (identityMap[profile.identity] || '高三 · 冲刺') +
-                '</span>';
-
-                const countdown = calcGaokaoCountdown(profile.identity);
-                if (countdown !== null && profile.identity !== '毕业生' && profile.identity !== '访客') {
-                    profileCountdownNum.textContent = countdown;
-                    document.querySelector('#profileCountdown .label').textContent = '距离高考';
-                } else if (profile.identity === '毕业生') {
-                    profileCountdownNum.textContent = '🎓';
-                    document.querySelector('#profileCountdown .label').textContent = '已毕业 · 前程似锦';
-                } else if (profile.identity === '访客') {
-                    profileCountdownNum.textContent = '—';
-                    document.querySelector('#profileCountdown .label').textContent = '访客 · 浏览模式';
-                } else {
-                    profileCountdownNum.textContent = '—';
-                    document.querySelector('#profileCountdown .label').textContent = '距离高考';
-                }
-
-                if (profile.avatar && profile.avatar.trim() !== '') {
-                    profileAvatarWrap.innerHTML = '<img src="' + profile.avatar + '" alt="头像" />';
-                } else {
-                    profileAvatarWrap.innerHTML = '<div class="avatar-placeholder">✦</div>';
-                }
-
-                const blogWorks = works.filter(function(w) { return w.type === '宸光博客'; });
-                const mingdeWorks = works.filter(function(w) { return w.type === '明德专栏'; });
-                const wallWorks = works.filter(function(w) { return w.type === '树洞留言墙'; });
-
-                profileBlogList.innerHTML = renderWorkCards(blogWorks);
-                profileMingdeList.innerHTML = renderWorkCards(mingdeWorks);
-                profileWallList.innerHTML = renderWorkCards(wallWorks);
-
+                // 先打开弹窗
                 const profileModal = document.getElementById('profileModal');
                 profileModal.classList.remove('closing');
                 profileModal.classList.add('open');
                 document.body.style.overflow = 'hidden';
 
-                window._currentProfile = profile;
+                try {
+                    const profileName = document.getElementById('profileName');
+                    const profileUid = document.getElementById('profileUid');
+                    const profileBio = document.getElementById('profileBio');
+                    const profileEnroll = document.getElementById('profileEnroll');
+                    const profileCountdownNum = document.getElementById('profileCountdownNum');
+                    const profileAvatarWrap = document.getElementById('profileAvatarWrap');
+                    const profileHonorArea = document.getElementById('profileHonorArea');
+
+                    const profileBlogList = document.getElementById('profileBlogList');
+                    const profileMingdeList = document.getElementById('profileMingdeList');
+                    const profileWallList = document.getElementById('profileWallList');
+
+                    // 基本信息
+                    profileName.textContent = profile.nickname || '未设置网名';
+                    profileUid.textContent = '编号：' + (profile.code || '待分配');
+                    profileBio.textContent = profile.bio || '这个人很懒，什么都没有写。';
+
+                    // ---- 年级 / 高考倒计时 ----
+                    let gradeText = '—';
+                    let countdownText = '—';
+                    let countdownNum = '—';
+                    const idVal = profile.idField || '';
+                    if (/^\d{4}$/.test(idVal)) {
+                        const enrollYear = parseInt(idVal);
+                        const now = new Date();
+                        const currentYear = now.getFullYear();
+                        const yearsPassed = currentYear - enrollYear;
+                        let grade = '';
+                        if (yearsPassed < 1) grade = '高一';
+                        else if (yearsPassed === 1) grade = '高二';
+                        else if (yearsPassed === 2) grade = '高三';
+                        else grade = '毕业生';
+                        gradeText = grade;
+
+                        const gaokaoYear = enrollYear + 3;
+                        const target = new Date(gaokaoYear, 5, 7, 9, 0, 0);
+                        const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+                        if (diff > 0) {
+                            countdownNum = diff;
+                            countdownText = diff + ' 天后高考';
+                        } else if (diff === 0) {
+                            countdownNum = '🎯';
+                            countdownText = '高考今天！';
+                        } else {
+                            countdownNum = '🎓';
+                            countdownText = '已毕业';
+                        }
+                    } else if (idVal && idVal.length > 0) {
+                        gradeText = 'ID: ' + idVal;
+                        countdownText = '—';
+                        countdownNum = '—';
+                    } else {
+                        gradeText = '未知';
+                        countdownText = '—';
+                        countdownNum = '—';
+                    }
+                    profileEnroll.textContent = gradeText;
+                    profileCountdownNum.textContent = countdownNum;
+                    const countdownLabel = document.querySelector('#profileCountdown');
+                    if (countdownLabel) {
+                        countdownLabel.textContent = countdownText;
+                    }
+
+                    // ---- 头像 ----
+                    let avatarUrl = '';
+                    if (profile.avatarId && profile.avatarType) {
+                        if (profile.avatarType === 'QQ') {
+                            avatarUrl = 'https://q1.qlogo.cn/g?b=qq&nk=' + encodeURIComponent(profile.avatarId) + '&s=100';
+                        } else if (profile.avatarType === 'GitHub') {
+                            avatarUrl = 'https://github.com/' + encodeURIComponent(profile.avatarId) + '.png';
+                        } else if (profile.avatarType === '自定义') {
+                            avatarUrl = profile.avatarId;
+                        }
+                    }
+                    if (!avatarUrl || avatarUrl === '') {
+                        const firstChar = profile.nickname ? profile.nickname.charAt(0) : '?';
+                        profileAvatarWrap.innerHTML =
+                            '<div class="avatar-placeholder" style="font-size:28px;line-height:64px;">' + firstChar +
+                        '</div>';
+                    } else {
+                        profileAvatarWrap.innerHTML = '<img src="' + avatarUrl + '" alt="头像" />';
+                    }
+
+                    // ---- 荣誉标签 ----
+                    profileHonorArea.innerHTML = '';
+                    if (profile.honors && profile.honors.length > 0) {
+                        profile.honors.forEach(function(h) {
+                            if (/^https?:\/\/[^\s]+\.(png|jpg|jpeg|gif|svg|webp)(\?.*)?$/i.test(h)) {
+                                const tag = document.createElement('span');
+                                tag.className = 'honor-tag img-tag';
+                                tag.innerHTML = '<img src="' + h + '" alt="荣誉" />';
+                                profileHonorArea.appendChild(tag);
+                            } else {
+                                const match = h.match(/^\[(\d)\](.+)/);
+                                if (match) {
+                                    const level = parseInt(match[1]);
+                                    const label = match[2].trim();
+                                    const tag = document.createElement('span');
+                                    tag.className = 'honor-tag level-' + Math.min(level, 5);
+                                    tag.textContent = label;
+                                    profileHonorArea.appendChild(tag);
+                                } else {
+                                    const tag = document.createElement('span');
+                                    tag.className = 'honor-tag';
+                                    tag.textContent = h;
+                                    profileHonorArea.appendChild(tag);
+                                }
+                            }
+                        });
+                    } else {
+                        const empty = document.createElement('span');
+                        empty.className = 'honor-tag';
+                        empty.textContent = '暂无荣誉';
+                        empty.style.color = 'var(--color-text-muted)';
+                        empty.style.borderColor = 'transparent';
+                        profileHonorArea.appendChild(empty);
+                    }
+
+                    // ★ 左栏背景图 ★
+                    const profileLeft = document.getElementById('profileLeft');
+                    if (profile.background && profile.background.trim() !== '') {
+                        profileLeft.style.backgroundImage = 'url(' + profile.background + ')';
+                    } else {
+                        profileLeft.style.backgroundImage = 'none';
+                    }
+
+                    // ---- 分板块渲染（带阅读全文按钮） ----
+                    const blogWorks = works.filter(function(w) { return w.type === '宸光博客'; });
+                    const mingdeWorks = works.filter(function(w) { return w.type === '明德专栏'; });
+                    const wallWorks = works.filter(function(w) { return w.type === '树洞留言墙'; });
+
+                    profileBlogList.innerHTML = renderHorizontalCards(blogWorks);
+                    profileMingdeList.innerHTML = renderHorizontalCards(mingdeWorks);
+                    profileWallList.innerHTML = renderHorizontalCards(wallWorks);
+
+                    // 初始化横向滚动并绑定阅读全文事件
+                    initScroll('.profile-right .scroll-wrapper');
+
+                    // ★ 额外绑定阅读全文点击（确保生效） ★
+                    document.querySelectorAll('.profile-right .w-readmore').forEach(function(btn) {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const id = this.dataset.id;
+                            if (!id) return;
+                            const post = allPosts.find(function(p) { return p.id == id; });
+                            if (post) {
+                                const content = post.content || '';
+                                const match = content.match(/\[直链网页(https?:\/\/[^\s\]]+)\]/);
+                                if (match) {
+                                    window.open(match[1], '_blank');
+                                } else {
+                                    window.location.href = 'post.html?id=' + id;
+                                }
+                            }
+                        });
+                    });
+
+                    window._currentProfile = profile;
+                } catch (err) {
+                    console.warn('渲染个人档案内容出错，但弹窗已打开:', err);
+                }
             }
 
-            // ---- 渲染作品卡片 ----
-            function renderWorkCards(works) {
+            // ---- 渲染横向卡片（含阅读全文按钮） ----
+            function renderHorizontalCards(works) {
                 if (!works || works.length === 0) {
-                    return '<div class="empty-msg">暂无关联内容</div>';
+                    return '<div class="empty-msg">暂无内容</div>';
                 }
                 return works.map(function(w) {
                     const badge = w.isFeatured ? '<span class="badge">精选</span>' : '';
                     const coverHtml = w.cover ?
                         '<div class="w-cover"><img src="' + w.cover + '" alt="" loading="lazy" /></div>' :
                         '';
-                    const summary = w.content ? w.content.slice(0, 80) + (w.content.length > 80 ? '…' : '') : '';
+                    const summary = w.content ? w.content.slice(0, 50) + (w.content.length > 50 ? '…' : '') : '';
                     return `
-                        <div class="work-card">
+                        <div class="work-card" data-id="${w.id}">
                             <div class="w-title">${badge}${stripTitleBadge(w.title)}</div>
-                            <div class="w-meta"><span>${w.date || '未知日期'}</span></div>
+                            <div class="w-meta">${w.date || '未知日期'}</div>
                             ${summary ? '<div class="w-summary">' + summary + '</div>' : ''}
                             ${coverHtml}
+                            <span class="w-readmore" data-id="${w.id}">阅读全文 →</span>
                         </div>
                     `;
                 }).join('');
             }
 
-            // ---- 计算高考倒计时 ----
-            function calcGaokaoCountdown(identity) {
-                const now = new Date();
-                const year = now.getFullYear();
-                if (identity === '毕业生' || identity === '访客') return null;
+            // ---- 初始化横向滚动 + 自定义滑动条 ----
+            function initScroll(containerSelector) {
+                try {
+                    document.querySelectorAll(containerSelector).forEach(function(wrapper) {
+                        const container = wrapper.querySelector('.scroll-container');
+                        const prevBtn = wrapper.querySelector('.scroll-arrow.prev');
+                        const nextBtn = wrapper.querySelector('.scroll-arrow.next');
+                        const scrollbar = wrapper.parentElement.querySelector('.custom-scrollbar');
+                        const thumb = scrollbar ? scrollbar.querySelector('.thumb') : null;
 
-                let targetYear = year;
-                if (identity === '高三') {
-                    const target = new Date(year, 5, 7, 9, 0, 0);
-                    if (now > target) targetYear = year + 1;
-                } else if (identity === '高二') {
-                    targetYear = year + 1;
-                } else if (identity === '高一') {
-                    targetYear = year + 2;
-                } else {
-                    return null;
+                        if (!container) return;
+
+                        const cards = container.querySelectorAll('.work-card');
+                        const hasContent = cards.length > 0;
+
+                        if (!hasContent) {
+                            if (prevBtn) prevBtn.style.display = 'none';
+                            if (nextBtn) nextBtn.style.display = 'none';
+                            if (scrollbar) scrollbar.style.display = 'none';
+                            return;
+                        } else {
+                            if (prevBtn) prevBtn.style.display = 'flex';
+                            if (nextBtn) nextBtn.style.display = 'flex';
+                            if (scrollbar) scrollbar.style.display = 'block';
+                        }
+
+                        function updateThumb() {
+                            if (!scrollbar || !thumb) return;
+                            const scrollWidth = container.scrollWidth;
+                            const clientWidth = container.clientWidth;
+                            if (scrollWidth <= clientWidth) {
+                                scrollbar.style.display = 'none';
+                                return;
+                            }
+                            scrollbar.style.display = 'block';
+                            const ratio = clientWidth / scrollWidth;
+                            thumb.style.width = (ratio * 100) + '%';
+                            const scrollLeft = container.scrollLeft;
+                            const maxScroll = scrollWidth - clientWidth;
+                            const pos = maxScroll > 0 ? (scrollLeft / maxScroll) * (100 - ratio * 100) : 0;
+                            thumb.style.marginLeft = pos + '%';
+                        }
+
+                        function scrollBy(amount) {
+                            container.scrollBy({ left: amount, behavior: 'smooth' });
+                        }
+
+                        if (prevBtn) prevBtn.addEventListener('click', function() { scrollBy(-220); });
+                        if (nextBtn) nextBtn.addEventListener('click', function() { scrollBy(220); });
+
+                        container.addEventListener('scroll', updateThumb);
+                        window.addEventListener('resize', updateThumb);
+
+                        if (scrollbar) {
+                            scrollbar.addEventListener('click', function(e) {
+                                const rect = scrollbar.getBoundingClientRect();
+                                const x = (e.clientX - rect.left) / rect.width;
+                                const scrollWidth = container.scrollWidth;
+                                const clientWidth = container.clientWidth;
+                                const maxScroll = scrollWidth - clientWidth;
+                                container.scrollLeft = x * maxScroll;
+                            });
+                        }
+
+                        setTimeout(updateThumb, 100);
+
+                        // 卡片点击（兼容）
+                        container.querySelectorAll('.work-card').forEach(function(card) {
+                            card.addEventListener('click', function(e) {
+                                if (e.target.classList.contains('w-readmore')) return;
+                                const id = this.dataset.id;
+                                if (!id) return;
+                                const post = allPosts.find(function(p) { return p.id == id; });
+                                if (post) {
+                                    const content = post.content || '';
+                                    const match = content.match(/\[直链网页(https?:\/\/[^\s\]]+)\]/);
+                                    if (match) {
+                                        window.open(match[1], '_blank');
+                                    } else {
+                                        window.location.href = 'post.html?id=' + id;
+                                    }
+                                }
+                            });
+                        });
+                    });
+                } catch (e) {
+                    console.warn('initScroll 出错，但已忽略:', e);
                 }
-                const target = new Date(targetYear, 5, 7, 9, 0, 0);
-                const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
-                return Math.max(0, diff);
             }
 
             // ---- 关闭个人档案弹窗 ----
@@ -3799,7 +4192,11 @@
                 }, 500);
             }
 
-            document.getElementById('openBlogSubmitBtn').addEventListener('click', function() { openSubmitModal('blog'); });
+            document.getElementById('openBlogSubmitBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                openSubmitModal('blog');
+            });
+
             submitClose1.addEventListener('click', closeSubmitModal);
             submitClose2.addEventListener('click', closeSubmitModal);
             submitModal.addEventListener('click', function(e) {
@@ -3828,35 +4225,18 @@
                 window.location.href = 'mailto:stellarsage2023@hotmail.com?subject=【投稿】';
             });
 
-            // ---- 个人档案投稿 ----
+            // ============================================================
+            // ★★★ 个人档案投稿弹窗（三步，完整功能） ★★★
+            // ============================================================
             const archiveModal = document.getElementById('archiveModal');
-            const archiveCloseBtn = document.getElementById('archiveCloseBtn');
-            const archiveGoForm = document.getElementById('archiveGoForm');
-            const archiveBackStep1 = document.getElementById('archiveBackStep1');
-            const archiveCloseStep1 = document.getElementById('archiveCloseStep1');
-            const archiveCloseStep2 = document.getElementById('archiveCloseStep2');
-            const archiveSubmitForm = document.getElementById('archiveSubmitForm');
-            const archiveBackStep2 = document.getElementById('archiveBackStep2');
-            const archiveDoneBtn2 = document.getElementById('archiveDoneBtn2');
-            const archiveOpenRef = document.getElementById('archiveOpenRef');
-            const archivePreviewBtn = document.getElementById('archivePreviewBtn');
-            const archiveSearchPreviewBtn = document.getElementById('archiveSearchPreviewBtn');
-            const archiveTemplateCopy = document.getElementById('archiveTemplateCopy');
-            const templateContent = document.getElementById('templateContent');
-            const templateTitle = document.getElementById('templateTitle');
-
-            const avatarTypeEl = document.getElementById('archiveAvatarType');
-            const avatarInputEl = document.getElementById('archiveAvatarInput');
-            const avatarApplyEl = document.getElementById('archiveAvatarApply');
-            const avatarPreviewEl = document.getElementById('archiveAvatarPreview');
-            const avatarStatusEl = document.getElementById('archiveAvatarStatus');
-
-            const nicknameInput = document.getElementById('archiveNickname');
-            const realNameInput = document.getElementById('archiveRealName');
-            const identityInput = document.getElementById('archiveIdentity');
-            const passwordInput = document.getElementById('archivePassword');
-            const bioInput = document.getElementById('archiveBio');
-            const nicknameCheckStatus = document.getElementById('nicknameCheckStatus');
+            document.getElementById('openArchiveBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                archiveModal.classList.remove('closing');
+                archiveModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                showStep(1);
+                resetForm();
+            });
 
             function showStep(step) {
                 document.querySelectorAll('.archive-step').forEach(function(el) { el.classList.remove('active'); });
@@ -3869,165 +4249,80 @@
                 }
             }
 
-            function openArchiveModal() {
-                if (submitModal.classList.contains('open')) {
-                    closeSubmitModal();
-                    setTimeout(function() {
-                        archiveModal.classList.remove('closing');
-                        archiveModal.classList.add('open');
-                        document.body.style.overflow = 'hidden';
-                        showStep(1);
-                        resetForm();
-                    }, 400);
-                } else {
-                    archiveModal.classList.remove('closing');
-                    archiveModal.classList.add('open');
-                    document.body.style.overflow = 'hidden';
-                    showStep(1);
-                    resetForm();
-                }
+            function resetForm() {
+                document.getElementById('archiveNickname').value = '';
+                document.getElementById('archiveRealName').value = '';
+                document.getElementById('archiveIdentity').value = '高三';
+                document.getElementById('archivePassword').value = '';
+                document.getElementById('archiveBio').value = '';
+                document.getElementById('archiveAvatarInput').value = '';
+                document.getElementById('archiveAvatarPreview').style.display = 'none';
+                document.getElementById('archiveAvatarPreview').className = 'avatar-preview';
+                document.getElementById('archiveAvatarStatus').textContent = '';
+                document.getElementById('archiveAvatarStatus').className = 'avatar-status';
+                document.getElementById('nicknameCheckStatus').textContent = '';
+                document.getElementById('nicknameCheckStatus').className = 'check-status';
             }
 
-            function closeArchiveModal() {
+            document.getElementById('archiveGoForm').addEventListener('click', function(e) {
+                e.preventDefault();
+                showStep(2);
+            });
+            document.getElementById('archiveBackStep1').addEventListener('click', function(e) {
+                e.preventDefault();
+                showStep(1);
+            });
+            document.getElementById('archiveBackStep2').addEventListener('click', function(e) {
+                e.preventDefault();
+                showStep(2);
+            });
+            document.getElementById('archiveCloseStep1').addEventListener('click', function(e) {
+                e.preventDefault();
                 archiveModal.classList.add('closing');
                 setTimeout(function() {
                     archiveModal.classList.remove('open');
                     archiveModal.classList.remove('closing');
                     document.body.style.overflow = '';
                 }, 500);
-            }
-
-            function resetForm() {
-                nicknameInput.value = '';
-                realNameInput.value = '';
-                identityInput.value = '高三';
-                passwordInput.value = '';
-                bioInput.value = '';
-                avatarInputEl.value = '';
-                avatarPreviewEl.style.display = 'none';
-                avatarPreviewEl.className = 'avatar-preview';
-                avatarStatusEl.textContent = '';
-                avatarStatusEl.className = 'avatar-status';
-                nicknameCheckStatus.textContent = '';
-                nicknameCheckStatus.className = 'check-status';
-            }
-
-            document.getElementById('openArchiveBtn').addEventListener('click', openArchiveModal);
-
-            archiveGoForm.addEventListener('click', function() { showStep(2); });
-            archiveBackStep1.addEventListener('click', function() { showStep(1); });
-            archiveBackStep2.addEventListener('click', function() { showStep(2); });
-            archiveCloseStep1.addEventListener('click', closeArchiveModal);
-            archiveCloseStep2.addEventListener('click', closeArchiveModal);
-            archiveCloseBtn.addEventListener('click', closeArchiveModal);
-            archiveDoneBtn2.addEventListener('click', closeArchiveModal);
-            archiveModal.addEventListener('click', function(e) {
-                if (e.target === archiveModal) closeArchiveModal();
             });
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && archiveModal.classList.contains('open')) closeArchiveModal();
+            document.getElementById('archiveCloseStep2').addEventListener('click', function(e) {
+                e.preventDefault();
+                archiveModal.classList.add('closing');
+                setTimeout(function() {
+                    archiveModal.classList.remove('open');
+                    archiveModal.classList.remove('closing');
+                    document.body.style.overflow = '';
+                }, 500);
+            });
+            document.getElementById('archiveCloseBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                archiveModal.classList.add('closing');
+                setTimeout(function() {
+                    archiveModal.classList.remove('open');
+                    archiveModal.classList.remove('closing');
+                    document.body.style.overflow = '';
+                }, 500);
+            });
+            document.getElementById('archiveDoneBtn2').addEventListener('click', function(e) {
+                e.preventDefault();
+                archiveModal.classList.add('closing');
+                setTimeout(function() {
+                    archiveModal.classList.remove('open');
+                    archiveModal.classList.remove('closing');
+                    document.body.style.overflow = '';
+                }, 500);
             });
 
-            // 网名校验
-            function checkNickname(nickname) {
-                return new Promise(function(resolve) {
-                    if (nickname === '星宸学社') {
-                        nicknameCheckStatus.textContent = '✕ 网名不可使用「星宸学社」，此为建站团队专属名称';
-                        nicknameCheckStatus.className = 'check-status taken';
-                        resolve(false);
-                        return;
-                    }
-                    try {
-                        const archives = getArchives();
-                        const exists = archives.some(function(a) { return a.nickname === nickname; });
-                        if (exists) {
-                            nicknameCheckStatus.textContent = '⚠️ 网名 "' + nickname + '" 已被使用，请更换';
-                            nicknameCheckStatus.className = 'check-status taken';
-                            resolve(false);
-                        } else {
-                            nicknameCheckStatus.textContent = '✓ 网名 "' + nickname + '" 可用';
-                            nicknameCheckStatus.className = 'check-status available';
-                            resolve(true);
-                        }
-                    } catch (e) {
-                        nicknameCheckStatus.textContent = '✓ 网名 "' + nickname + '" 可用';
-                        nicknameCheckStatus.className = 'check-status available';
-                        resolve(true);
-                    }
-                });
-            }
-
-            nicknameInput.addEventListener('blur', function() {
-                const val = this.value.trim();
-                if (val.length > 0) checkNickname(val);
-                else {
-                    nicknameCheckStatus.textContent = '';
-                    nicknameCheckStatus.className = 'check-status';
-                }
-            });
-
-            // 头像
-            function applyAvatar() {
-                const type = avatarTypeEl.value;
-                const id = avatarInputEl.value.trim();
-                if (!id) {
-                    avatarPreviewEl.style.display = 'none';
-                    avatarStatusEl.textContent = '请输入 ' + (type === 'qq' ? 'QQ号' : (type === 'github' ? 'GitHub用户名' :
-                        '自定义说明'));
-                    avatarStatusEl.className = 'avatar-status';
-                    return;
-                }
-                if (type === 'custom') {
-                    avatarStatusEl.textContent = '请在邮件中说明头像上传方式（附件或链接）';
-                    avatarStatusEl.className = 'avatar-status';
-                    avatarPreviewEl.style.display = 'none';
-                    return;
-                }
-                const url = type === 'qq' ?
-                    'https://q1.qlogo.cn/g?b=qq&nk=' + encodeURIComponent(id) + '&s=100' :
-                    'https://github.com/' + encodeURIComponent(id) + '.png';
-                avatarPreviewEl.src = url;
-                avatarPreviewEl.style.display = 'block';
-                avatarPreviewEl.className = 'avatar-preview';
-                avatarStatusEl.textContent = '加载中…';
-                avatarStatusEl.className = 'avatar-status';
-
-                const img = new Image();
-                img.onload = function() {
-                    avatarPreviewEl.className = 'avatar-preview loaded';
-                    avatarStatusEl.textContent = '头像加载成功';
-                    avatarStatusEl.className = 'avatar-status success';
-                };
-                img.onerror = function() {
-                    avatarPreviewEl.style.display = 'none';
-                    avatarStatusEl.textContent = '头像加载失败，请检查输入是否正确';
-                    avatarStatusEl.className = 'avatar-status error';
-                };
-                img.src = url;
-            }
-
-            avatarApplyEl.addEventListener('click', applyAvatar);
-            avatarInputEl.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') applyAvatar();
-            });
-            avatarTypeEl.addEventListener('change', function() {
-                const type = this.value;
-                avatarInputEl.placeholder = type === 'qq' ? '输入QQ号' : (type === 'github' ? '输入GitHub用户名' :
-                    '输入自定义说明');
-                avatarInputEl.value = '';
-                avatarPreviewEl.style.display = 'none';
-                avatarStatusEl.textContent = '';
-                avatarStatusEl.className = 'avatar-status';
-            });
-
-            // 预览我的档案
-            archivePreviewBtn.addEventListener('click', function() {
-                const nickname = nicknameInput.value.trim() || '未设置网名';
-                const realName = realNameInput.value.trim() || '';
-                const identity = identityInput.value || '高三';
-                const bio = bioInput.value.trim() || '这个人很懒，什么都没有写。';
-                const avatarSrc = avatarPreviewEl.src || '';
-                const hasAvatar = avatarPreviewEl.style.display !== 'none' && avatarPreviewEl.className.includes('loaded');
+            // ---- 预览我的档案 ----
+            document.getElementById('archivePreviewBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                const nickname = document.getElementById('archiveNickname').value.trim() || '未设置网名';
+                const realName = document.getElementById('archiveRealName').value.trim() || '';
+                const identity = document.getElementById('archiveIdentity').value || '高三';
+                const bio = document.getElementById('archiveBio').value.trim() || '这个人很懒，什么都没有写。';
+                const avatarPreview = document.getElementById('archiveAvatarPreview');
+                const avatarSrc = avatarPreview.src || '';
+                const hasAvatar = avatarPreview.style.display !== 'none' && avatarPreview.className.includes('loaded');
 
                 const works = allPosts.filter(function(p) {
                     return p.author === nickname || p.author === realName;
@@ -4046,87 +4341,37 @@
                 const profile = {
                     nickname: nickname,
                     realName: realName,
-                    identity: identity,
+                    idField: '',
                     bio: bio,
-                    avatar: hasAvatar ? avatarSrc : '',
+                    avatarType: document.getElementById('archiveAvatarType').value,
+                    avatarId: document.getElementById('archiveAvatarInput').value.trim(),
+                    honors: [],
+                    background: '',
                     code: '预览'
                 };
                 showProfileModal(profile, works);
             });
 
-            // 预览档案（搜索）
-            archiveSearchPreviewBtn.addEventListener('click', function() {
-                const nickname = nicknameInput.value.trim() || '未设置网名';
-                const realName = realNameInput.value.trim() || '';
-                const identity = identityInput.value || '高三';
-                const bio = bioInput.value.trim() || '这个人很懒，什么都没有写。';
-                const avatarSrc = avatarPreviewEl.src || '';
-                const hasAvatar = avatarPreviewEl.style.display !== 'none' && avatarPreviewEl.className.includes('loaded');
-
-                const archives = getArchives();
-                let found = archives.find(function(a) { return a.nickname === nickname || a.realName === realName; });
-
-                if (found) {
-                    const works = allPosts.filter(function(p) {
-                        return p.author === found.nickname || p.author === found.realName;
-                    }).map(function(p) {
-                        return {
-                            title: p.title,
-                            date: p.date,
-                            type: '宸光博客',
-                            content: p.content,
-                            cover: p.cover,
-                            tags: p.tags,
-                            isFeatured: isFeatured(p.title)
-                        };
-                    });
-                    showProfileModal(found, works);
-                } else {
-                    const profile = {
-                        nickname: nickname,
-                        realName: realName,
-                        identity: identity,
-                        bio: bio,
-                        avatar: hasAvatar ? avatarSrc : '',
-                        code: '预览'
-                    };
-                    const works = allPosts.filter(function(p) {
-                        return p.author === nickname || p.author === realName;
-                    }).map(function(p) {
-                        return {
-                            title: p.title,
-                            date: p.date,
-                            type: '宸光博客',
-                            content: p.content,
-                            cover: p.cover,
-                            tags: p.tags,
-                            isFeatured: isFeatured(p.title)
-                        };
-                    });
-                    showProfileModal(profile, works);
-                }
+            // ---- 预览档案（跳转星宸学社） ----
+            document.getElementById('archiveSearchPreviewBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                findAndShowProfile('星宸学社');
             });
 
-            // 生成投稿模板
-            archiveSubmitForm.addEventListener('click', function() {
-                const nickname = nicknameInput.value.trim();
-                const password = passwordInput.value.trim();
-
+            // ---- 生成投稿模板 ----
+            document.getElementById('archiveSubmitForm').addEventListener('click', function(e) {
+                e.preventDefault();
+                const nickname = document.getElementById('archiveNickname').value.trim();
+                const password = document.getElementById('archivePassword').value.trim();
                 if (!nickname) { showAlert('提示', '请填写网名。', '✏️'); return; }
                 if (nickname === '星宸学社') { showAlert('提示', '网名不可使用「星宸学社」，请更换。', '✏️'); return; }
                 if (!password || password.length < 4) { showAlert('提示', '请设置至少4位密码。', '🔒'); return; }
 
-                const checkText = nicknameCheckStatus.textContent;
-                if (checkText.includes('已被使用')) {
-                    showAlert('提示', '网名 "' + nickname + '" 已被使用，请更换。', '✏️');
-                    return;
-                }
-
-                const realName = realNameInput.value.trim() || '未填写';
-                const identity = identityInput.value || '高三';
-                const bio = bioInput.value.trim() || '未填写';
-                const avatarType = avatarTypeEl.value;
-                const avatarId = avatarInputEl.value.trim();
+                const realName = document.getElementById('archiveRealName').value.trim() || '未填写';
+                const identity = document.getElementById('archiveIdentity').value || '高三';
+                const bio = document.getElementById('archiveBio').value.trim() || '未填写';
+                const avatarType = document.getElementById('archiveAvatarType').value;
+                const avatarId = document.getElementById('archiveAvatarInput').value.trim();
                 let avatarDesc = '';
                 if (avatarType === 'qq' && avatarId) avatarDesc = 'QQ头像 (QQ号: ' + avatarId + ')';
                 else if (avatarType === 'github' && avatarId) avatarDesc = 'GitHub头像 (用户名: ' + avatarId + ')';
@@ -4145,35 +4390,18 @@
                     '本档案将关联所有署名投稿。\n' +
                     '审核流程：AI初审 → 人工复审 → 回信确认。';
 
-                templateTitle.textContent = '个人档案申请 + ' + nickname;
-                templateContent.textContent = contentText;
-
-                const archives = getArchives();
-                if (!archives.some(function(a) { return a.nickname === nickname; })) {
-                    archives.push({
-                        nickname: nickname,
-                        realName: realName,
-                        identity: identity,
-                        password: password,
-                        bio: bio,
-                        avatar: avatarPreviewEl.style.display !== 'none' && avatarPreviewEl.className.includes('loaded') ?
-                            avatarPreviewEl.src : '',
-                        code: 'JC-2026-' + String(archives.length + 1).padStart(4, '0'),
-                        createdAt: new Date().toISOString()
-                    });
-                    saveArchives(archives);
-                }
-
+                document.getElementById('templateTitle').textContent = '个人档案申请 + ' + nickname;
+                document.getElementById('templateContent').textContent = contentText;
                 showStep(3);
             });
 
-            // 复制模板
-            archiveTemplateCopy.addEventListener('click', function() {
+            // ---- 复制模板 ----
+            document.getElementById('archiveTemplateCopy').addEventListener('click', function(e) {
+                e.preventDefault();
                 const fullText =
                     '收件人：stellarsage2023@hotmail.com\n' +
-                    '标题：' + templateTitle.textContent + '\n\n' +
-                    templateContent.textContent;
-
+                    '标题：' + document.getElementById('templateTitle').textContent + '\n\n' +
+                    document.getElementById('templateContent').textContent;
                 navigator.clipboard.writeText(fullText).then(function() {
                     showAlert('已复制', '投稿模板已复制到剪贴板，请发送邮件至 stellarsage2023@hotmail.com', '✓');
                 }).catch(function() {
@@ -4187,27 +4415,71 @@
                 });
             });
 
-            // ---- 参考页 ----
-            const refModal = document.getElementById('refModal');
-            const refClose = document.getElementById('refCloseBtn');
-            const refConfirm = document.getElementById('refConfirmBtn');
-
-            function openRefModal() {
-                if (archiveModal.classList.contains('open')) {
-                    closeArchiveModal();
-                    setTimeout(function() {
-                        refModal.classList.remove('closing');
-                        refModal.classList.add('open');
-                        document.body.style.overflow = 'hidden';
-                    }, 400);
-                } else {
-                    refModal.classList.remove('closing');
-                    refModal.classList.add('open');
-                    document.body.style.overflow = 'hidden';
+            // ---- 头像预览 ----
+            document.getElementById('archiveAvatarApply').addEventListener('click', function(e) {
+                e.preventDefault();
+                const type = document.getElementById('archiveAvatarType').value;
+                const id = document.getElementById('archiveAvatarInput').value.trim();
+                const preview = document.getElementById('archiveAvatarPreview');
+                const status = document.getElementById('archiveAvatarStatus');
+                if (!id) {
+                    preview.style.display = 'none';
+                    status.textContent = '请输入 ' + (type === 'qq' ? 'QQ号' : (type === 'github' ? 'GitHub用户名' :
+                        '自定义说明'));
+                    status.className = 'avatar-status';
+                    return;
                 }
-            }
+                if (type === 'custom') {
+                    status.textContent = '请在邮件中说明头像上传方式（附件或链接）';
+                    status.className = 'avatar-status';
+                    preview.style.display = 'none';
+                    return;
+                }
+                const url = type === 'qq' ?
+                    'https://q1.qlogo.cn/g?b=qq&nk=' + encodeURIComponent(id) + '&s=100' :
+                    'https://github.com/' + encodeURIComponent(id) + '.png';
+                preview.src = url;
+                preview.style.display = 'block';
+                preview.className = 'avatar-preview';
+                status.textContent = '加载中…';
+                status.className = 'avatar-status';
+                const img = new Image();
+                img.onload = function() {
+                    preview.className = 'avatar-preview loaded';
+                    status.textContent = '头像加载成功';
+                    status.className = 'avatar-status success';
+                };
+                img.onerror = function() {
+                    preview.style.display = 'none';
+                    status.textContent = '头像加载失败，请检查输入是否正确';
+                    status.className = 'avatar-status error';
+                };
+                img.src = url;
+            });
 
+            // ---- 网名校验 ----
+            document.getElementById('archiveNickname').addEventListener('blur', function() {
+                const val = this.value.trim();
+                const status = document.getElementById('nicknameCheckStatus');
+                if (!val) { status.textContent = ''; status.className = 'check-status'; return; }
+                if (val === '星宸学社') {
+                    status.textContent = '✕ 网名不可使用「星宸学社」，此为建站团队专属名称';
+                    status.className = 'check-status taken';
+                    return;
+                }
+                status.textContent = '✓ 网名 "' + val + '" 可用';
+                status.className = 'check-status available';
+            });
+
+            // ---- 参考页按钮 ----
+            function openRefModal() {
+                const refModal = document.getElementById('refModal');
+                refModal.classList.remove('closing');
+                refModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
             function closeRefModal() {
+                const refModal = document.getElementById('refModal');
                 refModal.classList.add('closing');
                 setTimeout(function() {
                     refModal.classList.remove('open');
@@ -4215,47 +4487,64 @@
                     document.body.style.overflow = '';
                 }, 500);
             }
-
-            archiveOpenRef.addEventListener('click', openRefModal);
-            refClose.addEventListener('click', closeRefModal);
-            refConfirm.addEventListener('click', closeRefModal);
-            refModal.addEventListener('click', function(e) {
-                if (e.target === refModal) closeRefModal();
+            document.getElementById('archiveOpenRef').addEventListener('click', function(e) {
+                e.preventDefault();
+                openRefModal();
+            });
+            document.getElementById('refCloseBtn').addEventListener('click', closeRefModal);
+            document.getElementById('refConfirmBtn').addEventListener('click', closeRefModal);
+            document.getElementById('refModal').addEventListener('click', function(e) {
+                if (e.target === this) closeRefModal();
             });
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && refModal.classList.contains('open')) closeRefModal();
+                if (e.key === 'Escape' && document.getElementById('refModal').classList.contains('open')) {
+                    closeRefModal();
+                }
             });
 
-            // ---- 法律文件 ----
+            // ---- 法律文件（超时重新加载，不刷新页面） ----
             const legalModal = document.getElementById('legalModal');
             const legalTitle = document.getElementById('legalTitle');
             const legalContent = document.getElementById('legalContent');
             const legalClose = document.getElementById('legalCloseBtn');
             const legalConfirm = document.getElementById('legalConfirmBtn');
 
-            function openLegal(type) {
+            function loadLegalFile(type) {
+                const paths = {
+                    disclaimer: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/disclaimer.txt',
+                    privacy: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/privacy.txt',
+                    terms: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/terms.txt'
+                };
                 const titles = { disclaimer: '免责声明', privacy: '隐私政策', terms: '使用条款' };
-                const paths = { disclaimer: '/legal/disclaimer.txt', privacy: '/legal/privacy.txt', terms: '/legal/terms.txt' };
                 legalTitle.textContent = titles[type] || '法律文件';
                 legalContent.textContent = '加载中...';
+
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+                fetch(paths[type], { signal: controller.signal })
+                    .then(function(res) {
+                        clearTimeout(timeoutId);
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.text();
+                    })
+                    .then(function(text) {
+                        legalContent.textContent = text;
+                    })
+                    .catch(function(err) {
+                        // 显示错误并提供重新加载按钮
+                        legalContent.innerHTML =
+                            '加载失败，<span style="color:var(--color-red);cursor:pointer;text-decoration:underline;" onclick="window._retryLegal(\'' +
+                            type + '\')">点击重新加载</span>';
+                    });
+            }
+
+            function openLegal(type) {
                 legalModal.classList.remove('closing');
                 legalModal.classList.add('open');
                 document.body.style.overflow = 'hidden';
-
-                fetch(paths[type])
-                    .then(function(res) {
-                        if (!res.ok) throw new Error('File not found');
-                        return res.text();
-                    })
-                    .then(function(text) { legalContent.textContent = text; })
-                    .catch(function() {
-                        const samples = {
-                            disclaimer: '本站为艺术展示站，所有内容均为创作者个人观点，不代表学校官方立场。\n\n本站不提供任何形式的招生、录取、教学等服务，所有信息仅供文化交流与展示。\n\n访问者应自行判断内容真实性，本平台不对因使用本站内容而产生的任何后果承担责任。',
-                            privacy: '本站不收集、存储任何用户个人信息。\n\n所有投稿内容仅用于展示，投稿者需确保拥有所提交内容的完整版权。\n\n本站不对外提供用户数据，亦不涉及任何商业用途。',
-                            terms: '使用本站即表示您同意以下条款：\n\n1. 所有内容版权归原作者所有，本站仅作展示。\n2. 禁止将本站内容用于任何商业用途。\n3. 本站保留随时修改、删除内容的权利，无需事先通知。\n4. 如发现侵权内容，请联系 stellarsage2023@hotmail.com 处理。'
-                        };
-                        legalContent.textContent = samples[type] || '文件内容暂不可用。';
-                    });
+                window._retryLegal = loadLegalFile; // 暴露给内联点击
+                loadLegalFile(type);
             }
 
             function closeLegal() {
