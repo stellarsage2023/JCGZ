@@ -1,0 +1,3014 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>文章详情 · 明德专栏</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== 全局重置 & 变量 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --color-bg: #121212;
+            --color-surface: rgba(26, 26, 26, 0.82);
+            --color-card: rgba(34, 34, 34, 0.85);
+            --color-text: #f0ece6;
+            --color-text-light: #b0a8a0;
+            --color-text-muted: #6a6460;
+            --color-red: #c0392b;
+            --color-red-light: #e74c3c;
+            --color-red-dark: #a93226;
+            --color-gold: #c9a84c;
+            --color-gold-light: #e0c66a;
+            --color-gray: #2d2d2d;
+            --color-gray-light: #3a3a3a;
+            --color-border: rgba(255, 255, 255, 0.06);
+            --font-body: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            --transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            --transition-fast: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            --transition-card: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            --transition-bounce: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+            background: var(--color-bg);
+        }
+        body {
+            font-family: var(--font-body);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.65;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            opacity: 0;
+            animation: bodyFadeIn 0.8s 0.2s forwards ease-out;
+        }
+        @keyframes bodyFadeIn {
+            to { opacity: 1; }
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 28px;
+            position: relative;
+            z-index: 1;
+        }
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--color-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-red);
+            border-radius: 0;
+            transition: background var(--transition-fast);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-red-light);
+        }
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-red) var(--color-bg);
+        }
+
+        /* ===== 导航栏（与主站/博客一致） ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: rgba(18, 18, 18, 0.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--color-border);
+            padding: 0 28px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: box-shadow var(--transition), transform var(--transition);
+            transform: translateY(-100%);
+            animation: navSlideIn 0.8s 0.4s forwards cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes navSlideIn {
+            0% { transform: translateY(-100%) scaleY(0.96); opacity: 0; }
+            100% { transform: translateY(0) scaleY(1); opacity: 1; }
+        }
+        .navbar.scrolled {
+            box-shadow: 0 2px 32px rgba(0, 0, 0, 0.5);
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 1.5px;
+            color: var(--color-text);
+            flex-shrink: 0;
+        }
+        .nav-brand .nav-logo {
+            height: 48px;
+            width: auto;
+            display: block;
+            transition: transform var(--transition-fast);
+        }
+        .nav-brand .nav-logo:hover {
+            transform: scale(1.04);
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+            margin-left: auto;
+        }
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-light);
+            transition: color var(--transition-fast), transform var(--transition-fast);
+            position: relative;
+            display: inline-block;
+            letter-spacing: 0.3px;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0;
+            height: 2px;
+            background: var(--color-red);
+            transition: width var(--transition-fast);
+        }
+        .nav-links a:hover {
+            color: var(--color-text);
+            transform: translateY(-1px);
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .nav-links a .sub {
+            font-size: 10px;
+            color: var(--color-text-muted);
+            font-weight: 400;
+            margin-left: 3px;
+            letter-spacing: 0.5px;
+        }
+        .nav-links a.active {
+            color: var(--color-text);
+        }
+        .nav-links a.active::after {
+            width: 100%;
+        }
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+            z-index: 10;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .nav-toggle.active {
+            transform: rotate(90deg);
+        }
+        .nav-drawer {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: rgba(18, 18, 18, 0.98);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 20px 28px 28px;
+            border-bottom: 1px solid var(--color-border);
+            z-index: 998;
+            transform: translateY(-120%);
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .nav-drawer.open {
+            transform: translateY(0);
+        }
+        .nav-drawer a {
+            display: block;
+            padding: 10px 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-text-light);
+            border-bottom: 1px solid var(--color-border);
+            transition: color var(--transition-fast), padding-left var(--transition-fast);
+            letter-spacing: 0.3px;
+        }
+        .nav-drawer a:last-child {
+            border-bottom: none;
+        }
+        .nav-drawer a:hover {
+            color: var(--color-red);
+            padding-left: 8px;
+        }
+        .nav-drawer a .sub {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            font-weight: 400;
+            margin-left: 4px;
+            letter-spacing: 0.5px;
+        }
+        .nav-drawer a.active {
+            color: var(--color-text);
+        }
+
+        /* ===== 页脚（与主站一致） ===== */
+        .footer {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: 40px 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .footer .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 32px;
+        }
+        .footer h5 {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: var(--color-text);
+            letter-spacing: 0.5px;
+        }
+        .footer p,
+        .footer li {
+            font-size: 14px;
+            color: var(--color-text-light);
+            line-height: 1.8;
+            letter-spacing: 0.2px;
+        }
+        .footer ul {
+            list-style: none;
+        }
+        .footer ul li {
+            padding: 2px 0;
+            transition: padding-left var(--transition-fast), color var(--transition-fast);
+        }
+        .footer ul li:hover {
+            padding-left: 4px;
+            color: var(--color-text);
+        }
+        .footer .copy {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 13px;
+            color: var(--color-text-muted);
+            border-top: 1px solid var(--color-border);
+            padding-top: 18px;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+        .footer .btn-red {
+            display: inline-block;
+            padding: 8px 24px;
+            font-weight: 600;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            text-align: center;
+            background: var(--color-red);
+            color: #fff;
+            transform: skewX(-6deg);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+        .footer .btn-red .inner {
+            display: inline-block;
+            transform: skewX(6deg);
+            transition: transform var(--transition-fast);
+        }
+        .footer .btn-red .en {
+            font-weight: 400;
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 6px;
+            letter-spacing: 1px;
+        }
+        .footer .btn-red::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--color-gray);
+            transform: translateX(-101%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: -1;
+        }
+        .footer .btn-red:hover {
+            transform: skewX(-6deg) translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 28px rgba(192, 57, 43, 0.25);
+        }
+        .footer .btn-red:hover::before {
+            transform: translateX(0);
+        }
+        .footer .btn-red:hover .inner {
+            transform: skewX(6deg) scale(1.02);
+        }
+        .footer .btn-red:active {
+            transform: skewX(-6deg) scale(0.96);
+        }
+        .footer .email-link {
+            color: var(--color-red);
+            font-weight: 500;
+            transition: color var(--transition-fast);
+        }
+        .footer .email-link:hover {
+            color: var(--color-red-light);
+        }
+        .footer .xingchen {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--color-border);
+            font-size: 13px;
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .footer .xingchen .logo-wrap {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: opacity var(--transition-fast);
+        }
+        .footer .xingchen .logo-wrap:hover {
+            opacity: 0.8;
+        }
+        .footer .xingchen .logo-wrap img {
+            height: 36px;
+            width: auto;
+            display: block;
+            transition: transform var(--transition-fast);
+        }
+        .footer .xingchen .logo-wrap img:hover {
+            transform: scale(1.05);
+        }
+        .footer .xingchen .logo-wrap .logo-text {
+            font-weight: 600;
+            color: var(--color-text-light);
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .footer .xingchen .logo-wrap .logo-text .en {
+            font-weight: 400;
+            color: var(--color-text-muted);
+            font-size: 12px;
+            letter-spacing: 1px;
+            margin-left: 4px;
+        }
+        .footer .xingchen .info-wrap {
+            flex: 1;
+            min-width: 200px;
+        }
+        .footer .xingchen .info-wrap .desc {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+        .footer .xingchen .info-wrap .contact-info {
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+        .footer .xingchen .info-wrap .contact-info a {
+            color: var(--color-red);
+            transition: color var(--transition-fast);
+        }
+        .footer .xingchen .info-wrap .contact-info a:hover {
+            color: var(--color-red-light);
+        }
+        .footer .legal {
+            grid-column: 1 / -1;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+            font-size: 12px;
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+        .footer .legal a {
+            color: var(--color-red);
+            transition: color var(--transition-fast);
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+        }
+        .footer .legal a:hover {
+            color: var(--color-red-light);
+            border-bottom-color: var(--color-red-light);
+        }
+        .footer .legal .sep {
+            margin: 0 8px;
+            color: var(--color-border);
+        }
+
+        /* ===== 弹窗系统（通用提示 + 法律 + 个人档案展示） ===== */
+        .custom-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .custom-modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+        .custom-modal-overlay.closing {
+            opacity: 0;
+        }
+        #customAlert {
+            z-index: 999999;
+        }
+
+        .custom-modal-box {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            max-width: 480px;
+            width: 92%;
+            padding: 32px 30px 28px;
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .custom-modal-overlay.open .custom-modal-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .custom-modal-overlay.closing .custom-modal-box {
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+        }
+        .custom-modal-box .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            background: none;
+            border: none;
+            transition: transform var(--transition-fast), color var(--transition-fast);
+            font-family: var(--font-body);
+            z-index: 5;
+        }
+        .custom-modal-box .close-btn:hover {
+            color: var(--color-text);
+            transform: rotate(90deg);
+        }
+        .custom-modal-box .modal-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+            display: block;
+            color: var(--color-red);
+        }
+        .custom-modal-box h3 {
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--color-text);
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+        .custom-modal-box h3 .hl {
+            color: var(--color-red);
+        }
+        .custom-modal-box p {
+            font-size: 14px;
+            color: var(--color-text-light);
+            line-height: 1.7;
+            margin-bottom: 16px;
+            letter-spacing: 0.2px;
+        }
+        .custom-modal-box .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .custom-modal-box .btn-group .btn-red {
+            flex: 1;
+            text-align: center;
+            min-width: 80px;
+        }
+        .custom-modal-box .btn-red {
+            display: inline-block;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            text-align: center;
+            background: var(--color-red);
+            color: #fff;
+            transform: skewX(-6deg);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+        .custom-modal-box .btn-red .inner {
+            display: inline-block;
+            transform: skewX(6deg);
+            transition: transform var(--transition-fast);
+        }
+        .custom-modal-box .btn-red .en {
+            font-weight: 400;
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 6px;
+            letter-spacing: 1px;
+        }
+        .custom-modal-box .btn-red::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--color-gray);
+            transform: translateX(-101%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: -1;
+        }
+        .custom-modal-box .btn-red:hover {
+            transform: skewX(-6deg) translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 28px rgba(192, 57, 43, 0.25);
+        }
+        .custom-modal-box .btn-red:hover::before {
+            transform: translateX(0);
+        }
+        .custom-modal-box .btn-red:hover .inner {
+            transform: skewX(6deg) scale(1.02);
+        }
+        .custom-modal-box .btn-red:active {
+            transform: skewX(-6deg) scale(0.96);
+        }
+        .custom-modal-overlay.open .custom-modal-box>* {
+            opacity: 0;
+            transform: scale(0.92) translateY(8px);
+            animation: modalPopIn 0.4s 0.06s forwards cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .custom-modal-overlay.open .custom-modal-box>*:nth-child(2) { animation-delay: 0.1s; }
+        .custom-modal-overlay.open .custom-modal-box>*:nth-child(3) { animation-delay: 0.14s; }
+        .custom-modal-overlay.open .custom-modal-box>*:nth-child(4) { animation-delay: 0.18s; }
+        .custom-modal-overlay.open .custom-modal-box>*:nth-child(5) { animation-delay: 0.22s; }
+        @keyframes modalPopIn {
+            0% { opacity: 0; transform: scale(0.92) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* 法律文件弹窗 */
+        .legal-modal-box {
+            max-width: 580px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            padding: 32px 30px 28px;
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .custom-modal-overlay.open .legal-modal-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .custom-modal-overlay.closing .legal-modal-box {
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+        }
+        .legal-modal-box .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            background: none;
+            border: none;
+            transition: transform var(--transition-fast), color var(--transition-fast);
+            font-family: var(--font-body);
+            z-index: 5;
+        }
+        .legal-modal-box .close-btn:hover {
+            color: var(--color-text);
+            transform: rotate(90deg);
+        }
+        .legal-modal-box h3 {
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--color-text);
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+        .legal-modal-box .legal-content {
+            font-size: 14px;
+            color: var(--color-text-light);
+            line-height: 1.8;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 4px 0;
+            margin-bottom: 16px;
+            letter-spacing: 0.2px;
+        }
+        .legal-modal-box .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .legal-modal-box .btn-group .btn-red {
+            flex: 1;
+            text-align: center;
+            min-width: 80px;
+        }
+        .custom-modal-overlay.open .legal-modal-box>* {
+            opacity: 0;
+            transform: scale(0.92) translateY(8px);
+            animation: modalPopIn 0.4s 0.06s forwards cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* ---- 个人档案展示弹窗（完整复制自主站） ---- */
+        .profile-modal-box {
+            max-width: 900px;
+            width: 94%;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            padding: 0;
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            max-height: 80vh;
+            overflow: visible;
+            display: grid;
+            grid-template-columns: 1fr 1.8fr;
+            position: relative;
+        }
+        .custom-modal-overlay.open .profile-modal-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .custom-modal-overlay.closing .profile-modal-box {
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+        }
+        .profile-modal-box .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            background: none;
+            border: none;
+            transition: transform var(--transition-fast), color var(--transition-fast);
+            font-family: var(--font-body);
+            z-index: 10;
+        }
+        .profile-modal-box .close-btn:hover {
+            color: var(--color-text);
+            transform: rotate(90deg);
+        }
+        .profile-modal-title-wrap {
+            position: absolute;
+            top: -28px;
+            left: 24px;
+            z-index: 20;
+            transform: skewX(-6deg) translateX(-100%);
+            background: var(--color-red);
+            padding: 4px 20px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+        }
+        .custom-modal-overlay.open .profile-modal-title-wrap {
+            transform: skewX(-6deg) translateX(0);
+            opacity: 1;
+        }
+        .profile-modal-title-wrap .title-inner {
+            display: inline-block;
+            transform: skewX(6deg);
+            font-weight: 700;
+            font-size: 18px;
+            color: #fff;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .profile-modal-title-wrap .title-inner .en {
+            font-weight: 400;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-left: 6px;
+            letter-spacing: 0.5px;
+        }
+        .profile-left {
+            position: relative;
+            padding: 28px 20px 20px 24px;
+            background: var(--color-bg);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 1px solid var(--color-border);
+            padding-top: 50px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            max-height: 80vh;
+        }
+        .profile-left::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .profile-left>* {
+            position: relative;
+            z-index: 1;
+        }
+        .profile-left .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .profile-left .avatar-wrap {
+            flex-shrink: 0;
+        }
+        .profile-left .avatar-wrap img {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid var(--color-red);
+            object-fit: cover;
+            background: var(--color-bg);
+        }
+        .profile-left .avatar-wrap .avatar-placeholder {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--color-text-muted);
+            background: var(--color-bg);
+        }
+        .profile-left .name-area {
+            flex: 1;
+            min-width: 0;
+        }
+        .profile-left .display-name {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--color-text);
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+        .profile-left .uid {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            font-family: monospace;
+            margin-top: 2px;
+        }
+        .profile-left .bio-text {
+            font-size: 14px;
+            color: var(--color-text-light);
+            line-height: 1.6;
+            margin: 4px 0 12px 0;
+            padding: 0;
+        }
+        .profile-left .enroll-area {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+            padding: 6px 0;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .profile-left .enroll-area .label {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            letter-spacing: 0.5px;
+        }
+        .profile-left .enroll-area .value {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--color-text);
+        }
+        .profile-left .enroll-area .countdown {
+            margin-left: auto;
+            font-size: 14px;
+            color: var(--color-red);
+            font-weight: 600;
+        }
+        .profile-left .enroll-area .countdown .num {
+            font-size: 18px;
+            font-weight: 800;
+        }
+        .profile-left .honor-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+        .profile-left .honor-area .honor-tag {
+            display: inline-block;
+            padding: 2px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border-radius: 2px;
+            background: var(--color-gray-light);
+            color: var(--color-text-light);
+            border: 1px solid var(--color-border);
+        }
+        .profile-left .honor-area .honor-tag.level-1 {
+            border-color: #5cb85c;
+            color: #5cb85c;
+        }
+        .profile-left .honor-area .honor-tag.level-2 {
+            border-color: #5bc0de;
+            color: #5bc0de;
+        }
+        .profile-left .honor-area .honor-tag.level-3 {
+            border-color: #f0ad4e;
+            color: #f0ad4e;
+        }
+        .profile-left .honor-area .honor-tag.level-4 {
+            border-color: #d9534f;
+            color: #d9534f;
+        }
+        .profile-left .honor-area .honor-tag.level-5 {
+            border-color: var(--color-gold);
+            color: var(--color-gold);
+        }
+        .profile-left .honor-area .honor-tag.img-tag {
+            padding: 0;
+            border: none;
+            background: transparent;
+            height: 28px;
+            width: 28px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+        .profile-left .honor-area .honor-tag.img-tag img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .profile-right {
+            position: relative;
+            padding: 28px 16px 20px 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px;
+            background: transparent;
+            max-height: 80vh;
+        }
+        .profile-right>* {
+            position: relative;
+            z-index: 1;
+        }
+        .profile-right .section-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--color-text);
+            margin: 0 0 6px 0;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 4px;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        .profile-right .section-title:not(:first-child) {
+            margin-top: 12px;
+        }
+        .profile-right .scroll-wrapper {
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .profile-right .scroll-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 4px 0 8px 0;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .profile-right .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        .profile-right .scroll-container .work-card {
+            flex: 0 0 200px;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            padding: 10px 12px;
+            transition: border-color var(--transition-fast), transform var(--transition-fast);
+            display: flex;
+            flex-direction: column;
+            min-height: 120px;
+            cursor: default;
+        }
+        .profile-right .scroll-container .work-card:hover {
+            border-color: var(--color-red);
+            transform: translateY(-2px);
+        }
+        .profile-right .scroll-container .work-card .w-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--color-text);
+            letter-spacing: 0.2px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .profile-right .scroll-container .work-card .w-title .badge {
+            font-size: 8px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--color-red);
+            margin-right: 3px;
+            text-transform: uppercase;
+        }
+        .profile-right .scroll-container .work-card .w-meta {
+            font-size: 10px;
+            color: var(--color-text-muted);
+            margin-top: 2px;
+        }
+        .profile-right .scroll-container .work-card .w-summary {
+            font-size: 11px;
+            color: var(--color-text-light);
+            margin-top: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            flex: 1;
+        }
+        .profile-right .scroll-container .work-card .w-cover {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: var(--color-bg);
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .profile-right .scroll-container .work-card .w-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-right .scroll-container .work-card .w-readmore {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--color-red);
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            transition: border-color var(--transition-fast), color var(--transition-fast);
+            padding-bottom: 1px;
+            letter-spacing: 0.3px;
+            align-self: flex-start;
+        }
+        .profile-right .scroll-container .work-card .w-readmore:hover {
+            border-bottom-color: var(--color-red);
+            color: var(--color-red-light);
+        }
+        .profile-right .scroll-container .empty-msg {
+            color: var(--color-text-muted);
+            font-size: 13px;
+            text-align: center;
+            padding: 12px 0;
+            width: 100%;
+            flex-shrink: 0;
+        }
+        .profile-right .scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            width: 22px;
+            height: 22px;
+            background: rgba(18, 18, 18, 0.85);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: background var(--transition-fast), color var(--transition-fast);
+            backdrop-filter: blur(6px);
+            user-select: none;
+            border-radius: 50%;
+        }
+        .profile-right .scroll-arrow:hover {
+            background: var(--color-red);
+            color: #fff;
+        }
+        .profile-right .scroll-arrow.prev {
+            left: 0;
+        }
+        .profile-right .scroll-arrow.next {
+            right: 0;
+        }
+        .profile-right .custom-scrollbar {
+            width: 100%;
+            height: 4px;
+            background: var(--color-border);
+            border-radius: 2px;
+            margin-top: 4px;
+            position: relative;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .profile-right .custom-scrollbar .thumb {
+            height: 100%;
+            background: var(--color-red);
+            border-radius: 2px;
+            width: 20%;
+            position: relative;
+            transition: width 0.1s;
+        }
+        .profile-right .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--color-border);
+            flex-shrink: 0;
+        }
+        .profile-right .btn-group .btn-red {
+            flex: 1;
+            text-align: center;
+            min-width: 80px;
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        .profile-right .btn-group .btn-outline-red {
+            flex: 1;
+            text-align: center;
+            min-width: 80px;
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        /* 修改档案弹窗（简化版） */
+        .modify-modal-box {
+            max-width: 520px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            padding: 32px 30px 28px;
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .custom-modal-overlay.open .modify-modal-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .custom-modal-overlay.closing .modify-modal-box {
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+        }
+        .modify-modal-box .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            background: none;
+            border: none;
+            transition: transform var(--transition-fast), color var(--transition-fast);
+            font-family: var(--font-body);
+            z-index: 5;
+        }
+        .modify-modal-box .close-btn:hover {
+            color: var(--color-text);
+            transform: rotate(90deg);
+        }
+        .modify-modal-box h3 {
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--color-text);
+            margin-bottom: 2px;
+            letter-spacing: 0.3px;
+        }
+        .modify-modal-box h3 .hl {
+            color: var(--color-red);
+        }
+        .modify-modal-box .sub {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-bottom: 16px;
+            letter-spacing: 0.2px;
+        }
+        .modify-modal-box .form-group {
+            margin-bottom: 14px;
+        }
+        .modify-modal-box .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-light);
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+        .modify-modal-box .form-group label .required {
+            color: var(--color-red);
+            margin-left: 2px;
+        }
+        .modify-modal-box .form-group input,
+        .modify-modal-box .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-light);
+            font-family: var(--font-body);
+            font-size: 14px;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+            outline: none;
+            letter-spacing: 0.2px;
+        }
+        .modify-modal-box .form-group input:focus,
+        .modify-modal-box .form-group textarea:focus {
+            border-color: var(--color-red);
+            box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
+        }
+        .modify-modal-box .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .modify-modal-box .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        .modify-modal-box .btn-group .btn-red {
+            flex: 1;
+            text-align: center;
+            min-width: 80px;
+        }
+        .modify-modal-box .btn-group .btn-outline-red {
+            flex: 1;
+            text-align: center;
+            min-width: 80px;
+        }
+        /* 参考页弹窗（简化） */
+        .ref-modal-box {
+            max-width: 560px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            padding: 32px 30px 28px;
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .custom-modal-overlay.open .ref-modal-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .custom-modal-overlay.closing .ref-modal-box {
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+        }
+        .ref-modal-box .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            background: none;
+            border: none;
+            transition: transform var(--transition-fast), color var(--transition-fast);
+            font-family: var(--font-body);
+            z-index: 5;
+        }
+        .ref-modal-box .close-btn:hover {
+            color: var(--color-text);
+            transform: rotate(90deg);
+        }
+        .ref-modal-box h3 {
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--color-text);
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+        .ref-modal-box h3 .hl {
+            color: var(--color-red);
+        }
+        .ref-modal-box .ref-content {
+            font-size: 14px;
+            color: var(--color-text-light);
+            line-height: 1.8;
+            padding: 8px 0;
+        }
+        .ref-modal-box .ref-content .demo-card {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            padding: 14px 16px;
+            margin: 6px 0;
+        }
+        .ref-modal-box .ref-content .demo-card .name {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+        .ref-modal-box .ref-content .demo-card .bio {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin-top: 2px;
+        }
+        .ref-modal-box .ref-content .demo-card .works {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid var(--color-border);
+        }
+        .ref-modal-box .ref-content .demo-card .uid {
+            font-size: 11px;
+            color: var(--color-text-muted);
+            font-family: monospace;
+            margin-top: 2px;
+        }
+        .ref-modal-box .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ref-modal-box .btn-group .btn-red {
+            flex: 1;
+            text-align: center;
+            min-width: 80px;
+        }
+        .custom-modal-overlay.open .ref-modal-box>*,
+        .custom-modal-overlay.open .profile-modal-box>*,
+        .custom-modal-overlay.open .modify-modal-box>* {
+            opacity: 0;
+            transform: scale(0.92) translateY(8px);
+            animation: modalPopIn 0.4s 0.06s forwards cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* ===== 文章详情页布局 ===== */
+        .post-page {
+            padding-top: 100px;
+            padding-bottom: 40px;
+            min-height: 60vh;
+        }
+        .post-page .container {
+            max-width: 1200px;
+            position: relative;
+        }
+        .post-main {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        /* 返回栏 */
+        .back-bar {
+            padding: 12px 0 16px;
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-red);
+            padding: 6px 16px;
+            border: 1px solid var(--color-red);
+            background: transparent;
+            cursor: pointer;
+            transition: background 0.25s, color 0.25s;
+            transform: skewX(-6deg);
+            font-family: var(--font-body);
+        }
+        .back-btn .inner {
+            display: inline-block;
+            transform: skewX(6deg);
+        }
+        .back-btn:hover {
+            background: var(--color-red);
+            color: #fff;
+        }
+
+        /* 文章头部 */
+        .post-header {
+            margin-bottom: 24px;
+        }
+        .post-header .post-tag {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 14px;
+            border: 1.5px solid var(--color-red);
+            color: var(--color-red);
+            background: transparent;
+            display: inline-block;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .post-header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--color-text);
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .post-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 24px;
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+        .post-meta .author-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: color var(--transition-fast);
+        }
+        .post-meta .author-wrap:hover {
+            color: var(--color-text);
+        }
+        .post-meta .author-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--color-gray-light);
+            border: 1px solid var(--color-border);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .post-meta .author-name {
+            font-weight: 500;
+            color: var(--color-red);
+            border-bottom: 1px solid transparent;
+            transition: border-color var(--transition-fast);
+        }
+        .post-meta .author-wrap:hover .author-name {
+            border-bottom-color: var(--color-red);
+        }
+        .post-meta .meta-date {
+            color: var(--color-text-muted);
+        }
+        .post-meta .meta-date::before {
+            content: "· ";
+            color: var(--color-border);
+        }
+        .post-body {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            padding: 32px 36px;
+            font-size: 16px;
+            line-height: 1.9;
+            color: var(--color-text-light);
+        }
+        .post-body p {
+            margin-bottom: 16px;
+        }
+        .post-body p:last-child {
+            margin-bottom: 0;
+        }
+        .post-body h2,
+        .post-body h3 {
+            margin: 24px 0 12px;
+            font-weight: 700;
+            color: var(--color-text);
+            scroll-margin-top: 80px;
+        }
+        .post-body h2 {
+            font-size: 24px;
+        }
+        .post-body h3 {
+            font-size: 20px;
+        }
+        .post-body ul,
+        .post-body ol {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+        .post-body li {
+            margin-bottom: 4px;
+        }
+        .post-body blockquote {
+            border-left: 4px solid var(--color-red);
+            padding-left: 16px;
+            margin: 16px 0;
+            color: var(--color-text-muted);
+            background: rgba(192, 57, 43, 0.05);
+            padding: 12px 20px;
+        }
+        .post-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 2px;
+            margin: 12px 0;
+            border: 1px solid var(--color-border);
+        }
+        .post-body code {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 8px;
+            border-radius: 2px;
+            font-size: 14px;
+            font-family: 'SF Mono', 'Menlo', monospace;
+            color: var(--color-text-light);
+        }
+        .post-body pre {
+            background: #1a1a1a;
+            color: #eef5ff;
+            padding: 16px 20px;
+            border-radius: 2px;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 12px 0;
+            border: 1px solid var(--color-border);
+        }
+        .post-body pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .post-body a {
+            color: var(--color-red);
+            text-decoration: underline;
+            transition: color var(--transition-fast);
+        }
+        .post-body a:hover {
+            color: var(--color-red-light);
+        }
+        .post-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+        .post-body table th,
+        .post-body table td {
+            border: 1px solid var(--color-border);
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .post-body table th {
+            background: rgba(255, 255, 255, 0.04);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+        .post-body table td {
+            color: var(--color-text-light);
+        }
+
+        .loading-state,
+        .error-state {
+            text-align: center;
+            padding: 80px 0;
+            color: var(--color-text-muted);
+        }
+        .loading-state i,
+        .error-state i {
+            display: block;
+            font-size: 32px;
+            color: var(--color-red);
+            margin-bottom: 12px;
+        }
+
+        /* ===== 文章目录（桌面端固定右侧） ===== */
+        .toc-wrapper {
+            position: fixed;
+            top: 100px;
+            right: 28px;
+            width: 220px;
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            padding: 16px 12px;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            display: none; /* 默认隐藏，有内容时显示 */
+        }
+        .toc-wrapper .toc-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--color-text);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 6px;
+        }
+        .toc-wrapper .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+        .toc-wrapper .toc-list li {
+            padding: 4px 0 4px 8px;
+            border-left: 2px solid transparent;
+            transition: border-color var(--transition-fast), color var(--transition-fast);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .toc-wrapper .toc-list li a {
+            display: block;
+            color: var(--color-text-light);
+            transition: color var(--transition-fast);
+            cursor: pointer;
+        }
+        .toc-wrapper .toc-list li a:hover {
+            color: var(--color-text);
+        }
+        .toc-wrapper .toc-list li.active {
+            border-left-color: var(--color-red);
+        }
+        .toc-wrapper .toc-list li.active a {
+            color: var(--color-red);
+        }
+        .toc-wrapper .toc-list li.toc-h2 {
+            font-weight: 600;
+            padding-left: 4px;
+        }
+        .toc-wrapper .toc-list li.toc-h3 {
+            padding-left: 20px;
+            font-weight: 400;
+            font-size: 12px;
+        }
+
+        /* 手机端目录抽屉 */
+        .toc-drawer-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 60;
+            background: var(--color-red);
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(192, 57, 43, 0.3);
+            transition: transform var(--transition-fast);
+            display: none;
+            transform: skewX(-6deg);
+        }
+        .toc-drawer-toggle .inner {
+            display: inline-block;
+            transform: skewX(6deg);
+        }
+        .toc-drawer-toggle:hover {
+            transform: skewX(-6deg) scale(1.04);
+        }
+
+        .toc-drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            max-width: 80vw;
+            height: 100vh;
+            background: var(--color-surface);
+            backdrop-filter: blur(12px);
+            border-left: 1px solid var(--color-border);
+            z-index: 70;
+            padding: 20px 16px;
+            transition: right 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            overflow-y: auto;
+            display: none;
+        }
+        .toc-drawer.open {
+            right: 0;
+        }
+        .toc-drawer .drawer-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--color-text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            transition: transform var(--transition-fast);
+        }
+        .toc-drawer .drawer-close:hover {
+            transform: rotate(90deg);
+            color: var(--color-text);
+        }
+        .toc-drawer .toc-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--color-text);
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 8px;
+        }
+        .toc-drawer .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+        .toc-drawer .toc-list li {
+            padding: 6px 0 6px 8px;
+            border-left: 2px solid transparent;
+            transition: border-color var(--transition-fast), color var(--transition-fast);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .toc-drawer .toc-list li a {
+            display: block;
+            color: var(--color-text-light);
+            transition: color var(--transition-fast);
+            cursor: pointer;
+        }
+        .toc-drawer .toc-list li a:hover {
+            color: var(--color-text);
+        }
+        .toc-drawer .toc-list li.active {
+            border-left-color: var(--color-red);
+        }
+        .toc-drawer .toc-list li.active a {
+            color: var(--color-red);
+        }
+        .toc-drawer .toc-list li.toc-h2 {
+            font-weight: 600;
+            padding-left: 4px;
+        }
+        .toc-drawer .toc-list li.toc-h3 {
+            padding-left: 20px;
+            font-weight: 400;
+            font-size: 13px;
+        }
+
+        /* 桌面端显示 toc-wrapper，手机端显示 drawer */
+        @media (min-width: 1025px) {
+            .toc-wrapper {
+                display: block;
+            }
+            .post-main {
+                margin-right: 260px;
+            }
+            .toc-drawer-toggle,
+            .toc-drawer {
+                display: none !important;
+            }
+        }
+        @media (max-width: 1024px) {
+            .toc-wrapper {
+                display: none !important;
+            }
+            .post-main {
+                margin-right: 0;
+            }
+            .toc-drawer-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .toc-drawer {
+                display: block;
+            }
+        }
+        @media (max-width: 600px) {
+            .post-body {
+                padding: 16px 14px;
+                font-size: 15px;
+            }
+            .post-header h1 {
+                font-size: 24px;
+            }
+            .post-meta {
+                font-size: 13px;
+                gap: 8px 16px;
+            }
+            .back-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .toc-drawer {
+                width: 260px;
+            }
+            .toc-drawer-toggle {
+                padding: 8px 12px;
+                font-size: 14px;
+                bottom: 16px;
+                right: 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 12px;
+            }
+            .post-body {
+                padding: 12px 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 背景网格 ===== -->
+    <div class="bg-grid"></div>
+
+    <!-- ===== 导航栏（明德专栏高亮） ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <img src="https://www.hnfudu.com/images/product/202606/02/211_input_1780391475532610.png?cache=1780389371" alt="建宸高级中学校徽" class="nav-logo" />
+        </div>
+        <ul class="nav-links">
+            <li><a href="/index.html">主站</a></li>
+            <li><a href="/blog.html">宸光博客 <span class="sub">子站</span></a></li>
+            <li><a href="#" class="active">明德专栏 <span class="sub">子站</span></a></li>
+            <li><a href="/news/">校园资讯 <span class="sub">子站</span></a></li>
+            <li><a href="/wall/">留言墙</a></li>
+        </ul>
+        <button class="nav-toggle" id="navToggle">☰</button>
+    </nav>
+
+    <!-- ===== 移动端抽屉 ===== -->
+    <div class="nav-drawer" id="navDrawer">
+        <a href="/index.html">主站</a>
+        <a href="/blog.html">宸光博客 <span class="sub">子站</span></a>
+        <a href="#" class="active">明德专栏 <span class="sub">子站</span></a>
+        <a href="/news/">校园资讯 <span class="sub">子站</span></a>
+        <a href="/wall/">留言墙</a>
+    </div>
+
+    <!-- ===== 文章主体 ===== -->
+    <main class="post-page">
+        <div class="container">
+            <!-- 返回栏 -->
+            <div class="back-bar">
+                <a href="./" class="back-btn"><span class="inner">← 返回明德专栏</span></a>
+            </div>
+
+            <!-- 文章内容（左/中） -->
+            <div class="post-main" id="postMain">
+                <div id="postContent">
+                    <div class="loading-state">
+                        <i>⟳</i>
+                        加载文章...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== 右侧目录（桌面） ===== -->
+    <aside class="toc-wrapper" id="tocWrapper">
+        <div class="toc-title">文章目录</div>
+        <ul class="toc-list" id="tocList"></ul>
+    </aside>
+
+    <!-- ===== 手机端目录抽屉按钮 ===== -->
+    <button class="toc-drawer-toggle" id="tocDrawerToggle"><span class="inner">目录</span></button>
+
+    <!-- ===== 手机端目录抽屉 ===== -->
+    <div class="toc-drawer" id="tocDrawer">
+        <button class="drawer-close" id="tocDrawerClose">✕</button>
+        <div class="toc-title">文章目录</div>
+        <ul class="toc-list" id="tocDrawerList"></ul>
+    </div>
+
+    <!-- ===== 页脚 ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div>
+                <h5>建宸高级中学</h5>
+                <p>Jian Chen High School</p>
+                <p style="font-size:13px; color:var(--color-text-muted); margin-top:2px;">博雅阳光 | 知行合一</p>
+                <div style="margin-top:12px;">
+                    <button class="btn-red" id="footerAdmissionsBtn"><span class="inner">招生咨询 <span class="en">Admissions</span></span></button>
+                </div>
+            </div>
+            <div>
+                <h5>地址</h5>
+                <p>醴陵市仙岳山街道碧山村、万宜村</p>
+                <p style="font-size:13px; color:var(--color-text-muted);">碧山老年公寓对面</p>
+            </div>
+            <div>
+                <h5>星宸学社</h5>
+                <p style="font-size:13px; color:var(--color-text-light);">Stellar Sage</p>
+                <p style="font-size:13px; color:var(--color-text-muted);">QQ群：<a href="https://qm.qq.com/q/856272742" target="_blank" class="email-link">856272742</a></p>
+                <p style="font-size:13px; color:var(--color-text-muted);">QQ联系人：<a href="https://qm.qq.com/cgi-bin/qm/qr?k=3838992031" target="_blank" class="email-link">星宸学社 3838992031</a></p>
+                <p style="font-size:13px; color:var(--color-text-muted);">邮箱：<a href="mailto:stellarsage2023@hotmail.com" class="email-link">stellarsage2023@hotmail.com</a></p>
+            </div>
+            <div>
+                <h5>关注</h5>
+                <p>微信公众号 | 抖音 | 视频号</p>
+                <p style="font-size:13px; color:var(--color-text-muted);">搜索「醴陵一中教育集团建宸高级中学」</p>
+            </div>
+            <div class="copy">
+                <p style="margin-bottom:4px;">&copy; 2026 醴陵建宸高级中学 | 艺术站</p>
+                <div class="xingchen">
+                    <a href="https://stellarsage2023.github.io/st" target="_blank" class="logo-wrap" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+                        <img src="https://user-assets.sxlcdn.com/images/1138507/FmHi2bXK2JlqF65Hn2_tFDgK86zz.png?imageMogr2/strip/auto-orient/thumbnail/1200x9000%3E/quality/90!/format/png" alt="星宸学社 Stellar Sage" />
+                        <span class="logo-text">星宸学社 <span class="en">Stellar Sage</span></span>
+                    </a>
+                    <div class="info-wrap">
+                        <div class="desc">青年创意文化社团 · 以创意连接校园与未来</div>
+                        <div class="contact-info">
+                            QQ群：856272742 | QQ：3838992031 | 邮箱：stellarsage2023@hotmail.com
+                        </div>
+                    </div>
+                </div>
+                <div class="legal">
+                    <span>本网站为艺术展示站，所有内容仅供文化交流与展示</span>
+                    <span class="sep">|</span>
+                    <a data-action="legal" data-type="disclaimer">免责声明</a>
+                    <span class="sep">|</span>
+                    <a data-action="legal" data-type="privacy">隐私政策</a>
+                    <span class="sep">|</span>
+                    <a data-action="legal" data-type="terms">使用条款</a>
+                    <br />
+                    <span style="font-size:11px;">外部法律文件加载路径：/legal/disclaimer.txt &nbsp; /legal/privacy.txt &nbsp; /legal/terms.txt</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== 弹窗 HTML ===== -->
+    <!-- 通用提示弹窗 -->
+    <div class="custom-modal-overlay" id="customAlert">
+        <div class="custom-modal-box">
+            <button class="close-btn" id="alertCloseBtn">✕</button>
+            <span class="modal-icon" id="alertIcon">✦</span>
+            <h3 id="alertTitle">提示</h3>
+            <p id="alertMessage">消息内容</p>
+            <div class="btn-group">
+                <button class="btn-red" id="alertConfirmBtn"><span class="inner">确定 <span class="en">Confirm</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 法律文件弹窗 -->
+    <div class="custom-modal-overlay" id="legalModal">
+        <div class="legal-modal-box">
+            <button class="close-btn" id="legalCloseBtn">✕</button>
+            <h3 id="legalTitle">法律文件</h3>
+            <div class="legal-content" id="legalContent">加载中...</div>
+            <div class="btn-group">
+                <button class="btn-red" id="legalConfirmBtn"><span class="inner">确定 <span class="en">Confirm</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人档案展示弹窗 -->
+    <div class="custom-modal-overlay" id="profileModal">
+        <div class="profile-modal-box">
+            <button class="close-btn" id="profileCloseBtn">✕</button>
+            <div class="profile-modal-title-wrap">
+                <span class="title-inner">个人档案 <span class="en">Profile</span></span>
+            </div>
+            <div class="profile-left" id="profileLeft">
+                <div class="profile-header">
+                    <div class="avatar-wrap" id="profileAvatarWrap">
+                        <div class="avatar-placeholder">✦</div>
+                    </div>
+                    <div class="name-area">
+                        <div class="display-name" id="profileName">未设置网名</div>
+                        <div class="uid" id="profileUid">编号：待分配</div>
+                    </div>
+                </div>
+                <div class="bio-text" id="profileBio">这个人很懒，什么都没有写。</div>
+                <div class="enroll-area" id="profileEnrollArea">
+                    <span class="label">年级</span>
+                    <span class="value" id="profileEnroll">—</span>
+                    <span class="countdown" id="profileCountdown"><span class="num" id="profileCountdownNum">—</span> 天后高考</span>
+                </div>
+                <div class="honor-area" id="profileHonorArea"></div>
+            </div>
+            <div class="profile-right" id="profileRight">
+                <div class="section-title">宸光博客</div>
+                <div class="scroll-wrapper">
+                    <div class="scroll-container" id="profileBlogList"></div>
+                    <button class="scroll-arrow prev" data-target="profileBlogList">‹</button>
+                    <button class="scroll-arrow next" data-target="profileBlogList">›</button>
+                </div>
+                <div class="custom-scrollbar" data-target="profileBlogList"><div class="thumb"></div></div>
+
+                <div class="section-title">明德专栏</div>
+                <div class="scroll-wrapper">
+                    <div class="scroll-container" id="profileMingdeList"></div>
+                    <button class="scroll-arrow prev" data-target="profileMingdeList">‹</button>
+                    <button class="scroll-arrow next" data-target="profileMingdeList">›</button>
+                </div>
+                <div class="custom-scrollbar" data-target="profileMingdeList"><div class="thumb"></div></div>
+
+                <div class="section-title">树洞留言墙</div>
+                <div class="scroll-wrapper">
+                    <div class="scroll-container" id="profileWallList"></div>
+                    <button class="scroll-arrow prev" data-target="profileWallList">‹</button>
+                    <button class="scroll-arrow next" data-target="profileWallList">›</button>
+                </div>
+                <div class="custom-scrollbar" data-target="profileWallList"><div class="thumb"></div></div>
+
+                <div class="btn-group">
+                    <button class="btn-red" id="profileModifyBtn"><span class="inner">修改档案 <span class="en">Modify</span></span></button>
+                    <button class="btn-outline-red" id="profileCloseBtn2"><span class="inner">关闭 <span class="en">Close</span></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改个人档案弹窗（仅用于展示） -->
+    <div class="custom-modal-overlay" id="modifyModal">
+        <div class="modify-modal-box">
+            <button class="close-btn" id="modifyCloseBtn">✕</button>
+            <h3>修改 <span class="hl">个人档案</span></h3>
+            <p class="sub">输入档案编号和密码进行修改，修改内容将发送至邮箱审核</p>
+            <div class="form-group">
+                <label>档案编号 <span class="required">*</span></label>
+                <input type="text" id="modifyCode" placeholder="例如：JC-2026-0001" />
+            </div>
+            <div class="form-group">
+                <label>档案密码 <span class="required">*</span></label>
+                <input type="password" id="modifyPassword" placeholder="请输入你的档案密码" />
+            </div>
+            <div class="form-group">
+                <label>联系邮箱 <span class="required">*</span></label>
+                <input type="email" id="modifyEmail" placeholder="用于接收审核反馈" />
+            </div>
+            <div class="form-group">
+                <label>修改内容 <span class="required">*</span></label>
+                <textarea id="modifyContent" placeholder="请详细描述你要修改的内容（如：更新简介、更换头像等）"></textarea>
+            </div>
+            <div class="btn-group">
+                <button class="btn-red" id="modifySubmitBtn"><span class="inner">提交修改 <span class="en">Submit</span></span></button>
+                <button class="btn-outline-red" id="modifyCancelBtn"><span class="inner">取消 <span class="en">Cancel</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JavaScript
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ===== 导航栏交互 =====
+            var navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                navbar.classList.toggle('scrolled', window.scrollY > 20);
+            });
+
+            var toggle = document.getElementById('navToggle');
+            var drawer = document.getElementById('navDrawer');
+            var drawerOpen = false;
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                drawerOpen = !drawerOpen;
+                drawer.classList.toggle('open', drawerOpen);
+                if (drawerOpen) {
+                    toggle.classList.add('active');
+                    toggle.textContent = '✕';
+                } else {
+                    toggle.classList.remove('active');
+                    toggle.textContent = '☰';
+                }
+            });
+            drawer.querySelectorAll('a').forEach(function(a) {
+                a.addEventListener('click', function() {
+                    drawer.classList.remove('open');
+                    drawerOpen = false;
+                    toggle.classList.remove('active');
+                    toggle.textContent = '☰';
+                });
+            });
+            document.addEventListener('click', function(e) {
+                if (drawerOpen && !drawer.contains(e.target) && e.target !== toggle) {
+                    drawer.classList.remove('open');
+                    drawerOpen = false;
+                    toggle.classList.remove('active');
+                    toggle.textContent = '☰';
+                }
+            });
+
+            // ===== 弹窗系统 =====
+            var alertModal = document.getElementById('customAlert');
+            var alertTitle = document.getElementById('alertTitle');
+            var alertMessage = document.getElementById('alertMessage');
+            var alertIcon = document.getElementById('alertIcon');
+            var alertConfirm = document.getElementById('alertConfirmBtn');
+            var alertClose = document.getElementById('alertCloseBtn');
+
+            function showAlert(title, message, icon) {
+                return new Promise(function(resolve) {
+                    alertTitle.textContent = title || '提示';
+                    alertMessage.textContent = message || '';
+                    alertIcon.textContent = icon || '✦';
+                    alertModal.classList.remove('closing');
+                    alertModal.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+
+                    function closeHandler() {
+                        alertModal.classList.add('closing');
+                        setTimeout(function() {
+                            alertModal.classList.remove('open');
+                            alertModal.classList.remove('closing');
+                            document.body.style.overflow = '';
+                            resolve();
+                        }, 500);
+                        alertConfirm.removeEventListener('click', closeHandler);
+                        alertClose.removeEventListener('click', closeHandler);
+                    }
+                    alertConfirm.addEventListener('click', closeHandler);
+                    alertClose.addEventListener('click', closeHandler);
+                    var escHandler = function(e) {
+                        if (e.key === 'Escape' && alertModal.classList.contains('open')) {
+                            closeHandler();
+                            document.removeEventListener('keydown', escHandler);
+                        }
+                    };
+                    document.addEventListener('keydown', escHandler);
+                });
+            }
+            window.showAlert = showAlert;
+
+            // ===== 法律文件弹窗 =====
+            var legalModal = document.getElementById('legalModal');
+            var legalTitle = document.getElementById('legalTitle');
+            var legalContent = document.getElementById('legalContent');
+            var legalClose = document.getElementById('legalCloseBtn');
+            var legalConfirm = document.getElementById('legalConfirmBtn');
+
+            function loadLegalFile(type) {
+                var paths = {
+                    disclaimer: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/disclaimer.txt',
+                    privacy: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/privacy.txt',
+                    terms: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/terms.txt'
+                };
+                var titles = { disclaimer: '免责声明', privacy: '隐私政策', terms: '使用条款' };
+                legalTitle.textContent = titles[type] || '法律文件';
+                legalContent.textContent = '加载中...';
+
+                var controller = new AbortController();
+                var timeoutId = setTimeout(function() { controller.abort(); }, 8000);
+
+                fetch(paths[type], { signal: controller.signal })
+                    .then(function(res) {
+                        clearTimeout(timeoutId);
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.text();
+                    })
+                    .then(function(text) {
+                        legalContent.textContent = text;
+                    })
+                    .catch(function() {
+                        legalContent.innerHTML =
+                            '加载失败，<span style="color:var(--color-red);cursor:pointer;text-decoration:underline;" onclick="window._retryLegal(\'' +
+                            type + '\')">点击重新加载</span>';
+                    });
+            }
+
+            function openLegal(type) {
+                legalModal.classList.remove('closing');
+                legalModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                window._retryLegal = loadLegalFile;
+                loadLegalFile(type);
+            }
+
+            function closeLegal() {
+                legalModal.classList.add('closing');
+                setTimeout(function() {
+                    legalModal.classList.remove('open');
+                    legalModal.classList.remove('closing');
+                    document.body.style.overflow = '';
+                }, 500);
+            }
+
+            document.querySelectorAll('[data-action="legal"]').forEach(function(el) {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openLegal(this.dataset.type);
+                });
+            });
+            legalClose.addEventListener('click', closeLegal);
+            legalConfirm.addEventListener('click', closeLegal);
+            legalModal.addEventListener('click', function(e) {
+                if (e.target === legalModal) closeLegal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && legalModal.classList.contains('open')) closeLegal();
+            });
+
+            // 招生咨询
+            document.getElementById('footerAdmissionsBtn').addEventListener('click', function() {
+                showAlert('招生咨询', '获取最新招生信息，请关注公众号「醴陵一中教育集团建宸高级中学」。', '✦');
+            });
+
+            // ===== 获取文章ID =====
+            function getQueryParam(name) {
+                var url = new URL(window.location.href);
+                return url.searchParams.get(name);
+            }
+            var postId = getQueryParam('id');
+            var container = document.getElementById('postContent');
+
+            if (!postId) {
+                container.innerHTML = '<div class="error-state"><i>⚠</i>缺少文章ID</div>';
+                return;
+            }
+
+            // ===== GitHub 配置 =====
+            var REPO_OWNER = 'stellarsage2023';
+            var REPO_NAME = 'JCGZ';
+            var apiUrl = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/issues/' + postId;
+
+            // ===== 个人档案相关函数（与主站/明德专栏一致） =====
+            var allPostsCache = {};
+
+            async function fetchArchivesFromGitHub() {
+                var url =
+                    'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME +
+                    '/issues?labels=个人档案&state=all&per_page=100';
+                try {
+                    var res = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+                    if (!res.ok) throw new Error('GitHub API 请求失败');
+                    var issues = await res.json();
+                    return issues.map(function(issue) {
+                        var body = issue.body || '';
+                        var code = body.match(/编号[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || 'JC-2026-' + String(issue
+                            .number).padStart(4, '0');
+                        var realName = body.match(/真实姓名[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        var idField = body.match(/ID[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        var password = body.match(/密码[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        var bio = body.match(/简介[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        var avatarType = body.match(/头像类型[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        var avatarId = body.match(/头像ID[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        var honorRaw = body.match(/荣誉[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        var backgroundRaw = body.match(/背景[：:]\s*(.+?)(?:\n|$)/)?.[1]?.trim() || '';
+                        var honors = honorRaw ? honorRaw.split(',').map(function(h) { return h.trim(); }).filter(
+                            function(h) { return h.length > 0; }) : [];
+                        return {
+                            nickname: issue.title.trim(),
+                            code: code,
+                            realName: realName,
+                            idField: idField,
+                            password: password,
+                            bio: bio,
+                            avatarType: avatarType,
+                            avatarId: avatarId,
+                            honors: honors,
+                            background: backgroundRaw
+                        };
+                    });
+                } catch (err) {
+                    console.warn('加载个人档案失败:', err);
+                    return [];
+                }
+            }
+
+            // 获取所有标签的issues用于档案关联
+            async function fetchAllPostsForProfile() {
+                var labels = ['宸光博客', '明德专栏', '树洞留言'];
+                var all = [];
+                for (var label of labels) {
+                    var url =
+                        'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME +
+                        '/issues?labels=' + encodeURIComponent(label) + '&state=all&per_page=100';
+                    try {
+                        var res = await fetch(url);
+                        if (res.ok) {
+                            var issues = await res.json();
+                            issues.forEach(function(issue) {
+                                var p = parseIssueToPost(issue);
+                                p.label = label;
+                                all.push(p);
+                            });
+                        }
+                    } catch (e) {}
+                }
+                return all;
+            }
+
+            function parseIssueToPost(issue) {
+                var body = issue.body || '';
+                var title = issue.title || '无标题';
+                var author = extractAuthor(body);
+                var categories = extractCategoriesFromBody(body);
+                var tags = extractTagsFromBody(body);
+                var date = issue.created_at ? issue.created_at.slice(0, 10) : '未知日期';
+                var cover = getFirstImage(body);
+                var link = extractExternalLink(body);
+                var content = body.replace(/作者[：:].*?(?:\n|$)/, '').replace(/分类[：:].*?(?:\n|$)/, '').replace(/标签[：:].*?(?:\n|$)/,
+                    '').trim();
+                return {
+                    id: issue.number,
+                    title: title,
+                    content: content,
+                    date: date,
+                    author: author,
+                    cover: cover || '',
+                    link: link || '',
+                    categories: categories,
+                    tags: tags,
+                    body: body,
+                    issueNumber: issue.number,
+                    html_url: issue.html_url,
+                    label: '未知'
+                };
+            }
+
+            function extractAuthor(body) {
+                if (!body) return '佚名';
+                var match = body.match(/作者[：:]\s*(.+?)(?:\n|$)/);
+                if (match) return match[1].trim();
+                return '佚名';
+            }
+
+            function extractCategoriesFromBody(body) {
+                if (!body) return [];
+                var match = body.match(/分类[：:]\s*(.+?)(?:\n|$)/);
+                if (match) {
+                    return match[1].split(/[，,、\s]+/).filter(function(t) { return t.trim().length > 0; }).map(function(t) {
+                        return t.trim();
+                    });
+                }
+                return [];
+            }
+
+            function extractTagsFromBody(body) {
+                if (!body) return [];
+                var match = body.match(/标签[：:]\s*(.+)/);
+                if (match) {
+                    return match[1].split(/[，,、\s]+/).filter(function(t) { return t.trim().length > 0; }).map(function(t) {
+                        return t.trim();
+                    });
+                }
+                return [];
+            }
+
+            function extractExternalLink(body) {
+                if (!body) return null;
+                var match = body.match(/星宸学社(https?:\/\/[^\s]+)/);
+                if (match) return match[1];
+                return null;
+            }
+
+            function extractImages(body) {
+                if (!body) return [];
+                var regex = /!\[.*?\]\((https?:\/\/[^\s)]+)\)/g;
+                var matches = [];
+                var m;
+                while ((m = regex.exec(body)) !== null) {
+                    matches.push(m[1]);
+                }
+                return matches;
+            }
+
+            function isFeatured(title) {
+                return title && title.startsWith('[精选]');
+            }
+
+            function stripTitleBadge(title) {
+                if (!title) return '';
+                var cleaned = title.replace(/^\[精选\]\s*/, '');
+                cleaned = cleaned.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+                return cleaned;
+            }
+
+            function getFirstImage(body) {
+                var imgs = extractImages(body);
+                return imgs.length > 0 ? imgs[0] : null;
+            }
+
+            // 查找并展示个人档案
+            async function findAndShowProfile(authorName) {
+                if (!authorName || authorName === '佚名') {
+                    showAlert('提示', '该作者暂无个人档案。', '📋');
+                    return;
+                }
+
+                var archives = await fetchArchivesFromGitHub();
+                var found = archives.find(function(a) {
+                    return a.nickname === authorName || a.realName === authorName;
+                });
+
+                if (found) {
+                    var allData = await fetchAllPostsForProfile();
+                    var works = allData.filter(function(p) {
+                        return p.author === found.nickname || p.author === found.realName;
+                    }).map(function(p) {
+                        return {
+                            title: p.title,
+                            date: p.date,
+                            type: p.label || '未知',
+                            content: p.content,
+                            cover: p.cover,
+                            tags: p.tags,
+                            isFeatured: isFeatured(p.title),
+                            id: p.id
+                        };
+                    });
+                    showProfileModal(found, works);
+                } else {
+                    showAlert('提示', '未找到 "' + authorName + '" 的个人档案。\n请先投稿个人档案。', '📋');
+                }
+            }
+
+            // 展示个人档案弹窗
+            function showProfileModal(profile, works) {
+                var profileModal = document.getElementById('profileModal');
+                profileModal.classList.remove('closing');
+                profileModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+
+                try {
+                    var profileName = document.getElementById('profileName');
+                    var profileUid = document.getElementById('profileUid');
+                    var profileBio = document.getElementById('profileBio');
+                    var profileEnroll = document.getElementById('profileEnroll');
+                    var profileCountdownNum = document.getElementById('profileCountdownNum');
+                    var profileAvatarWrap = document.getElementById('profileAvatarWrap');
+                    var profileHonorArea = document.getElementById('profileHonorArea');
+
+                    var profileBlogList = document.getElementById('profileBlogList');
+                    var profileMingdeList = document.getElementById('profileMingdeList');
+                    var profileWallList = document.getElementById('profileWallList');
+
+                    profileName.textContent = profile.nickname || '未设置网名';
+                    profileUid.textContent = '编号：' + (profile.code || '待分配');
+                    profileBio.textContent = profile.bio || '这个人很懒，什么都没有写。';
+
+                    // 年级 / 高考倒计时
+                    var gradeText = '—';
+                    var countdownText = '—';
+                    var countdownNum = '—';
+                    var idVal = profile.idField || '';
+                    if (/^\d{4}$/.test(idVal)) {
+                        var enrollYear = parseInt(idVal);
+                        var now = new Date();
+                        var currentYear = now.getFullYear();
+                        var yearsPassed = currentYear - enrollYear;
+                        var grade = '';
+                        if (yearsPassed < 1) grade = '高一';
+                        else if (yearsPassed === 1) grade = '高二';
+                        else if (yearsPassed === 2) grade = '高三';
+                        else grade = '毕业生';
+                        gradeText = grade;
+
+                        var gaokaoYear = enrollYear + 3;
+                        var target = new Date(gaokaoYear, 5, 7, 9, 0, 0);
+                        var diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+                        if (diff > 0) {
+                            countdownNum = diff;
+                            countdownText = diff + ' 天后高考';
+                        } else if (diff === 0) {
+                            countdownNum = '🎯';
+                            countdownText = '高考今天！';
+                        } else {
+                            countdownNum = '🎓';
+                            countdownText = '已毕业';
+                        }
+                    } else if (idVal && idVal.length > 0) {
+                        gradeText = 'ID: ' + idVal;
+                        countdownText = '—';
+                        countdownNum = '—';
+                    } else {
+                        gradeText = '未知';
+                        countdownText = '—';
+                        countdownNum = '—';
+                    }
+                    profileEnroll.textContent = gradeText;
+                    profileCountdownNum.textContent = countdownNum;
+                    var countdownLabel = document.querySelector('#profileCountdown');
+                    if (countdownLabel) {
+                        countdownLabel.textContent = countdownText;
+                    }
+
+                    // 头像
+                    var avatarUrl = '';
+                    if (profile.avatarId && profile.avatarType) {
+                        if (profile.avatarType === 'QQ') {
+                            avatarUrl = 'https://q1.qlogo.cn/g?b=qq&nk=' + encodeURIComponent(profile.avatarId) + '&s=100';
+                        } else if (profile.avatarType === 'GitHub') {
+                            avatarUrl = 'https://github.com/' + encodeURIComponent(profile.avatarId) + '.png';
+                        } else if (profile.avatarType === '自定义') {
+                            avatarUrl = profile.avatarId;
+                        }
+                    }
+                    if (!avatarUrl || avatarUrl === '') {
+                        var firstChar = profile.nickname ? profile.nickname.charAt(0) : '?';
+                        profileAvatarWrap.innerHTML =
+                            '<div class="avatar-placeholder" style="font-size:28px;line-height:64px;">' + firstChar +
+                            '</div>';
+                    } else {
+                        profileAvatarWrap.innerHTML = '<img src="' + avatarUrl + '" alt="头像" />';
+                    }
+
+                    // 荣誉标签
+                    profileHonorArea.innerHTML = '';
+                    if (profile.honors && profile.honors.length > 0) {
+                        profile.honors.forEach(function(h) {
+                            if (/^https?:\/\/[^\s]+\.(png|jpg|jpeg|gif|svg|webp)(\?.*)?$/i.test(h)) {
+                                var tag = document.createElement('span');
+                                tag.className = 'honor-tag img-tag';
+                                tag.innerHTML = '<img src="' + h + '" alt="荣誉" />';
+                                profileHonorArea.appendChild(tag);
+                            } else {
+                                var match = h.match(/^\[(\d)\](.+)/);
+                                if (match) {
+                                    var level = parseInt(match[1]);
+                                    var label = match[2].trim();
+                                    var tag = document.createElement('span');
+                                    tag.className = 'honor-tag level-' + Math.min(level, 5);
+                                    tag.textContent = label;
+                                    profileHonorArea.appendChild(tag);
+                                } else {
+                                    var tag = document.createElement('span');
+                                    tag.className = 'honor-tag';
+                                    tag.textContent = h;
+                                    profileHonorArea.appendChild(tag);
+                                }
+                            }
+                        });
+                    } else {
+                        var empty = document.createElement('span');
+                        empty.className = 'honor-tag';
+                        empty.textContent = '暂无荣誉';
+                        empty.style.color = 'var(--color-text-muted)';
+                        empty.style.borderColor = 'transparent';
+                        profileHonorArea.appendChild(empty);
+                    }
+
+                    // 左栏背景
+                    var profileLeft = document.getElementById('profileLeft');
+                    if (profile.background && profile.background.trim() !== '') {
+                        profileLeft.style.backgroundImage = 'url(' + profile.background + ')';
+                    } else {
+                        profileLeft.style.backgroundImage = 'none';
+                    }
+
+                    // 分板块渲染
+                    var blogWorks = works.filter(function(w) { return w.type === '宸光博客'; });
+                    var mingdeWorks = works.filter(function(w) { return w.type === '明德专栏'; });
+                    var wallWorks = works.filter(function(w) { return w.type === '树洞留言'; });
+
+                    profileBlogList.innerHTML = renderHorizontalCards(blogWorks);
+                    profileMingdeList.innerHTML = renderHorizontalCards(mingdeWorks);
+                    profileWallList.innerHTML = renderHorizontalCards(wallWorks);
+
+                    initProfileScroll('.profile-right .scroll-wrapper');
+
+                    // 绑定阅读全文
+                    document.querySelectorAll('.profile-right .w-readmore').forEach(function(btn) {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            var id = this.dataset.id;
+                            if (!id) return;
+                            window.location.href = 'post.html?id=' + id;
+                        });
+                    });
+
+                    window._currentProfile = profile;
+                } catch (err) {
+                    console.warn('渲染个人档案出错:', err);
+                }
+            }
+
+            function renderHorizontalCards(works) {
+                if (!works || works.length === 0) {
+                    return '<div class="empty-msg">暂无内容</div>';
+                }
+                return works.map(function(w) {
+                    var badge = w.isFeatured ? '<span class="badge">精选</span>' : '';
+                    var coverHtml = w.cover ?
+                        '<div class="w-cover"><img src="' + w.cover + '" alt="" loading="lazy" /></div>' :
+                        '';
+                    var summary = w.content ? w.content.slice(0, 50) + (w.content.length > 50 ? '…' : '') : '';
+                    return `
+                        <div class="work-card" data-id="${w.id}">
+                            <div class="w-title">${badge}${stripTitleBadge(w.title)}</div>
+                            <div class="w-meta">${w.date || '未知日期'}</div>
+                            ${summary ? '<div class="w-summary">' + summary + '</div>' : ''}
+                            ${coverHtml}
+                            <span class="w-readmore" data-id="${w.id}">阅读全文 →</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function initProfileScroll(containerSelector) {
+                try {
+                    document.querySelectorAll(containerSelector).forEach(function(wrapper) {
+                        var container = wrapper.querySelector('.scroll-container');
+                        var prevBtn = wrapper.querySelector('.scroll-arrow.prev');
+                        var nextBtn = wrapper.querySelector('.scroll-arrow.next');
+                        var scrollbar = wrapper.parentElement.querySelector('.custom-scrollbar');
+                        var thumb = scrollbar ? scrollbar.querySelector('.thumb') : null;
+
+                        if (!container) return;
+
+                        var cards = container.querySelectorAll('.work-card');
+                        var hasContent = cards.length > 0;
+
+                        if (!hasContent) {
+                            if (prevBtn) prevBtn.style.display = 'none';
+                            if (nextBtn) nextBtn.style.display = 'none';
+                            if (scrollbar) scrollbar.style.display = 'none';
+                            return;
+                        } else {
+                            if (prevBtn) prevBtn.style.display = 'flex';
+                            if (nextBtn) nextBtn.style.display = 'flex';
+                            if (scrollbar) scrollbar.style.display = 'block';
+                        }
+
+                        function updateThumb() {
+                            if (!scrollbar || !thumb) return;
+                            var scrollWidth = container.scrollWidth;
+                            var clientWidth = container.clientWidth;
+                            if (scrollWidth <= clientWidth) {
+                                scrollbar.style.display = 'none';
+                                return;
+                            }
+                            scrollbar.style.display = 'block';
+                            var ratio = clientWidth / scrollWidth;
+                            thumb.style.width = (ratio * 100) + '%';
+                            var scrollLeft = container.scrollLeft;
+                            var maxScroll = scrollWidth - clientWidth;
+                            var pos = maxScroll > 0 ? (scrollLeft / maxScroll) * (100 - ratio * 100) : 0;
+                            thumb.style.marginLeft = pos + '%';
+                        }
+
+                        function scrollBy(amount) {
+                            container.scrollBy({ left: amount, behavior: 'smooth' });
+                        }
+
+                        if (prevBtn) prevBtn.addEventListener('click', function() { scrollBy(-200); });
+                        if (nextBtn) nextBtn.addEventListener('click', function() { scrollBy(200); });
+
+                        container.addEventListener('scroll', updateThumb);
+                        window.addEventListener('resize', updateThumb);
+
+                        if (scrollbar) {
+                            scrollbar.addEventListener('click', function(e) {
+                                var rect = scrollbar.getBoundingClientRect();
+                                var x = (e.clientX - rect.left) / rect.width;
+                                var scrollWidth = container.scrollWidth;
+                                var clientWidth = container.clientWidth;
+                                var maxScroll = scrollWidth - clientWidth;
+                                container.scrollLeft = x * maxScroll;
+                            });
+                        }
+
+                        setTimeout(updateThumb, 100);
+                    });
+                } catch (e) {
+                    console.warn('initProfileScroll 出错:', e);
+                }
+            }
+
+            // 关闭个人档案弹窗
+            function closeProfileModal() {
+                var profileModal = document.getElementById('profileModal');
+                profileModal.classList.add('closing');
+                setTimeout(function() {
+                    profileModal.classList.remove('open');
+                    profileModal.classList.remove('closing');
+                    document.body.style.overflow = '';
+                }, 500);
+            }
+
+            document.getElementById('profileCloseBtn').addEventListener('click', closeProfileModal);
+            document.getElementById('profileCloseBtn2').addEventListener('click', closeProfileModal);
+            document.getElementById('profileModal').addEventListener('click', function(e) {
+                if (e.target === this) closeProfileModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('profileModal').classList.contains('open')) {
+                    closeProfileModal();
+                }
+            });
+
+            // 修改档案按钮（简化）
+            document.getElementById('profileModifyBtn').addEventListener('click', function() {
+                var profile = window._currentProfile;
+                if (!profile) {
+                    showAlert('提示', '请先打开一个个人档案。', '📋');
+                    return;
+                }
+                document.getElementById('modifyCode').value = profile.code || '';
+                document.getElementById('modifyPassword').value = '';
+                document.getElementById('modifyEmail').value = '';
+                document.getElementById('modifyContent').value = '修改内容：\n';
+                closeProfileModal();
+                setTimeout(function() {
+                    var modifyModal = document.getElementById('modifyModal');
+                    modifyModal.classList.remove('closing');
+                    modifyModal.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                }, 500);
+            });
+
+            function closeModifyModal() {
+                var modal = document.getElementById('modifyModal');
+                modal.classList.add('closing');
+                setTimeout(function() {
+                    modal.classList.remove('open');
+                    modal.classList.remove('closing');
+                    document.body.style.overflow = '';
+                }, 500);
+            }
+
+            document.getElementById('modifyCloseBtn').addEventListener('click', closeModifyModal);
+            document.getElementById('modifyCancelBtn').addEventListener('click', closeModifyModal);
+            document.getElementById('modifyModal').addEventListener('click', function(e) {
+                if (e.target === this) closeModifyModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('modifyModal').classList.contains('open')) {
+                    closeModifyModal();
+                }
+            });
+
+            document.getElementById('modifySubmitBtn').addEventListener('click', function() {
+                var code = document.getElementById('modifyCode').value.trim();
+                var password = document.getElementById('modifyPassword').value.trim();
+                var email = document.getElementById('modifyEmail').value.trim();
+                var content = document.getElementById('modifyContent').value.trim();
+
+                if (!code) { showAlert('提示', '请输入档案编号。', '✏️'); return; }
+                if (!password) { showAlert('提示', '请输入档案密码。', '🔒'); return; }
+                if (!email) { showAlert('提示', '请输入联系邮箱。', '✉️'); return; }
+                if (!content) { showAlert('提示', '请描述你要修改的内容。', '📝'); return; }
+
+                var mailBody =
+                    '收件人：stellarsage2023@hotmail.com\n' +
+                    '标题：个人档案修改申请 + ' + code + '\n\n' +
+                    '--- 修改申请 ---\n' +
+                    '档案编号：' + code + '\n' +
+                    '档案密码：' + password + '\n' +
+                    '联系邮箱：' + email + '\n' +
+                    '修改内容：\n' + content + '\n\n' +
+                    '--- 说明 ---\n' +
+                    '请审核以上修改申请，确认后将更新档案。\n' +
+                    '审核周期：1-7个工作日。';
+
+                navigator.clipboard.writeText(mailBody).then(function() {
+                    showAlert('已生成', '修改申请已复制到剪贴板，请发送邮件至 stellarsage2023@hotmail.com', '✓');
+                    closeModifyModal();
+                }).catch(function() {
+                    var ta = document.createElement('textarea');
+                    ta.value = mailBody;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    showAlert('已生成', '修改申请已复制到剪贴板，请发送邮件至 stellarsage2023@hotmail.com', '✓');
+                    closeModifyModal();
+                });
+            });
+
+            // ===== 加载文章并渲染 =====
+            fetch(apiUrl)
+                .then(function(res) {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.json();
+                })
+                .then(function(issue) {
+                    if (!issue) throw new Error('文章不存在');
+
+                    var body = issue.body || '';
+                    var author = '';
+                    var category = '';
+                    var lines = body.split('\n');
+                    var contentStart = 0;
+
+                    lines.forEach(function(line, idx) {
+                        var trimmed = line.trim();
+                        if (trimmed.match(/^作者[：:]\s*(.+)/)) {
+                            author = trimmed.replace(/^作者[：:]\s*/, '').trim();
+                        } else if (trimmed.match(/^分类[：:]\s*(.+)/)) {
+                            category = trimmed.replace(/^分类[：:]\s*/, '').trim();
+                        }
+                        if (contentStart === 0 && trimmed && !trimmed.match(/^(作者|分类)[：:]/)) {
+                            contentStart = idx;
+                        }
+                    });
+
+                    if (!author) author = issue.user ? issue.user.login : '未知作者';
+                    if (!category) category = '未分类';
+
+                    var dateObj = new Date(issue.created_at);
+                    var dateStr = dateObj.getFullYear() + '-' +
+                        String(dateObj.getMonth() + 1).padStart(2, '0') + '-' +
+                        String(dateObj.getDate()).padStart(2, '0');
+
+                    var contentBody = lines.slice(contentStart).join('\n').trim();
+                    if (!contentBody) contentBody = body;
+
+                    // === 渲染 Markdown（简单） ===
+                    function renderMarkdown(text) {
+                        var html = text;
+                        html = html.replace(/```([\s\S]*?)```/g, function(match, code) {
+                            return '<pre><code>' + code.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</code></pre>';
+                        });
+                        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+                        html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" loading="lazy">');
+                        html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+                        html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+                        html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+                        html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+                        html = html.replace(/^[*-] (.+)$/gm, '<li>$1</li>');
+                        html = html.replace(/(<li>.*<\/li>\s*)+/g, '<ul>$&</ul>');
+                        html = html.replace(/\|(.+)\|/g, function(match) {
+                            var cells = match.split('|').filter(function(s) { return s.trim() !== ''; });
+                            if (cells.length === 0) return match;
+                            if (cells.every(function(c) { return /^-+$/.test(c.trim()); })) {
+                                return '';
+                            }
+                            var row = '<tr>' + cells.map(function(c) {
+                                return '<td>' + c.trim() + '</td>';
+                            }).join('') + '</tr>';
+                            return row;
+                        });
+                        html = html.replace(/(<tr>.*<\/tr>\s*)+/g, '<table>$&</table>');
+                        html = html.replace(/\n\s*\n/g, '</p><p>');
+                        html = html.replace(/([^\n]+)/g, function(match) {
+                            var trimmed = match.trim();
+                            if (trimmed.startsWith('<h') || trimmed.startsWith('<ul') || trimmed.startsWith('<li') ||
+                                trimmed.startsWith('<blockquote') || trimmed.startsWith('<pre') ||
+                                trimmed.startsWith('<img') || trimmed.startsWith('<p') || trimmed.startsWith('<table') ||
+                                trimmed === '') {
+                                return match;
+                            }
+                            return '<p>' + match + '</p>';
+                        });
+                        html = html.replace(/<p><\/(p)>/g, '');
+                        html = html.replace(/<p><blockquote>/g, '<blockquote>');
+                        html = html.replace(/<\/blockquote><\/p>/g, '</blockquote>');
+                        html = html.replace(/<p><ul>/g, '<ul>');
+                        html = html.replace(/<\/ul><\/p>/g, '</ul>');
+                        html = html.replace(/<p><li>/g, '<li>');
+                        html = html.replace(/<\/li><\/p>/g, '</li>');
+                        html = html.replace(/<p><table>/g, '<table>');
+                        html = html.replace(/<\/table><\/p>/g, '</table>');
+                        return html;
+                    }
+
+                    var renderedContent = renderMarkdown(contentBody);
+
+                    // ---- 获取作者头像 ----
+                    var avatarUrl = '';
+                    fetchArchivesFromGitHub().then(function(archives) {
+                        var found = archives.find(function(a) {
+                            return a.nickname === author || a.realName === author;
+                        });
+                        if (found && found.avatarId && found.avatarType) {
+                            if (found.avatarType === 'QQ') {
+                                avatarUrl = 'https://q1.qlogo.cn/g?b=qq&nk=' + encodeURIComponent(found.avatarId) +
+                                    '&s=100';
+                            } else if (found.avatarType === 'GitHub') {
+                                avatarUrl = 'https://github.com/' + encodeURIComponent(found.avatarId) + '.png';
+                            } else if (found.avatarType === '自定义') {
+                                avatarUrl = found.avatarId;
+                            }
+                        }
+                        // 渲染文章
+                        renderPost(avatarUrl);
+                    }).catch(function() {
+                        renderPost(avatarUrl);
+                    });
+
+                    function renderPost(avatarUrl) {
+                        var avatarHtml = avatarUrl ?
+                            '<img src="' + avatarUrl + '" alt="" class="author-avatar" />' :
+                            '<span class="author-avatar" style="display:inline-block;text-align:center;line-height:28px;font-size:14px;color:var(--color-text-muted);">?</span>';
+
+                        var html = '';
+                        html += '<div class="post-header">';
+                        html += '<span class="post-tag">' + category + '</span>';
+                        html += '<h1>' + issue.title + '</h1>';
+                        html += '<div class="post-meta">';
+                        html += '<span class="author-wrap" data-author="' + author + '">' +
+                            avatarHtml +
+                            '<span class="author-name">' + author + '</span>' +
+                            '</span>';
+                        html += '<span class="meta-date">' + dateStr + '</span>';
+                        html += '</div></div>';
+                        html += '<div class="post-body">' + renderedContent + '</div>';
+
+                        container.innerHTML = html;
+
+                        // 绑定作者点击
+                        var authorWrap = container.querySelector('.author-wrap');
+                        if (authorWrap) {
+                            authorWrap.addEventListener('click', function() {
+                                var name = this.dataset.author;
+                                if (name && name !== '佚名') {
+                                    findAndShowProfile(name);
+                                } else {
+                                    showAlert('提示', '该作者暂无个人档案。', '📋');
+                                }
+                            });
+                        }
+
+                        // ---- 生成目录 ----
+                        generateTOC();
+
+                        // 文章加载完成后，滚动到顶部（如有锚点）
+                        if (window.location.hash) {
+                            var target = document.querySelector(window.location.hash);
+                            if (target) {
+                                setTimeout(function() {
+                                    target.scrollIntoView({ behavior: 'smooth' });
+                                }, 300);
+                            }
+                        }
+                    }
+                })
+                .catch(function(err) {
+                    console.warn('加载文章失败:', err);
+                    container.innerHTML = '<div class="error-state"><i>⚠</i>加载失败，请稍后重试</div>';
+                });
+
+            // ===== 生成目录 =====
+            function generateTOC() {
+                var postBody = document.querySelector('.post-body');
+                if (!postBody) return;
+
+                var headings = postBody.querySelectorAll('h2, h3');
+                if (headings.length === 0) {
+                    document.getElementById('tocWrapper').style.display = 'none';
+                    document.getElementById('tocDrawerToggle').style.display = 'none';
+                    return;
+                }
+
+                var tocList = document.getElementById('tocList');
+                var tocDrawerList = document.getElementById('tocDrawerList');
+                var fragment = document.createDocumentFragment();
+                var fragmentDrawer = document.createDocumentFragment();
+
+                headings.forEach(function(h, index) {
+                    var level = h.tagName.toLowerCase() === 'h2' ? 'toc-h2' : 'toc-h3';
+                    // 为标题添加 id（如果没有）
+                    if (!h.id) {
+                        h.id = 'heading-' + index;
+                    }
+                    var li = document.createElement('li');
+                    li.className = level;
+                    var a = document.createElement('a');
+                    a.textContent = h.textContent;
+                    a.href = '#' + h.id;
+                    a.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        var target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                        // 关闭手机端抽屉
+                        document.getElementById('tocDrawer').classList.remove('open');
+                    });
+                    li.appendChild(a);
+                    fragment.appendChild(li);
+
+                    // 复制一份给抽屉
+                    var li2 = li.cloneNode(true);
+                    fragmentDrawer.appendChild(li2);
+                });
+
+                tocList.appendChild(fragment);
+                tocDrawerList.appendChild(fragmentDrawer);
+
+                // 滚动高亮
+                var tocItems = tocList.querySelectorAll('li');
+                var tocDrawerItems = tocDrawerList.querySelectorAll('li');
+
+                function updateActive() {
+                    var scrollY = window.scrollY + 100;
+                    var activeIndex = -1;
+                    headings.forEach(function(h, idx) {
+                        var rect = h.getBoundingClientRect();
+                        if (rect.top <= 120) {
+                            activeIndex = idx;
+                        }
+                    });
+                    tocItems.forEach(function(li, idx) {
+                        li.classList.toggle('active', idx === activeIndex);
+                    });
+                    tocDrawerItems.forEach(function(li, idx) {
+                        li.classList.toggle('active', idx === activeIndex);
+                    });
+                }
+
+                window.addEventListener('scroll', updateActive);
+                setTimeout(updateActive, 300);
+            }
+
+            // ===== 手机端目录抽屉控制 =====
+            var drawerToggle = document.getElementById('tocDrawerToggle');
+            var drawerToc = document.getElementById('tocDrawer');
+            var drawerClose = document.getElementById('tocDrawerClose');
+
+            drawerToggle.addEventListener('click', function() {
+                drawerToc.classList.toggle('open');
+            });
+            drawerClose.addEventListener('click', function() {
+                drawerToc.classList.remove('open');
+            });
+            // 点击遮罩关闭（点击外部）
+            drawerToc.addEventListener('click', function(e) {
+                if (e.target === drawerToc) {
+                    drawerToc.classList.remove('open');
+                }
+            });
+
+        })();
+    </script>
+</body>
+</html>
