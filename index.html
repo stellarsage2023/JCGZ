@@ -73,7 +73,8 @@
             inset: 0;
             pointer-events: none;
             z-index: 0;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
             background-size: 48px 48px;
         }
@@ -98,7 +99,7 @@
         }
 
         /* ============================================================
-           导航栏（完全来自博客站）
+           导航栏（链接已修正为 /JCGZ/ 绝对路径）
            ============================================================ */
         .navbar {
             position: fixed;
@@ -2403,7 +2404,7 @@
             opacity: 0;
             transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
             max-height: 80vh;
-            overflow: visible; /* 关键：让绝对定位的标题不被裁剪 */
+            overflow: visible;
             display: grid;
             grid-template-columns: 1fr 1.8fr;
             position: relative;
@@ -2655,7 +2656,7 @@
             padding-bottom: 4px;
             letter-spacing: 0.3px;
             flex-shrink: 0;
-            display: block !important; /* 强制显示 */
+            display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
         }
@@ -3530,29 +3531,29 @@
     <div class="bg-grid"></div>
 
     <!-- ============================================================
-    导航栏（完全来自博客站）
+    导航栏（链接已修正为 /JCGZ/ 绝对路径）
     ============================================================ -->
     <nav class="navbar" id="navbar">
         <div class="nav-brand">
             <img src="https://www.hnfudu.com/images/product/202606/02/211_input_1780391475532610.png?cache=1780389371" alt="建宸高级中学校徽" class="nav-logo" />
         </div>
         <ul class="nav-links">
-            <li><a href="#hero" class="active">主站</a></li>
-            <li><a href="blog.html">宸光博客 <span class="sub">子站</span></a></li>
-            <li><a href="#mingde">明德专栏 <span class="sub">子站</span></a></li>
-            <li><a href="#news">校园资讯 <span class="sub">子站</span></a></li>
-            <li><a href="#wall">留言墙</a></li>
+            <li><a href="/JCGZ/index.html" class="active">主站</a></li>
+            <li><a href="/JCGZ/blog/">宸光博客 <span class="sub">子站</span></a></li>
+            <li><a href="/JCGZ/mingde/">明德专栏 <span class="sub">子站</span></a></li>
+            <li><a href="/JCGZ/news/">校园资讯 <span class="sub">子站</span></a></li>
+            <li><a href="/JCGZ/wall/">留言墙</a></li>
         </ul>
         <button class="nav-toggle" id="navToggle">☰</button>
     </nav>
 
     <!-- ===== 移动端抽屉 ===== -->
     <div class="nav-drawer" id="navDrawer">
-        <a href="#hero" class="active">主站</a>
-        <a href="blog.html">宸光博客 <span class="sub">子站</span></a>
-        <a href="#mingde">明德专栏 <span class="sub">子站</span></a>
-        <a href="#news">校园资讯 <span class="sub">子站</span></a>
-        <a href="#wall">留言墙</a>
+        <a href="/JCGZ/index.html" class="active">主站</a>
+        <a href="/JCGZ/blog/">宸光博客 <span class="sub">子站</span></a>
+        <a href="/JCGZ/mingde/">明德专栏 <span class="sub">子站</span></a>
+        <a href="/JCGZ/news/">校园资讯 <span class="sub">子站</span></a>
+        <a href="/JCGZ/wall/">留言墙</a>
     </div>
 
     <!-- ============================================================
@@ -3625,7 +3626,7 @@
                     <h2 class="section-title">宸光博客</h2>
                     <p class="section-desc">记录建宸人的日常 | 投稿邮箱 stellarsage2023@hotmail.com</p>
                 </div>
-                <a href="blog.html" class="more-link">查看全部 →</a>
+                <a href="/JCGZ/blog/" class="more-link">查看全部 →</a>
             </div>
             <div class="scroll-wrapper">
                 <div class="scroll-container" id="blogScrollContainer">
@@ -3655,7 +3656,7 @@
                     <h2 class="section-title">明德专栏</h2>
                     <p class="section-desc">冲刺 | 传承 | 超越 — 每一段奋斗都值得被铭记。</p>
                 </div>
-                <a href="#" class="more-link" data-action="subpage" data-page="明德专栏">查看全部 →</a>
+                <a href="/JCGZ/mingde/" class="more-link">查看全部 →</a>
             </div>
             <div class="scroll-wrapper">
                 <div class="scroll-container" id="mingdeScrollContainer">
@@ -3688,7 +3689,7 @@
                     <h2 class="section-title">校园资讯</h2>
                     <p class="section-desc">最新动态 | 通知公告 | 校园活动</p>
                 </div>
-                <a href="#" class="more-link" data-action="subpage" data-page="校园资讯">查看全部 →</a>
+                <a href="/JCGZ/news/" class="more-link">查看全部 →</a>
             </div>
             <div class="scroll-wrapper">
                 <div class="scroll-container" id="newsScrollContainer">
@@ -3703,7 +3704,7 @@
     </section>
 
     <!-- ============================================================
-    树洞留言墙（横向滚动）
+    树洞留言墙（横向滚动 + 投稿按钮）
     ============================================================ -->
     <section class="section wall-section" id="wall">
         <div class="container">
@@ -3719,6 +3720,7 @@
                 <button class="scroll-arrow prev" data-target="wallScroll">‹</button>
                 <button class="scroll-arrow next" data-target="wallScroll">›</button>
             </div>
+            <!-- ★ 留言墙投稿按钮（补全） ★ -->
             <div class="wall-submit-area" style="margin-top:24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:16px 20px;background:var(--color-surface);border:1px solid var(--color-border);transition:transform var(--transition-fast),box-shadow var(--transition-fast);opacity:0;transform:translateY(20px);transition:opacity 0.7s cubic-bezier(0.22,1,0.36,1),transform 0.7s cubic-bezier(0.22,1,0.36,1),box-shadow var(--transition-fast);">
                 <div class="inner" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;width:100%;">
                     <span class="hint" style="font-size:14px;color:var(--color-text-light);flex:1;letter-spacing:0.2px;">想留下你的声音？<strong style="color:var(--color-text);">树洞投稿</strong> 至 stellarsage2023@hotmail.com</span>
@@ -4593,6 +4595,7 @@
                 e.preventDefault();
                 openSubmitModal('mingde');
             });
+            // ★ 留言墙投稿按钮事件绑定
             document.getElementById('openWallSubmitBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 openSubmitModal('wall');
@@ -4947,9 +4950,8 @@
                 });
 
                 if (found) {
-                    // 收集该作者的所有作品（从已加载的各label数据中）
                     var works = [];
-                    var labels = ['宸光博客', '明德专栏', '树洞留言'];
+                    var labels = ['宸光博客', '明德专栏', '树洞留言', '校园资讯'];
                     for (var i = 0; i < labels.length; i++) {
                         var label = labels[i];
                         if (!allPostsCache[label]) {
@@ -5000,7 +5002,6 @@
                     profileUid.textContent = '编号：' + (profile.code || '待分配');
                     profileBio.textContent = profile.bio || '这个人很懒，什么都没有写。';
 
-                    // 年级 / 高考倒计时
                     var gradeText = '—';
                     var countdownText = '—';
                     var countdownNum = '—';
@@ -5046,7 +5047,6 @@
                         countdownLabel.textContent = countdownText;
                     }
 
-                    // 头像
                     var avatarUrl = '';
                     if (profile.avatarId && profile.avatarType) {
                         if (profile.avatarType === 'QQ') {
@@ -5061,12 +5061,11 @@
                         var firstChar = profile.nickname ? profile.nickname.charAt(0) : '?';
                         profileAvatarWrap.innerHTML =
                             '<div class="avatar-placeholder" style="font-size:28px;line-height:64px;">' + firstChar +
-                        '</div>';
+                            '</div>';
                     } else {
                         profileAvatarWrap.innerHTML = '<img src="' + avatarUrl + '" alt="头像" />';
                     }
 
-                    // 荣誉标签
                     profileHonorArea.innerHTML = '';
                     if (profile.honors && profile.honors.length > 0) {
                         profile.honors.forEach(function(h) {
@@ -5101,7 +5100,6 @@
                         profileHonorArea.appendChild(empty);
                     }
 
-                    // 左栏背景
                     var profileLeft = document.getElementById('profileLeft');
                     if (profile.background && profile.background.trim() !== '') {
                         profileLeft.style.backgroundImage = 'url(' + profile.background + ')';
@@ -5109,42 +5107,29 @@
                         profileLeft.style.backgroundImage = 'none';
                     }
 
-                    // 分板块渲染
                     var blogWorks = works.filter(function(w) { return w.type === '宸光博客'; });
                     var mingdeWorks = works.filter(function(w) { return w.type === '明德专栏'; });
                     var wallWorks = works.filter(function(w) { return w.type === '树洞留言'; });
+                    // 校园资讯归入宸光博客板块展示
+                    var newsWorks = works.filter(function(w) { return w.type === '校园资讯'; });
+                    var allBlogWorks = blogWorks.concat(newsWorks);
 
-                    profileBlogList.innerHTML = renderHorizontalCards(blogWorks);
+                    profileBlogList.innerHTML = renderHorizontalCards(allBlogWorks);
                     profileMingdeList.innerHTML = renderHorizontalCards(mingdeWorks);
                     profileWallList.innerHTML = renderHorizontalCards(wallWorks);
 
-                    // 初始化横向滚动
                     initProfileScroll('.profile-right .scroll-wrapper');
 
-                    // 绑定阅读全文
                     document.querySelectorAll('.profile-right .w-readmore').forEach(function(btn) {
                         btn.addEventListener('click', function(e) {
                             e.stopPropagation();
                             var id = this.dataset.id;
                             if (!id) return;
-                            // 在所有缓存中查找
-                            var found = null;
-                            var labels = ['宸光博客', '明德专栏', '树洞留言'];
-                            for (var i = 0; i < labels.length; i++) {
-                                var label = labels[i];
-                                var posts = allPostsCache[label] || [];
-                                var p = posts.find(function(p) { return p.id == id; });
-                                if (p) { found = p; break; }
-                            }
-                            if (found) {
-                                var content = found.content || '';
-                                var match = content.match(/\[直链网页(https?:\/\/[^\s\]]+)\]/);
-                                if (match) {
-                                    window.open(match[1], '_blank');
-                                } else {
-                                    window.location.href = 'post.html?id=' + id;
-                                }
-                            }
+                            var found = works.find(function(w) { return w.id == id; });
+                            var src = found && found.type === '校园资讯' ? 'news' :
+                                (found && found.type === '明德专栏' ? 'mingde' :
+                                (found && found.type === '树洞留言' ? 'wall' : 'blog'));
+                            window.location.href = '/JCGZ/post.html?id=' + id + '&source=' + src;
                         });
                     });
 
@@ -5365,7 +5350,6 @@
                 data.forEach(function(item) {
                     if (item.badge === '最新') sortedData.push(item);
                 });
-                // 如果还没有排序，按日期降序
                 if (sortedData.length === 0) {
                     sortedData = data.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
                 }
@@ -5406,7 +5390,6 @@
                 });
                 container.innerHTML = html;
 
-                // 绑定作者点击
                 container.querySelectorAll('.author-link').forEach(function(el) {
                     el.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -5419,7 +5402,6 @@
                     });
                 });
 
-                // 绑定阅读全文
                 container.querySelectorAll('.link[data-id]').forEach(function(el) {
                     el.addEventListener('click', function() {
                         var id = parseInt(this.dataset.id);
@@ -5429,7 +5411,6 @@
                             window.open(link, '_blank');
                             return;
                         }
-                        // 在缓存中查找
                         var found = null;
                         var labels = ['宸光博客', '明德专栏', '树洞留言', '校园资讯'];
                         for (var i = 0; i < labels.length; i++) {
@@ -5444,7 +5425,8 @@
                             if (match) {
                                 window.open(match[1], '_blank');
                             } else {
-                                window.location.href = 'post.html?id=' + id;
+                                var src = found.label || 'blog';
+                                window.location.href = '/JCGZ/post.html?id=' + id + '&source=' + src;
                             }
                         } else {
                             showAlert('即将上线', '完整内容即将在子站上线，敬请关注。', '✦');
@@ -5457,7 +5439,6 @@
             // 加载各区块数据
             // ============================================================
             async function loadAllSections() {
-                // 1. 宸光博客：精选2篇 + 最新3篇
                 var blogPosts = await fetchIssuesByLabel('宸光博客');
                 allPostsCache['宸光博客'] = blogPosts;
                 var blogFeatured = blogPosts.filter(function(p) { return isFeatured(p.title); }).slice(0, 2);
@@ -5466,7 +5447,6 @@
                     .concat(blogLatest.map(function(p) { return { ...p, badge: '最新' }; }));
                 renderScrollCards('blogScroll', blogData, { showReadmore: false });
 
-                // 2. 明德专栏：精选2篇 + 最新3篇
                 var mingdePosts = await fetchIssuesByLabel('明德专栏');
                 allPostsCache['明德专栏'] = mingdePosts;
                 var mingdeFeatured = mingdePosts.filter(function(p) { return isFeatured(p.title); }).slice(0, 2);
@@ -5475,7 +5455,6 @@
                     .concat(mingdeLatest.map(function(p) { return { ...p, badge: '最新' }; }));
                 renderScrollCards('mingdeScroll', mingdeData, { showReadmore: false });
 
-                // 3. 校园资讯：精选2篇 + 最新3篇
                 var newsPosts = await fetchIssuesByLabel('校园资讯');
                 allPostsCache['校园资讯'] = newsPosts;
                 var newsFeatured = newsPosts.filter(function(p) { return isFeatured(p.title); }).slice(0, 2);
@@ -5484,7 +5463,6 @@
                     .concat(newsLatest.map(function(p) { return { ...p, badge: '最新' }; }));
                 renderScrollCards('newsScroll', newsData, { showReadmore: false });
 
-                // 4. 树洞留言墙：精选2篇 + 最新3篇
                 var wallPosts = await fetchIssuesByLabel('树洞留言');
                 allPostsCache['树洞留言'] = wallPosts;
                 var wallFeatured = wallPosts.filter(function(p) { return isFeatured(p.title); }).slice(0, 2);
@@ -5493,7 +5471,6 @@
                     .concat(wallLatest.map(function(p) { return { ...p, badge: '最新' }; }));
                 renderScrollCards('wallScroll', wallData, { showReadmore: false });
 
-                // 5. Hero 右侧卡片：校园资讯 最新2篇 + 精选1篇
                 var heroPosts = newsPosts.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
                 var heroFeatured = heroPosts.filter(function(p) { return isFeatured(p.title); }).slice(0, 1);
                 var heroLatest = heroPosts.filter(function(p) { return !isFeatured(p.title); }).slice(0, 2);
@@ -5511,7 +5488,6 @@
                 var emptyTip = heroCards.querySelector('.empty-tip');
                 if (!heroCards || !dotsContainer) return;
 
-                // 清空旧卡片（保留 dots 和 empty-tip）
                 var slides = heroCards.querySelectorAll('.slide');
                 slides.forEach(function(el) { el.remove(); });
 
@@ -5547,7 +5523,6 @@
                     dotsContainer.appendChild(dot);
                 });
 
-                // 绑定 dot 点击
                 dotsContainer.querySelectorAll('span').forEach(function(dot) {
                     dot.addEventListener('click', function() {
                         var idx = parseInt(this.dataset.index);
@@ -5555,7 +5530,6 @@
                     });
                 });
 
-                // 绑定阅读全文
                 heroCards.querySelectorAll('.link[data-id]').forEach(function(el) {
                     el.addEventListener('click', function() {
                         var id = parseInt(this.dataset.id);
@@ -5573,7 +5547,8 @@
                             if (match) {
                                 window.open(match[1], '_blank');
                             } else {
-                                window.location.href = 'post.html?id=' + id;
+                                var src = found.label || 'news';
+                                window.location.href = '/JCGZ/post.html?id=' + id + '&source=' + src;
                             }
                         } else {
                             showAlert('即将上线', '完整内容即将在子站上线，敬请关注。', '✦');
@@ -5581,7 +5556,6 @@
                     });
                 });
 
-                // 自动轮播
                 var currentSlide = 0;
 
                 function goToHeroSlide(idx) {
@@ -5610,7 +5584,6 @@
                     }, 6000);
                 });
 
-                // 暴露给全局用于 dot 点击
                 window.goToHeroSlide = goToHeroSlide;
             }
 
@@ -5752,12 +5725,10 @@
                 }
             });
 
-            // 招生咨询
             document.getElementById('footerAdmissionsBtn').addEventListener('click', function() {
                 showAlert('招生咨询', '获取最新招生信息，请关注公众号「醴陵一中教育集团建宸高级中学」。', '✦');
             });
 
-            // 特色按钮
             document.querySelectorAll('.btn-hero[data-action="feature"]').forEach(function(btn) {
                 btn.addEventListener('click', function() {
                     var name = this.dataset.name || '特色项目';
@@ -5766,7 +5737,6 @@
                 });
             });
 
-            // 子站跳转
             document.querySelectorAll('[data-action="subpage"]').forEach(function(el) {
                 el.addEventListener('click', function(e) {
                     e.preventDefault();
