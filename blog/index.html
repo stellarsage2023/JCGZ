@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
     <style>
-        /* ===== 全局重置 & 变量（完全未改动） ===== */
+        /* ===== 全局重置 & 变量 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -1554,7 +1554,7 @@
             letter-spacing: 0.2px;
         }
 
-        /* 个人档案投稿弹窗（保留完整功能） */
+        /* 个人档案投稿弹窗 */
         .archive-modal-box {
             max-width: 660px;
             background: var(--color-surface);
@@ -1916,7 +1916,7 @@
         }
 
         /* ============================================================
-           个人档案展示弹窗
+           个人档案展示弹窗（同步主站优化版）
            ============================================================ */
         .profile-modal-box {
             max-width: 900px;
@@ -1928,7 +1928,7 @@
             transform: scale(0.92) translateY(20px);
             opacity: 0;
             transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
-            max-height: 90vh;
+            max-height: 80vh;
             overflow: visible;
             display: grid;
             grid-template-columns: 1fr 1.8fr;
@@ -1961,17 +1961,23 @@
             transform: rotate(90deg);
         }
 
-        /* ---- 弹窗标题 ---- */
+        /* ---- 标题滑动色块入场 ---- */
         .profile-modal-title-wrap {
             position: absolute;
             top: -28px;
             left: 24px;
             z-index: 20;
-            transform: skewX(-6deg);
+            transform: skewX(-6deg) translateX(-100%);
             background: var(--color-red);
             padding: 4px 20px;
             display: inline-block;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+        }
+        .custom-modal-overlay.open .profile-modal-title-wrap {
+            transform: skewX(-6deg) translateX(0);
+            opacity: 1;
         }
         .profile-modal-title-wrap .title-inner {
             display: inline-block;
@@ -1985,7 +1991,7 @@
         .profile-modal-title-wrap .title-inner .en {
             font-weight: 400;
             font-size: 11px;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             margin-left: 6px;
             letter-spacing: 0.5px;
         }
@@ -2003,12 +2009,13 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            max-height: 80vh;
         }
         .profile-left::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             pointer-events: none;
             z-index: 0;
         }
@@ -2146,14 +2153,12 @@
         .profile-right {
             position: relative;
             padding: 28px 16px 20px 16px;
-            overflow: hidden;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             padding-top: 50px;
             background: transparent;
-        }
-        .profile-right::before {
-            display: none;
+            max-height: 80vh;
         }
         .profile-right > * {
             position: relative;
@@ -2169,6 +2174,9 @@
             padding-bottom: 4px;
             letter-spacing: 0.3px;
             flex-shrink: 0;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         .profile-right .section-title:not(:first-child) {
             margin-top: 12px;
@@ -2253,7 +2261,6 @@
             height: 100%;
             object-fit: cover;
         }
-        /* 阅读全文按钮 */
         .profile-right .scroll-container .work-card .w-readmore {
             display: inline-block;
             margin-top: 6px;
@@ -2636,7 +2643,8 @@
         @media (max-width: 1024px) {
             .blog-grid { grid-template-columns: repeat(3, 1fr); }
             .profile-modal-box { grid-template-columns: 1fr; max-height: 92vh; }
-            .profile-left { border-right: none; border-bottom: 1px solid var(--color-border); }
+            .profile-left { border-right: none; border-bottom: 1px solid var(--color-border); max-height: 60vh; }
+            .profile-right { max-height: 60vh; }
         }
         @media (max-width: 820px) {
             .nav-links { display: none; }
@@ -2655,8 +2663,8 @@
             .custom-modal-box { max-width: 400px; padding: 24px 20px 20px; }
             .archive-modal-box { max-width: 440px; padding: 24px 20px 20px; }
             .profile-modal-box { max-width: 96%; max-height: 92vh; }
-            .profile-left { padding: 16px 14px; }
-            .profile-right { padding: 16px 14px; }
+            .profile-left { padding: 16px 14px; max-height: 50vh; }
+            .profile-right { padding: 16px 14px; max-height: 50vh; }
             .modify-modal-box { max-width: 400px; padding: 24px 20px 20px; }
             .ref-modal-box { max-width: 400px; padding: 24px 20px 20px; }
             .legal-modal-box { max-width: 400px; padding: 24px 20px 20px; }
@@ -3563,7 +3571,7 @@
             });
 
             // ============================================================
-            // ★★★ 个人档案机制（从 GitHub Issues 拉取） ★★★
+            // ★★★ 个人档案机制（从 GitHub Issues 拉取，同步主站优化版） ★★★
             // ============================================================
             async function fetchArchivesFromGitHub() {
                 const url =
@@ -3607,6 +3615,44 @@
                 }
             }
 
+            // ---- 跨板块查找该作者的所有作品 ----
+            async function fetchAllAuthorWorks(authorName, realName) {
+                const labels = ['宸光博客', '明德专栏', '树洞留言', '校园资讯'];
+                const results = [];
+
+                for (let i = 0; i < labels.length; i++) {
+                    const label = labels[i];
+                    try {
+                        const url =
+                            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=${encodeURIComponent(label)}&state=all&per_page=100`;
+                        const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+                        if (!res.ok) continue;
+                        const issues = await res.json();
+                        issues.forEach(function(issue) {
+                            const parsed = parseIssueToPost(issue);
+                            if (parsed.author === authorName || (realName && parsed.author === realName)) {
+                                results.push({
+                                    title: parsed.title,
+                                    date: parsed.date,
+                                    type: label,
+                                    content: parsed.content,
+                                    cover: parsed.cover,
+                                    tags: parsed.tags,
+                                    isFeatured: isFeatured(parsed.title),
+                                    id: parsed.id,
+                                    source: label === '宸光博客' ? 'blog' :
+                                            label === '明德专栏' ? 'mingde' :
+                                            label === '树洞留言' ? 'wall' : 'news'
+                                });
+                            }
+                        });
+                    } catch (e) {
+                        console.warn('拉取 ' + label + ' 失败:', e);
+                    }
+                }
+                return results;
+            }
+
             // ---- 查找个人档案并展示 ----
             async function findAndShowProfile(authorName) {
                 if (!authorName || authorName === '佚名') {
@@ -3620,27 +3666,15 @@
                 });
 
                 if (found) {
-                    const works = allPosts.filter(function(p) {
-                        return p.author === found.nickname || p.author === found.realName;
-                    }).map(function(p) {
-                        return {
-                            title: p.title,
-                            date: p.date,
-                            type: '宸光博客',
-                            content: p.content,
-                            cover: p.cover,
-                            tags: p.tags,
-                            isFeatured: isFeatured(p.title),
-                            id: p.id
-                        };
-                    });
+                    // 跨板块查找作品
+                    const works = await fetchAllAuthorWorks(found.nickname, found.realName);
                     showProfileModal(found, works);
                 } else {
                     showAlert('提示', '未找到 "' + authorName + '" 的个人档案。\n请先投稿个人档案。', '📋');
                 }
             }
 
-            // ---- 展示个人档案弹窗（带容错） ----
+            // ---- 展示个人档案弹窗（同步主站优化版） ----
             function showProfileModal(profile, works) {
                 // 先打开弹窗
                 const profileModal = document.getElementById('profileModal');
@@ -3666,6 +3700,8 @@
                     profileBio.textContent = profile.bio || '这个人很懒，什么都没有写。';
 
                     // ---- 年级 / 高考倒计时 ----
+                    // 关键点：用 innerHTML 重建倒计时结构，
+                    // 避免第二次打开时 #profileCountdownNum 被覆盖导致渲染中断。
                     let gradeText = '—';
                     let countdownNum = '—';
                     let countdownSuffix = '';
@@ -3706,7 +3742,7 @@
                     }
                     profileEnroll.textContent = gradeText;
 
-                    // 重建倒计时结构，避免第二次打开时残留
+                    // 重建倒计时结构，避免第二次打开时残留或崩溃
                     const countdownLabel = document.getElementById('profileCountdown');
                     if (countdownLabel) {
                         countdownLabel.innerHTML = '<span class="num" id="profileCountdownNum">' +
@@ -3779,14 +3815,17 @@
                     // ---- 分板块渲染（带阅读全文按钮） ----
                     const blogWorks = works.filter(function(w) { return w.type === '宸光博客'; });
                     const mingdeWorks = works.filter(function(w) { return w.type === '明德专栏'; });
-                    const wallWorks = works.filter(function(w) { return w.type === '树洞留言墙'; });
+                    const wallWorks = works.filter(function(w) { return w.type === '树洞留言'; });
+                    const newsWorks = works.filter(function(w) { return w.type === '校园资讯'; });
+                    // 校园资讯归入宸光博客板块展示
+                    const allBlogWorks = blogWorks.concat(newsWorks);
 
-                    profileBlogList.innerHTML = renderHorizontalCards(blogWorks);
+                    profileBlogList.innerHTML = renderHorizontalCards(allBlogWorks);
                     profileMingdeList.innerHTML = renderHorizontalCards(mingdeWorks);
                     profileWallList.innerHTML = renderHorizontalCards(wallWorks);
 
                     // 初始化横向滚动并绑定阅读全文事件
-                    initScroll('.profile-right .scroll-wrapper');
+                    initProfileScroll('.profile-right .scroll-wrapper');
 
                     // ★ 额外绑定阅读全文点击（确保生效） ★
                     document.querySelectorAll('.profile-right .w-readmore').forEach(function(btn) {
@@ -3794,16 +3833,9 @@
                             e.stopPropagation();
                             const id = this.dataset.id;
                             if (!id) return;
-                            const post = allPosts.find(function(p) { return p.id == id; });
-                            if (post) {
-                                const content = post.content || '';
-                                const match = content.match(/\[直链网页(https?:\/\/[^\s\]]+)\]/);
-                                if (match) {
-                                    window.open(match[1], '_blank');
-                                } else {
-                                    window.location.href = '/JCGZ/post.html?id=' + id + '&source=blog';
-                                }
-                            }
+                            const work = works.find(function(w) { return w.id == id; });
+                            const src = work ? (work.source || 'blog') : 'blog';
+                            window.location.href = '/JCGZ/post.html?id=' + id + '&source=' + src;
                         });
                     });
 
@@ -3836,8 +3868,8 @@
                 }).join('');
             }
 
-            // ---- 初始化横向滚动 + 自定义滑动条 ----
-            function initScroll(containerSelector) {
+            // ---- 初始化个人档案横向滚动条（事件只绑定一次，避免多次打开时叠加） ----
+            function initProfileScroll(containerSelector) {
                 try {
                     document.querySelectorAll(containerSelector).forEach(function(wrapper) {
                         const container = wrapper.querySelector('.scroll-container');
@@ -3879,50 +3911,43 @@
                             thumb.style.marginLeft = pos + '%';
                         }
 
-                        function scrollBy(amount) {
-                            container.scrollBy({ left: amount, behavior: 'smooth' });
+                        // 事件只绑定一次（主站优化版）
+                        if (!container.dataset.scrollBound) {
+                            container.dataset.scrollBound = '1';
+
+                            if (prevBtn) prevBtn.addEventListener('click', function() {
+                                container.scrollBy({ left: -container.clientWidth * 0.8, behavior: 'smooth' });
+                            });
+                            if (nextBtn) nextBtn.addEventListener('click', function() {
+                                container.scrollBy({ left: container.clientWidth * 0.8, behavior: 'smooth' });
+                            });
+
+                            container.addEventListener('scroll', function() {
+                                if (typeof container.__updateThumb === 'function') container.__updateThumb();
+                            });
+                            window.addEventListener('resize', function() {
+                                if (typeof container.__updateThumb === 'function') container.__updateThumb();
+                            });
+
+                            if (scrollbar) {
+                                scrollbar.addEventListener('click', function(e) {
+                                    const rect = scrollbar.getBoundingClientRect();
+                                    const x = (e.clientX - rect.left) / rect.width;
+                                    const scrollWidth = container.scrollWidth;
+                                    const clientWidth = container.clientWidth;
+                                    const maxScroll = scrollWidth - clientWidth;
+                                    container.scrollLeft = x * maxScroll;
+                                });
+                            }
                         }
 
-                        if (prevBtn) prevBtn.addEventListener('click', function() { scrollBy(-220); });
-                        if (nextBtn) nextBtn.addEventListener('click', function() { scrollBy(220); });
-
-                        container.addEventListener('scroll', updateThumb);
-                        window.addEventListener('resize', updateThumb);
-
-                        if (scrollbar) {
-                            scrollbar.addEventListener('click', function(e) {
-                                const rect = scrollbar.getBoundingClientRect();
-                                const x = (e.clientX - rect.left) / rect.width;
-                                const scrollWidth = container.scrollWidth;
-                                const clientWidth = container.clientWidth;
-                                const maxScroll = scrollWidth - clientWidth;
-                                container.scrollLeft = x * maxScroll;
-                            });
-                        }
-
-                        setTimeout(updateThumb, 100);
-
-                        // 卡片点击（兼容）
-                        container.querySelectorAll('.work-card').forEach(function(card) {
-                            card.addEventListener('click', function(e) {
-                                if (e.target.classList.contains('w-readmore')) return;
-                                const id = this.dataset.id;
-                                if (!id) return;
-                                const post = allPosts.find(function(p) { return p.id == id; });
-                                if (post) {
-                                    const content = post.content || '';
-                                    const match = content.match(/\[直链网页(https?:\/\/[^\s\]]+)\]/);
-                                    if (match) {
-                                        window.open(match[1], '_blank');
-                                    } else {
-                                        window.location.href = '/JCGZ/post.html?id=' + id + '&source=blog';
-                                    }
-                                }
-                            });
-                        });
+                        container.__updateThumb = updateThumb;
+                        setTimeout(function() {
+                            if (typeof container.__updateThumb === 'function') container.__updateThumb();
+                        }, 100);
                     });
                 } catch (e) {
-                    console.warn('initScroll 出错，但已忽略:', e);
+                    console.warn('initProfileScroll 出错:', e);
                 }
             }
 
@@ -4321,10 +4346,8 @@
                 const realName = document.getElementById('archiveRealName').value.trim() || '';
                 const identity = document.getElementById('archiveIdentity').value || '高三';
                 const bio = document.getElementById('archiveBio').value.trim() || '这个人很懒，什么都没有写。';
-                const avatarPreview = document.getElementById('archiveAvatarPreview');
-                const avatarSrc = avatarPreview.src || '';
-                const hasAvatar = avatarPreview.style.display !== 'none' && avatarPreview.className.includes('loaded');
 
+                // 预览时从当前页面已加载的文章中筛选
                 const works = allPosts.filter(function(p) {
                     return p.author === nickname || p.author === realName;
                 }).map(function(p) {
@@ -4336,7 +4359,8 @@
                         cover: p.cover,
                         tags: p.tags,
                         isFeatured: isFeatured(p.title),
-                        id: p.id
+                        id: p.id,
+                        source: 'blog'
                     };
                 });
 
