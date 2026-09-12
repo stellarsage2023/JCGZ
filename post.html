@@ -245,6 +245,274 @@
             color: var(--color-text);
         }
 
+        /* ===== 按钮系统（完整同步主站） ===== */
+        .btn-red {
+            display: inline-block;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            text-align: center;
+            background: var(--color-red);
+            color: #fff;
+            transform: skewX(-6deg);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+        .btn-red .inner {
+            display: inline-block;
+            transform: skewX(6deg);
+            transition: transform var(--transition-fast);
+        }
+        .btn-red .en {
+            font-weight: 400;
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 6px;
+            letter-spacing: 1px;
+        }
+        .btn-red::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--color-gray);
+            transform: translateX(-101%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: -1;
+        }
+        .btn-red:hover {
+            transform: skewX(-6deg) translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 28px rgba(192, 57, 43, 0.25);
+        }
+        .btn-red:hover::before {
+            transform: translateX(0);
+        }
+        .btn-red:hover .inner {
+            transform: skewX(6deg) scale(1.02);
+        }
+        .btn-red:active {
+            transform: skewX(-6deg) scale(0.96);
+        }
+        .btn-outline-red {
+            background: transparent;
+            color: var(--color-red);
+            border: 1.5px solid var(--color-red);
+            display: inline-block;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            text-align: center;
+            transform: skewX(-6deg);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+        .btn-outline-red .inner {
+            display: inline-block;
+            transform: skewX(6deg);
+            transition: transform var(--transition-fast);
+        }
+        .btn-outline-red .en {
+            font-weight: 400;
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 6px;
+            letter-spacing: 1px;
+        }
+        .btn-outline-red::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--color-red);
+            transform: translateX(-101%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: -1;
+        }
+        .btn-outline-red:hover {
+            color: #fff;
+            transform: skewX(-6deg) translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 28px rgba(192, 57, 43, 0.25);
+        }
+        .btn-outline-red:hover::before {
+            transform: translateX(0);
+        }
+        .btn-outline-red:hover .inner {
+            transform: skewX(6deg) scale(1.02);
+        }
+        .btn-outline-red:active {
+            transform: skewX(-6deg) scale(0.96);
+        }
+        .btn-secondary {
+            background: var(--color-gray-light);
+            color: #fff;
+            display: inline-block;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            text-align: center;
+            transform: skewX(-6deg);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+        .btn-secondary .inner {
+            display: inline-block;
+            transform: skewX(6deg);
+            transition: transform var(--transition-fast);
+        }
+        .btn-secondary .en {
+            font-weight: 400;
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 6px;
+            letter-spacing: 1px;
+        }
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--color-gray);
+            transform: translateX(-101%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: -1;
+        }
+        .btn-secondary:hover {
+            transform: skewX(-6deg) translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+        }
+        .btn-secondary:hover::before {
+            transform: translateX(0);
+        }
+        .btn-secondary:hover .inner {
+            transform: skewX(6deg) scale(1.02);
+        }
+        .btn-secondary:active {
+            transform: skewX(-6deg) scale(0.96);
+        }
+        .btn-gold {
+            background: var(--color-gold);
+            color: #1a1a1a;
+            display: inline-block;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            text-align: center;
+            transform: skewX(-6deg);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+        .btn-gold .inner {
+            display: inline-block;
+            transform: skewX(6deg);
+            transition: transform var(--transition-fast);
+        }
+        .btn-gold .en {
+            font-weight: 400;
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 6px;
+            letter-spacing: 1px;
+        }
+        .btn-gold::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--color-gray-light);
+            transform: translateX(-101%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: -1;
+        }
+        .btn-gold:hover {
+            transform: skewX(-6deg) translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 28px rgba(201, 168, 76, 0.25);
+        }
+        .btn-gold:hover::before {
+            transform: translateX(0);
+        }
+        .btn-gold:hover .inner {
+            transform: skewX(6deg) scale(1.02);
+        }
+        .btn-gold:active {
+            transform: skewX(-6deg) scale(0.96);
+        }
+        .btn-submit-parallelogram {
+            display: inline-block;
+            padding: 10px 32px;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            text-align: center;
+            background: var(--color-red);
+            color: #fff;
+            transform: skewX(-10deg);
+            letter-spacing: 0.5px;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            white-space: nowrap;
+        }
+        .btn-submit-parallelogram .inner {
+            display: inline-block;
+            transform: skewX(10deg);
+            transition: transform var(--transition-fast);
+        }
+        .btn-submit-parallelogram .en {
+            font-weight: 400;
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 6px;
+            letter-spacing: 1px;
+        }
+        .btn-submit-parallelogram::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--color-gray);
+            transform: translateX(-101%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: -1;
+        }
+        .btn-submit-parallelogram:hover {
+            transform: skewX(-10deg) scale(1.03) translateY(-3px);
+            box-shadow: 0 12px 36px rgba(192, 57, 43, 0.3);
+        }
+        .btn-submit-parallelogram:hover::before {
+            transform: translateX(0);
+        }
+        .btn-submit-parallelogram:hover .inner {
+            transform: skewX(10deg) scale(1.02);
+        }
+        .btn-submit-parallelogram:active {
+            transform: skewX(-10deg) scale(0.96);
+        }
+
         /* ===== 页脚 ===== */
         .footer {
             background: var(--color-surface);
@@ -294,57 +562,8 @@
             letter-spacing: 0.5px;
         }
         .footer .btn-red {
-            display: inline-block;
             padding: 8px 24px;
-            font-weight: 600;
             font-size: 13px;
-            border: none;
-            cursor: pointer;
-            font-family: var(--font-body);
-            text-align: center;
-            background: var(--color-red);
-            color: #fff;
-            transform: skewX(-6deg);
-            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
-        }
-        .footer .btn-red .inner {
-            display: inline-block;
-            transform: skewX(6deg);
-            transition: transform var(--transition-fast);
-        }
-        .footer .btn-red .en {
-            font-weight: 400;
-            font-size: 10px;
-            opacity: 0.7;
-            margin-left: 6px;
-            letter-spacing: 1px;
-        }
-        .footer .btn-red::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: var(--color-gray);
-            transform: translateX(-101%);
-            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            z-index: -1;
-        }
-        .footer .btn-red:hover {
-            transform: skewX(-6deg) translateY(-2px) scale(1.02);
-            box-shadow: 0 8px 28px rgba(192, 57, 43, 0.25);
-        }
-        .footer .btn-red:hover::before {
-            transform: translateX(0);
-        }
-        .footer .btn-red:hover .inner {
-            transform: skewX(6deg) scale(1.02);
-        }
-        .footer .btn-red:active {
-            transform: skewX(-6deg) scale(0.96);
         }
         .footer .email-link {
             color: var(--color-red);
@@ -543,58 +762,10 @@
             text-align: center;
             min-width: 80px;
         }
-        .custom-modal-box .btn-red {
-            display: inline-block;
-            padding: 10px 28px;
-            font-weight: 600;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            font-family: var(--font-body);
+        .custom-modal-box .btn-group .btn-outline-red {
+            flex: 1;
             text-align: center;
-            background: var(--color-red);
-            color: #fff;
-            transform: skewX(-6deg);
-            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
-        }
-        .custom-modal-box .btn-red .inner {
-            display: inline-block;
-            transform: skewX(6deg);
-            transition: transform var(--transition-fast);
-        }
-        .custom-modal-box .btn-red .en {
-            font-weight: 400;
-            font-size: 10px;
-            opacity: 0.7;
-            margin-left: 6px;
-            letter-spacing: 1px;
-        }
-        .custom-modal-box .btn-red::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: var(--color-gray);
-            transform: translateX(-101%);
-            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            z-index: -1;
-        }
-        .custom-modal-box .btn-red:hover {
-            transform: skewX(-6deg) translateY(-2px) scale(1.02);
-            box-shadow: 0 8px 28px rgba(192, 57, 43, 0.25);
-        }
-        .custom-modal-box .btn-red:hover::before {
-            transform: translateX(0);
-        }
-        .custom-modal-box .btn-red:hover .inner {
-            transform: skewX(6deg) scale(1.02);
-        }
-        .custom-modal-box .btn-red:active {
-            transform: skewX(-6deg) scale(0.96);
+            min-width: 80px;
         }
         .custom-modal-overlay.open .custom-modal-box>* {
             opacity: 0;
@@ -684,7 +855,9 @@
             animation: modalPopIn 0.4s 0.06s forwards cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* ---- 个人档案展示弹窗 ---- */
+        /* ============================================================
+           个人档案展示弹窗（完整同步主站优化版）
+           ============================================================ */
         .profile-modal-box {
             max-width: 900px;
             width: 94%;
@@ -709,6 +882,7 @@
             transform: scale(0.92) translateY(20px);
             opacity: 0;
         }
+
         .profile-modal-box .close-btn {
             position: absolute;
             top: 12px;
@@ -726,6 +900,8 @@
             color: var(--color-text);
             transform: rotate(90deg);
         }
+
+        /* ---- 标题滑动色块入场 ---- */
         .profile-modal-title-wrap {
             position: absolute;
             top: -28px;
@@ -759,6 +935,8 @@
             margin-left: 6px;
             letter-spacing: 0.5px;
         }
+
+        /* 左栏：背景图 + 遮罩 */
         .profile-left {
             position: relative;
             padding: 28px 20px 20px 24px;
@@ -781,10 +959,11 @@
             pointer-events: none;
             z-index: 0;
         }
-        .profile-left>* {
+        .profile-left > * {
             position: relative;
             z-index: 1;
         }
+
         .profile-left .profile-header {
             display: flex;
             align-items: center;
@@ -831,6 +1010,7 @@
             font-family: monospace;
             margin-top: 2px;
         }
+
         .profile-left .bio-text {
             font-size: 14px;
             color: var(--color-text-light);
@@ -838,6 +1018,7 @@
             margin: 4px 0 12px 0;
             padding: 0;
         }
+
         .profile-left .enroll-area {
             display: flex;
             align-items: baseline;
@@ -868,6 +1049,7 @@
             font-size: 18px;
             font-weight: 800;
         }
+
         .profile-left .honor-area {
             display: flex;
             flex-wrap: wrap;
@@ -906,6 +1088,8 @@
             object-fit: cover;
             border-radius: 50%;
         }
+
+        /* ---- 右栏 ---- */
         .profile-right {
             position: relative;
             padding: 28px 16px 20px 16px;
@@ -916,10 +1100,11 @@
             background: transparent;
             max-height: 80vh;
         }
-        .profile-right>* {
+        .profile-right > * {
             position: relative;
             z-index: 1;
         }
+
         .profile-right .section-title {
             font-weight: 700;
             font-size: 14px;
@@ -936,6 +1121,7 @@
         .profile-right .section-title:not(:first-child) {
             margin-top: 12px;
         }
+
         .profile-right .scroll-wrapper {
             position: relative;
             overflow: hidden;
@@ -953,6 +1139,7 @@
         .profile-right .scroll-container::-webkit-scrollbar {
             display: none;
         }
+
         .profile-right .scroll-container .work-card {
             flex: 0 0 200px;
             background: var(--color-bg);
@@ -1031,6 +1218,7 @@
             border-bottom-color: var(--color-red);
             color: var(--color-red-light);
         }
+
         .profile-right .scroll-container .empty-msg {
             color: var(--color-text-muted);
             font-size: 13px;
@@ -1039,6 +1227,7 @@
             width: 100%;
             flex-shrink: 0;
         }
+
         .profile-right .scroll-arrow {
             position: absolute;
             top: 50%;
@@ -1065,6 +1254,7 @@
         }
         .profile-right .scroll-arrow.prev { left: 0; }
         .profile-right .scroll-arrow.next { right: 0; }
+
         .profile-right .custom-scrollbar {
             width: 100%;
             height: 4px;
@@ -1083,6 +1273,7 @@
             position: relative;
             transition: width 0.1s;
         }
+
         .profile-right .btn-group {
             display: flex;
             gap: 12px;
@@ -1756,7 +1947,6 @@
             .toc-drawer-overlay {
                 display: block;
             }
-            /* 防止抽屉打开时背景滚动 */
             body.toc-drawer-locked {
                 overflow: hidden;
             }
@@ -2268,7 +2458,9 @@
             var REPO_NAME = 'JCGZ';
             var apiUrl = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/issues/' + postId;
 
-            // ===== 个人档案相关函数 =====
+            // ============================================================
+            // 个人档案相关函数（完整同步主站优化版）
+            // ============================================================
             async function fetchArchivesFromGitHub() {
                 var url =
                     'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME +
@@ -2310,27 +2502,42 @@
                 }
             }
 
-            async function fetchAllPostsForProfile() {
+            // 跨板块查找该作者的所有作品
+            async function fetchAllAuthorWorks(authorName, realName) {
                 var labels = ['宸光博客', '明德专栏', '树洞留言', '校园资讯'];
-                var all = [];
+                var results = [];
                 for (var i = 0; i < labels.length; i++) {
                     var label = labels[i];
-                    var url =
-                        'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME +
-                        '/issues?labels=' + encodeURIComponent(label) + '&state=all&per_page=100';
                     try {
-                        var res = await fetch(url);
-                        if (res.ok) {
-                            var issues = await res.json();
-                            issues.forEach(function(issue) {
-                                var p = parseIssueToPost(issue);
-                                p.label = label;
-                                all.push(p);
-                            });
-                        }
-                    } catch (e) {}
+                        var url =
+                            'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME +
+                            '/issues?labels=' + encodeURIComponent(label) + '&state=all&per_page=100';
+                        var res = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+                        if (!res.ok) continue;
+                        var issues = await res.json();
+                        issues.forEach(function(issue) {
+                            var parsed = parseIssueToPost(issue);
+                            if (parsed.author === authorName || (realName && parsed.author === realName)) {
+                                results.push({
+                                    title: parsed.title,
+                                    date: parsed.date,
+                                    type: label,
+                                    content: parsed.content,
+                                    cover: parsed.cover,
+                                    tags: parsed.tags,
+                                    isFeatured: isFeatured(parsed.title),
+                                    id: parsed.id,
+                                    source: label === '宸光博客' ? 'blog' :
+                                            label === '明德专栏' ? 'mingde' :
+                                            label === '树洞留言' ? 'wall' : 'news'
+                                });
+                            }
+                        });
+                    } catch (e) {
+                        console.warn('拉取 ' + label + ' 失败:', e);
+                    }
                 }
-                return all;
+                return results;
             }
 
             function parseIssueToPost(issue) {
@@ -2356,8 +2563,7 @@
                     tags: tags,
                     body: body,
                     issueNumber: issue.number,
-                    html_url: issue.html_url,
-                    label: '未知'
+                    html_url: issue.html_url
                 };
             }
 
@@ -2437,31 +2643,14 @@
                 });
 
                 if (found) {
-                    var allData = await fetchAllPostsForProfile();
-                    var works = allData.filter(function(p) {
-                        return p.author === found.nickname || p.author === found.realName;
-                    }).map(function(p) {
-                        return {
-                            title: p.title,
-                            date: p.date,
-                            type: p.label || '未知',
-                            content: p.content,
-                            cover: p.cover,
-                            tags: p.tags,
-                            isFeatured: isFeatured(p.title),
-                            id: p.id,
-                            source: p.label === '宸光博客' ? 'blog' :
-                                    p.label === '明德专栏' ? 'mingde' :
-                                    p.label === '树洞留言' ? 'wall' : 'news'
-                        };
-                    });
+                    var works = await fetchAllAuthorWorks(found.nickname, found.realName);
                     showProfileModal(found, works);
                 } else {
                     showAlert('提示', '未找到 "' + authorName + '" 的个人档案。\n请先投稿个人档案。', '📋');
                 }
             }
 
-            // 展示个人档案弹窗
+            // 展示个人档案弹窗（同步主站优化版）
             function showProfileModal(profile, works) {
                 var profileModal = document.getElementById('profileModal');
                 profileModal.classList.remove('closing');
@@ -2484,7 +2673,7 @@
                     profileUid.textContent = '编号：' + (profile.code || '待分配');
                     profileBio.textContent = profile.bio || '这个人很懒，什么都没有写。';
 
-                    // 年级 / 高考倒计时（用 innerHTML 重建结构，避免多次打开时残留）
+                    // 年级 / 高考倒计时（innerHTML 重建结构，避免多次打开时残留）
                     var gradeText = '—';
                     var countdownNum = '—';
                     var countdownSuffix = '';
@@ -2646,6 +2835,7 @@
                 }).join('');
             }
 
+            // 初始化个人档案横向滚动条（事件只绑定一次）
             function initProfileScroll(containerSelector) {
                 try {
                     document.querySelectorAll(containerSelector).forEach(function(wrapper) {
@@ -2688,6 +2878,7 @@
                             thumb.style.marginLeft = pos + '%';
                         }
 
+                        // 事件只绑定一次（主站优化版）
                         if (!container.dataset.scrollBound) {
                             container.dataset.scrollBound = '1';
 
@@ -3049,7 +3240,6 @@
                         if (target) {
                             target.scrollIntoView({ behavior: 'smooth' });
                         }
-                        // 点击后自动收起抽屉
                         closeTocDrawer();
                     });
                     li2.appendChild(a2);
