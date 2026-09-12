@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>校园全景 · 建宸高级中学</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #0a0a0a;
+            font-family: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            color: #f0ece6;
+        }
+        #viewer {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+        }
+        #canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            cursor: grab;
+        }
+        #canvas:active {
+            cursor: grabbing;
+        }
+
+        /* ===== 顶部栏 ===== */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0));
+            pointer-events: none;
+            z-index: 10;
+            flex-wrap: wrap;
+        }
+        .brand {
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .brand .brand-logo {
+            height: 60px;
+            width: auto;
+            display: block;
+            flex-shrink: 0;
+            transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55));
+        }
+        .brand .brand-logo:hover {
+            transform: scale(1.05);
+        }
+        .brand .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .brand .brand-title {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: rgba(240, 236, 230, 0.95);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+        .brand .brand-title .hl {
+            color: #c0392b;
+        }
+        .brand .brand-sub {
+            font-weight: 400;
+            font-size: 11px;
+            color: rgba(176, 168, 160, 0.75);
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+        .actions {
+            pointer-events: auto;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .actions button {
+            background: rgba(18, 18, 18, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f0ece6;
+            padding: 7px 16px;
+            font-size: 13px;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: skewX(-6deg);
+            white-space: nowrap;
+            user-select: none;
+        }
+        .actions button .inner {
+            display: inline-block;
+            transform: skewX(6deg);
+        }
+        .actions button:hover {
+            border-color: #c0392b;
+            background: rgba(192, 57, 43, 0.22);
+            color: #fff;
+        }
+        .actions button:active {
+            transform: skewX(-6deg) scale(0.95);
+        }
+        .actions button.active {
+            background: #c0392b;
+            border-color: #c0392b;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(192, 57, 43, 0.35);
+        }
+
+        /* ===== 底部提示 ===== */
+        .hint {
+            position: fixed;
+            bottom: 26px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(240, 236, 230, 0.78);
+            font-size: 13px;
+            letter-spacing: 0.6px;
+            background: rgba(18, 18, 18, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 8px 22px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            pointer-events: none;
+            z-index: 10;
+            transition: opacity 0.8s ease;
+            text-align: center;
+            max-width: 90vw;
+        }
+        .hint.hide {
+            opacity: 0;
+        }
+        .hint .key {
+            color: #c0392b;
+            font-weight: 600;
+        }
+
+        /* ===== 加载遮罩 ===== */
+        .loading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 10, 10, 0.88);
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #b0a8a0;
+        }
+        .loading.show {
+            opacity: 1;
+        }
+        .loading .spinner {
+            width: 28px;
+            height: 28px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #c0392b;
+            border-radius: 50%;
+            margin-right: 14px;
+            animation: spin 0.9s linear infinite;
+            flex-shrink: 0;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== 拖放遮罩 ===== */
+        .drop-mask {
+            position: fixed;
+            inset: 20px;
+            border: 3px dashed rgba(192, 57, 43, 0.85);
+            background: rgba(192, 57, 43, 0.12);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #f0ece6;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            z-index: 30;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .drop-mask.show {
+            display: flex;
+        }
+
+        /* ===== 错误提示 ===== */
+        .error-toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(12px);
+            background: rgba(192, 57, 43, 0.95);
+            color: #fff;
+            padding: 10px 24px;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            z-index: 40;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            max-width: 90vw;
+            text-align: center;
+        }
+        .error-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== 移动端适配 ===== */
+        @media (max-width: 700px) {
+            .topbar {
+                padding: 10px 12px;
+                gap: 8px;
+            }
+            .brand {
+                gap: 10px;
+            }
+            .brand .brand-logo {
+                height: 46px;
+            }
+            .brand .brand-title {
+                font-size: 15px;
+            }
+            .brand .brand-sub {
+                display: none;
+            }
+            .actions {
+                gap: 6px;
+            }
+            .actions button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            .hint {
+                font-size: 12px;
+                padding: 6px 16px;
+                bottom: 18px;
+                letter-spacing: 0.3px;
+            }
+            .drop-mask {
+                font-size: 15px;
+                inset: 12px;
+                letter-spacing: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 全景画布 ===== -->
+    <div id="viewer">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <!-- ===== 顶部栏 ===== -->
+    <div class="topbar">
+        <div class="brand">
+            <img src="https://user-assets.sxlcdn.com/images/1138507/FmHi2bXK2JlqF65Hn2_tFDgK86zz.png?imageMogr2/strip/auto-orient/thumbnail/1200x9000%3E/quality/90!/format/png" alt="星宸学社 Stellar Sage" class="brand-logo" />
+            <div class="brand-text">
+                <span class="brand-title">校园<span class="hl">全景</span></span>
+                <span class="brand-sub">Jian Chen High School Panorama</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button id="btnAuto"><span class="inner">自动旋转</span></button>
+            <button id="btnReset"><span class="inner">重置视角</span></button>
+            <button id="btnFull"><span class="inner">全屏</span></button>
+        </div>
+    </div>
+
+    <!-- ===== 底部提示 ===== -->
+    <div class="hint" id="hint">
+        <span class="key">拖动</span> 旋转视角 &nbsp;·&nbsp;
+        <span class="key">滚轮 / 双指</span> 缩放
+    </div>
+
+    <!-- ===== 加载遮罩 ===== -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <span id="loadingText">加载中…</span>
+    </div>
+
+    <!-- ===== 错误提示 ===== -->
+    <div class="error-toast" id="errorToast"></div>
+
+    <!-- ===== Three.js ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            // ===== 默认校园全景图（固定地址） =====
+            var DEFAULT_PANORAMA = 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/refs/heads/main/dji_fly_20251129_134936_558_1764404326078_pano_op.jpg';
+
+            // ===== 依赖检测 =====
+            if (typeof THREE === 'undefined') {
+                document.getElementById('loadingText').textContent = 'Three.js 加载失败，请检查网络后刷新';
+                document.getElementById('loading').classList.add('show');
+                return;
+            }
+
+            // ===== 全局状态 =====
+            var scene, camera, renderer, sphere, texture;
+            var lon = 0;              // 经度
+            var lat = 0;              // 纬度
+            var fov = 75;             // 视野角度
+            var targetFov = 75;       // 目标视野（平滑过渡用）
+            var velocityLon = 0;      // 经度惯性
+            var velocityLat = 0;      // 纬度惯性
+            var autoRotate = false;   // 自动旋转开关
+            var isUserInteracting = false;
+            var hasImage = false;
+
+            // 指针状态（支持多指）
+            var pointers = new Map();
+            var downX = 0, downY = 0;
+            var downLon = 0, downLat = 0;
+            var lastMoveTime = 0;
+            var lastPinchDist = 0;
+
+            // DOM
+            var canvas = document.getElementById('canvas');
+            var loadingEl = document.getElementById('loading');
+            var loadingText = document.getElementById('loadingText');
+            var hintEl = document.getElementById('hint');
+            var errorToast = document.getElementById('errorToast');
+
+            // ===== 初始化 Three.js =====
+            function init() {
+                renderer = new THREE.WebGLRenderer({
+                    canvas: canvas,
+                    antialias: true,
+                    alpha: false
+                });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.outputEncoding = THREE.sRGBEncoding;
+                renderer.setClearColor(0x0a0a0a, 1);
+
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 0.1, 1100);
+
+                // 球体内侧贴图
+                var geometry = new THREE.SphereGeometry(500, 64, 40);
+                geometry.scale(-1, 1, 1);
+
+                var material = new THREE.MeshBasicMaterial({ color: 0x1a1a1a });
+                sphere = new THREE.Mesh(geometry, material);
+                scene.add(sphere);
+            }
+
+            // ===== 加载全景图 =====
+            function loadPanorama(url) {
+                showLoading('加载校园全景…');
+
+                var loader = new THREE.TextureLoader();
+                loader.setCrossOrigin('anonymous');
+
+                loader.load(
+                    url,
+                    function(tex) {
+                        tex.encoding = THREE.sRGBEncoding;
+                        if (texture) texture.dispose();
+                        texture = tex;
+
+                        sphere.material.map = tex;
+                        sphere.material.color.set(0xffffff);
+                        sphere.material.needsUpdate = true;
+
+                        hasImage = true;
+                        hideLoading();
+
+                        // 重置视角
+                        lon = 0;
+                        lat = 0;
+                        targetFov = 75;
+                        fov = 75;
+                        velocityLon = 0;
+                        velocityLat = 0;
+
+                        // 提示几秒后自动淡出
+                        hintEl.classList.remove('hide');
+                        clearTimeout(hintEl._timer);
+                        hintEl._timer = setTimeout(function() {
+                            hintEl.classList.add('hide');
+                        }, 6000);
+                    },
+                    function(xhr) {
+                        // 进度
+                        if (xhr && xhr.total) {
+                            var pct = Math.round((xhr.loaded / xhr.total) * 100);
+                            loadingText.textContent = '加载中 ' + pct + '%';
+                        }
+                    },
+                    function() {
+                        hideLoading();
+                        showError('全景图加载失败，请确认链接可访问');
+                    }
+                );
+            }
+
+            // ===== 加载遮罩控制 =====
+            function showLoading(text) {
+                loadingText.textContent = text || '加载中…';
+                loadingEl.classList.add('show');
+            }
+            function hideLoading() {
+                loadingEl.classList.remove('show');
+            }
+
+            // ===== 错误提示 =====
+            var errorTimer = null;
+            function showError(msg) {
+                errorToast.textContent = msg;
+                errorToast.classList.add('show');
+                clearTimeout(errorTimer);
+                errorTimer = setTimeout(function() {
+                    errorToast.classList.remove('show');
+                }, 3500);
+            }
+
+            // ===== 渲染循环 =====
+            var lastFrameTime = performance.now();
+            function animate() {
+                requestAnimationFrame(animate);
+
+                var now = performance.now();
+                var dt = Math.min((now - lastFrameTime) / 1000, 0.1);
+                lastFrameTime = now;
+
+                if (!isUserInteracting) {
+                    // 惯性衰减
+                    if (Math.abs(velocityLon) > 0.001 || Math.abs(velocityLat) > 0.001) {
+                        lon += velocityLon;
+                        lat += velocityLat;
+                        velocityLon *= 0.94;
+                        velocityLat *= 0.94;
+                    } else {
+                        velocityLon = 0;
+                        velocityLat = 0;
+
+                        // 自动旋转
+                        if (autoRotate && hasImage) {
+                            lon += 4 * dt; // 每秒 4 度
+                        }
+                    }
+                }
+
+                // 纬度限制
+                if (lat > 85) lat = 85;
+                if (lat < -85) lat = -85;
+
+                // 经度循环
+                if (lon > 180) lon -= 360;
+                if (lon < -180) lon += 360;
+
+                // 相机朝向
+                var phi = THREE.MathUtils.degToRad(90 - lat);
+                var theta = THREE.MathUtils.degToRad(lon);
+
+                var targetX = 500 * Math.sin(phi) * Math.cos(theta);
+                var targetY = 500 * Math.cos(phi);
+                var targetZ = 500 * Math.sin(phi) * Math.sin(theta);
+
+                camera.lookAt(targetX, targetY, targetZ);
+
+                // 视野平滑过渡
+                if (Math.abs(camera.fov - targetFov) > 0.05) {
+                    camera.fov += (targetFov - camera.fov) * 0.15;
+                    camera.updateProjectionMatrix();
+                }
+
+                renderer.render(scene, camera);
+            }
+
+            // ===== 指针事件：拖动旋转 =====
+            function getPinchDistance() {
+                var pts = Array.from(pointers.values());
+                if (pts.length < 2) return 0;
+                var dx = pts[0].x - pts[1].x;
+                var dy = pts[0].y - pts[1].y;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+
+            canvas.addEventListener('pointerdown', function(e) {
+                e.preventDefault();
+                canvas.setPointerCapture(e.pointerId);
+                pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+                if (pointers.size === 1) {
+                    isUserInteracting = true;
+                    downX = e.clientX;
+                    downY = e.clientY;
+                    downLon = lon;
+                    downLat = lat;
+                    velocityLon = 0;
+                    velocityLat = 0;
+                    lastMoveTime = performance.now();
+                } else if (pointers.size === 2) {
+                    lastPinchDist = getPinchDistance();
+                }
+            });
+
+            canvas.addEventListener('pointermove', function(e) {
+                if (!pointers.has(e.pointerId)) return;
+                pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+                if (pointers.size === 1 && isUserInteracting) {
+                    var dx = e.clientX - downX;
+                    var dy = e.clientY - downY;
+
+                    var newLon = downLon - dx * 0.1;
+                    var newLat = downLat + dy * 0.1;
+
+                    // 计算惯性速度（换算成每帧位移）
+                    var now = performance.now();
+                    var elapsed = Math.max(now - lastMoveTime, 8);
+                    velocityLon = (newLon - lon) / elapsed * 16;
+                    velocityLat = (newLat - lat) / elapsed * 16;
+                    lastMoveTime = now;
+
+                    lon = newLon;
+                    lat = newLat;
+                } else if (pointers.size === 2) {
+                    var dist = getPinchDistance();
+                    if (lastPinchDist > 0 && dist > 0) {
+                        var scale = lastPinchDist / dist;
+                        targetFov = Math.max(30, Math.min(100, targetFov * scale));
+                    }
+                    lastPinchDist = dist;
+                }
+            });
+
+            function endPointer(e) {
+                pointers.delete(e.pointerId);
+
+                if (pointers.size === 0) {
+                    isUserInteracting = false;
+                } else if (pointers.size === 1) {
+                    // 双指变单指：重置起点，避免跳变
+                    var p = pointers.values().next().value;
+                    downX = p.x;
+                    downY = p.y;
+                    downLon = lon;
+                    downLat = lat;
+                    lastPinchDist = 0;
+                    lastMoveTime = performance.now();
+                }
+            }
+
+            canvas.addEventListener('pointerup', endPointer);
+            canvas.addEventListener('pointercancel', endPointer);
+
+            // ===== 滚轮缩放 =====
+            canvas.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                targetFov = Math.max(30, Math.min(100, targetFov + e.deltaY * 0.05));
+            }, { passive: false });
+
+            // ===== 窗口尺寸变化 =====
+            window.addEventListener('resize', function() {
+                if (!renderer || !camera) return;
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // ===== 顶部按钮 =====
+            var btnAuto = document.getElementById('btnAuto');
+            btnAuto.addEventListener('click', function() {
+                autoRotate = !autoRotate;
+                btnAuto.classList.toggle('active', autoRotate);
+            });
+
+            document.getElementById('btnReset').addEventListener('click', function() {
+                lon = 0;
+                lat = 0;
+                targetFov = 75;
+                velocityLon = 0;
+                velocityLat = 0;
+            });
+
+            document.getElementById('btnFull').addEventListener('click', function() {
+                var el = document.documentElement;
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    if (el.requestFullscreen) {
+                        el.requestFullscreen();
+                    } else if (el.webkitRequestFullscreen) {
+                        el.webkitRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    }
+                }
+            });
+
+            // ===== 键盘快捷键 =====
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.fullscreenElement) {
+                    document.exitFullscreen();
+                }
+                if (e.key === 'r' || e.key === 'R') {
+                    lon = 0;
+                    lat = 0;
+                    targetFov = 75;
+                    velocityLon = 0;
+                    velocityLat = 0;
+                }
+            });
+
+            // ===== 启动 =====
+            init();
+            animate();
+
+            // 固定加载校园全景图（可通过 ?src= 参数覆盖）
+            try {
+                var params = new URLSearchParams(window.location.search);
+                var srcParam = params.get('src');
+                if (srcParam) {
+                    loadPanorama(decodeURIComponent(srcParam));
+                } else {
+                    loadPanorama(DEFAULT_PANORAMA);
+                }
+            } catch (err) {
+                loadPanorama(DEFAULT_PANORAMA);
+            }
+
+        })();
+    </script>
+</body>
+</html>
