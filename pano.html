@@ -94,7 +94,9 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            align-items: center;
         }
+        .actions a,
         .actions button {
             background: rgba(18, 18, 18, 0.78);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -111,16 +113,22 @@
             transform: skewX(-6deg);
             white-space: nowrap;
             user-select: none;
+            text-decoration: none;
+            display: inline-block;
+            line-height: 1.4;
         }
+        .actions a .inner,
         .actions button .inner {
             display: inline-block;
             transform: skewX(6deg);
         }
+        .actions a:hover,
         .actions button:hover {
             border-color: #c0392b;
             background: rgba(192, 57, 43, 0.22);
             color: #fff;
         }
+        .actions a:active,
         .actions button:active {
             transform: skewX(-6deg) scale(0.95);
         }
@@ -129,6 +137,17 @@
             border-color: #c0392b;
             color: #fff;
             box-shadow: 0 4px 16px rgba(192, 57, 43, 0.35);
+        }
+        .actions a.home-btn {
+            background: #c0392b;
+            border-color: #c0392b;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(192, 57, 43, 0.35);
+        }
+        .actions a.home-btn:hover {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            box-shadow: 0 6px 22px rgba(192, 57, 43, 0.5);
         }
 
         /* ===== 底部提示 ===== */
@@ -150,16 +169,267 @@
             transition: opacity 0.8s ease;
             text-align: center;
             max-width: 90vw;
-        }
-        .hint.hide {
             opacity: 0;
+        }
+        .hint.show {
+            opacity: 1;
         }
         .hint .key {
             color: #c0392b;
             font-weight: 600;
         }
 
-        /* ===== 加载遮罩 ===== */
+        /* ===== 首次操作指导（黑底 + 白字 + 红强调） ===== */
+        .guide-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+            padding: 20px;
+        }
+        .guide-overlay.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .guide-content {
+            text-align: center;
+            max-width: 460px;
+            width: 100%;
+            animation: guideIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+            transform: translateY(24px) scale(0.96);
+        }
+        @keyframes guideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 滑动轨道动画 */
+        .guide-track {
+            position: relative;
+            width: 220px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.18);
+            margin: 0 auto 40px;
+        }
+        .guide-track::before,
+        .guide-track::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.22);
+        }
+        .guide-track::before { left: -14px; }
+        .guide-track::after { right: -14px; }
+
+        .guide-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 58px;
+            height: 58px;
+            margin-top: -29px;
+            margin-left: -29px;
+            border-radius: 50%;
+            background: #0a0a0a;
+            border: 2px solid #c0392b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: dotSwipe 2.6s cubic-bezier(0.55, 0.05, 0.45, 0.95) infinite;
+        }
+        .guide-dot::before {
+            content: '';
+            position: absolute;
+            inset: -14px;
+            border-radius: 50%;
+            border: 1px solid rgba(192, 57, 43, 0.5);
+            animation: dotPulse 2.6s cubic-bezier(0.55, 0.05, 0.45, 0.95) infinite;
+        }
+        .guide-dot svg {
+            width: 24px;
+            height: 24px;
+            stroke: #ffffff;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0.95;
+        }
+        @keyframes dotSwipe {
+            0%, 100% { left: 18%; }
+            50% { left: 82%; }
+        }
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); opacity: 0.55; }
+            50% { transform: scale(1.2); opacity: 0; }
+        }
+
+        /* 文案 */
+        .guide-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+        .guide-title .hl {
+            color: #c0392b;
+        }
+        .guide-sub {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.68);
+            letter-spacing: 0.6px;
+            line-height: 1.9;
+            margin-bottom: 32px;
+        }
+        .guide-sub .key {
+            color: #ffffff;
+            font-weight: 600;
+            border-bottom: 1px solid #c0392b;
+            padding-bottom: 1px;
+        }
+
+        /* 开始按钮 */
+        .guide-btn {
+            display: inline-block;
+            padding: 12px 48px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            letter-spacing: 2px;
+            color: #ffffff;
+            background: #c0392b;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(192, 57, 43, 0.35);
+        }
+        .guide-btn .inner {
+            display: inline-block;
+        }
+        .guide-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #ffffff;
+            transform: translateX(-101%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 0;
+        }
+        .guide-btn .inner {
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s;
+        }
+        .guide-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 36px rgba(192, 57, 43, 0.5);
+        }
+        .guide-btn:hover::before {
+            transform: translateX(0);
+        }
+        .guide-btn:hover .inner {
+            color: #0a0a0a;
+        }
+        .guide-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* ===== 右键导航菜单 ===== */
+        .context-menu {
+            position: fixed;
+            z-index: 200;
+            min-width: 200px;
+            background: rgba(10, 10, 10, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75),
+                        0 0 0 1px rgba(192, 57, 43, 0.1);
+            padding: 8px 0;
+            display: none;
+            opacity: 0;
+            transform: scale(0.85) translateY(-6px);
+            transition: opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+        .context-menu.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+        .context-menu .ctx-header {
+            padding: 8px 20px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #6a6460;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 6px;
+            user-select: none;
+        }
+        .context-menu .ctx-item {
+            display: block;
+            padding: 11px 20px;
+            font-size: 13px;
+            color: rgba(240, 236, 230, 0.78);
+            text-decoration: none;
+            letter-spacing: 0.4px;
+            transition: all 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+        .context-menu .ctx-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%) scaleY(0);
+            width: 3px;
+            height: 60%;
+            background: #c0392b;
+            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .context-menu .ctx-item:hover {
+            background: rgba(192, 57, 43, 0.16);
+            color: #ffffff;
+            padding-left: 26px;
+        }
+        .context-menu .ctx-item:hover::before {
+            transform: translateY(-50%) scaleY(1);
+        }
+        .context-menu .ctx-item .sub {
+            font-size: 10px;
+            color: #6a6460;
+            margin-left: 6px;
+            letter-spacing: 0.5px;
+        }
+        .context-menu .ctx-item:hover .sub {
+            color: rgba(240, 236, 230, 0.6);
+        }
+
+        /* ===== 加载遮罩（z-index 低于引导，被引导覆盖） ===== */
         .loading {
             position: fixed;
             inset: 0;
@@ -167,7 +437,7 @@
             align-items: center;
             justify-content: center;
             background: rgba(10, 10, 10, 0.88);
-            z-index: 20;
+            z-index: 15;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.35s ease;
@@ -190,28 +460,6 @@
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-
-        /* ===== 拖放遮罩 ===== */
-        .drop-mask {
-            position: fixed;
-            inset: 20px;
-            border: 3px dashed rgba(192, 57, 43, 0.85);
-            background: rgba(192, 57, 43, 0.12);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            color: #f0ece6;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            z-index: 30;
-            pointer-events: none;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-        .drop-mask.show {
-            display: flex;
         }
 
         /* ===== 错误提示 ===== */
@@ -258,6 +506,7 @@
             .actions {
                 gap: 6px;
             }
+            .actions a,
             .actions button {
                 padding: 6px 12px;
                 font-size: 12px;
@@ -268,10 +517,49 @@
                 bottom: 18px;
                 letter-spacing: 0.3px;
             }
-            .drop-mask {
-                font-size: 15px;
-                inset: 12px;
-                letter-spacing: 2px;
+            .guide-track {
+                width: 180px;
+                margin-bottom: 32px;
+            }
+            .guide-dot {
+                width: 50px;
+                height: 50px;
+                margin-top: -25px;
+                margin-left: -25px;
+            }
+            .guide-dot svg {
+                width: 20px;
+                height: 20px;
+            }
+            .guide-title {
+                font-size: 18px;
+                letter-spacing: 1.5px;
+            }
+            .guide-sub {
+                font-size: 13px;
+                margin-bottom: 26px;
+            }
+            .guide-btn {
+                padding: 11px 38px;
+                font-size: 13px;
+                letter-spacing: 1.5px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .brand .brand-logo {
+                height: 38px;
+            }
+            .brand .brand-title {
+                font-size: 13px;
+            }
+            .actions a,
+            .actions button {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+            .guide-track {
+                width: 150px;
             }
         }
     </style>
@@ -293,16 +581,56 @@
             </div>
         </div>
         <div class="actions">
+            <a href="/JCGZ/" class="home-btn"><span class="inner">前往主站</span></a>
             <button id="btnAuto"><span class="inner">自动旋转</span></button>
             <button id="btnReset"><span class="inner">重置视角</span></button>
             <button id="btnFull"><span class="inner">全屏</span></button>
         </div>
     </div>
 
+    <!-- ===== 首次操作指导（每次进入都显示） ===== -->
+    <div class="guide-overlay" id="guideOverlay">
+        <div class="guide-content">
+            <div class="guide-track">
+                <div class="guide-dot">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 11.5V6.5a1.5 1.5 0 0 1 3 0v5"/>
+                        <path d="M12 11V5.5a1.5 1.5 0 0 1 3 0V11"/>
+                        <path d="M15 11V6.5a1.5 1.5 0 0 1 3 0V13"/>
+                        <path d="M9 11.5V9a1.5 1.5 0 0 0-3 0v4"/>
+                        <path d="M6 13a7 7 0 0 0 7 7h1a7 7 0 0 0 7-7"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="guide-title">
+                拖动屏幕<span class="hl">旋转视角</span>
+            </div>
+            <div class="guide-sub">
+                左右滑动 · 探索建宸校园每一个角落<br />
+                <span class="key">滚轮 / 双指</span> 缩放 &nbsp;·&nbsp;
+                <span class="key">右键</span> 打开导航
+            </div>
+            <button class="guide-btn" id="guideStartBtn">
+                <span class="inner">开始探索</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== 右键导航菜单 ===== -->
+    <div class="context-menu" id="contextMenu">
+        <div class="ctx-header">建宸高级中学</div>
+        <a href="/JCGZ/" class="ctx-item">主站</a>
+        <a href="/JCGZ/blog/" class="ctx-item">宸光博客 <span class="sub">子站</span></a>
+        <a href="/JCGZ/mingde/" class="ctx-item">明德专栏 <span class="sub">子站</span></a>
+        <a href="/JCGZ/news/" class="ctx-item">校园资讯 <span class="sub">子站</span></a>
+        <a href="/JCGZ/wall/" class="ctx-item">留言墙</a>
+    </div>
+
     <!-- ===== 底部提示 ===== -->
     <div class="hint" id="hint">
         <span class="key">拖动</span> 旋转视角 &nbsp;·&nbsp;
-        <span class="key">滚轮 / 双指</span> 缩放
+        <span class="key">滚轮 / 双指</span> 缩放 &nbsp;·&nbsp;
+        <span class="key">右键</span> 打开导航
     </div>
 
     <!-- ===== 加载遮罩 ===== -->
@@ -323,6 +651,11 @@
             // ===== 默认校园全景图（固定地址） =====
             var DEFAULT_PANORAMA = 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/refs/heads/main/dji_fly_20251129_134936_558_1764404326078_pano_op.jpg';
 
+            // ===== 初始视角：全景图正前方在 180° 方向 =====
+            var INIT_LON = 180;
+            var INIT_LAT = 0;
+            var INIT_FOV = 75;
+
             // ===== 依赖检测 =====
             if (typeof THREE === 'undefined') {
                 document.getElementById('loadingText').textContent = 'Three.js 加载失败，请检查网络后刷新';
@@ -332,17 +665,17 @@
 
             // ===== 全局状态 =====
             var scene, camera, renderer, sphere, texture;
-            var lon = 0;              // 经度
-            var lat = 0;              // 纬度
-            var fov = 75;             // 视野角度
-            var targetFov = 75;       // 目标视野（平滑过渡用）
-            var velocityLon = 0;      // 经度惯性
-            var velocityLat = 0;      // 纬度惯性
-            var autoRotate = false;   // 自动旋转开关
+            var lon = INIT_LON;
+            var lat = INIT_LAT;
+            var fov = INIT_FOV;
+            var targetFov = INIT_FOV;
+            var velocityLon = 0;
+            var velocityLat = 0;
+            var autoRotate = false;
             var isUserInteracting = false;
             var hasImage = false;
+            var isImageLoaded = false;
 
-            // 指针状态（支持多指）
             var pointers = new Map();
             var downX = 0, downY = 0;
             var downLon = 0, downLat = 0;
@@ -355,6 +688,128 @@
             var loadingText = document.getElementById('loadingText');
             var hintEl = document.getElementById('hint');
             var errorToast = document.getElementById('errorToast');
+            var guideOverlay = document.getElementById('guideOverlay');
+            var guideStartBtn = document.getElementById('guideStartBtn');
+            var contextMenu = document.getElementById('contextMenu');
+
+            // ===== 引导控制（每次进入都显示） =====
+            function hideGuide() {
+                if (!guideOverlay || guideOverlay.classList.contains('hide')) return;
+                guideOverlay.classList.add('hide');
+
+                // 引导关闭后，如果图片还没加载好，才显示 loading
+                if (!isImageLoaded) {
+                    loadingEl.classList.add('show');
+                }
+
+                // 底部提示条
+                setTimeout(function() {
+                    hintEl.classList.add('show');
+                    clearTimeout(hintEl._timer);
+                    hintEl._timer = setTimeout(function() {
+                        hintEl.classList.remove('show');
+                    }, 6000);
+                }, 500);
+            }
+
+            guideStartBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                hideGuide();
+            });
+
+            guideOverlay.addEventListener('click', function(e) {
+                if (e.target === guideOverlay) {
+                    hideGuide();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !guideOverlay.classList.contains('hide')) {
+                    hideGuide();
+                }
+            });
+
+            // ===== 右键导航菜单 =====
+            function showContextMenu(x, y) {
+                // 先定位到目标位置，让浏览器计算尺寸
+                contextMenu.style.left = x + 'px';
+                contextMenu.style.top = y + 'px';
+                contextMenu.style.transformOrigin = 'top left';
+                contextMenu.classList.add('show');
+
+                // 下一帧读取真实尺寸，做边界修正
+                requestAnimationFrame(function() {
+                    var rect = contextMenu.getBoundingClientRect();
+                    var newX = x;
+                    var newY = y;
+                    var originX = 'left';
+                    var originY = 'top';
+
+                    if (x + rect.width > window.innerWidth - 8) {
+                        newX = x - rect.width;
+                        if (newX < 8) newX = 8;
+                        originX = 'right';
+                    }
+                    if (y + rect.height > window.innerHeight - 8) {
+                        newY = y - rect.height;
+                        if (newY < 8) newY = 8;
+                        originY = 'bottom';
+                    }
+
+                    contextMenu.style.left = newX + 'px';
+                    contextMenu.style.top = newY + 'px';
+                    contextMenu.style.transformOrigin = originX + ' ' + originY;
+                });
+            }
+
+            function hideContextMenu() {
+                contextMenu.classList.remove('show');
+            }
+
+            // 右键触发（阻止浏览器默认菜单）
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showContextMenu(e.clientX, e.clientY);
+            });
+
+            // 点击任何地方关闭菜单（但菜单项点击除外）
+            document.addEventListener('click', function(e) {
+                if (!contextMenu.contains(e.target)) {
+                    hideContextMenu();
+                }
+            });
+
+            // 滚动、按下滚轮、Esc 也关闭
+            document.addEventListener('wheel', hideContextMenu, { passive: true });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') hideContextMenu();
+            });
+
+            // 触摸设备：长按 550ms 触发
+            var touchTimer = null;
+            var touchStartX = 0, touchStartY = 0;
+            document.addEventListener('touchstart', function(e) {
+                if (e.touches.length !== 1) return;
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                clearTimeout(touchTimer);
+                touchTimer = setTimeout(function() {
+                    showContextMenu(touchStartX, touchStartY);
+                }, 550);
+            }, { passive: true });
+
+            document.addEventListener('touchmove', function(e) {
+                if (e.touches.length !== 1) return;
+                var dx = e.touches[0].clientX - touchStartX;
+                var dy = e.touches[0].clientY - touchStartY;
+                if (Math.sqrt(dx * dx + dy * dy) > 12) {
+                    clearTimeout(touchTimer);
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchend', function() {
+                clearTimeout(touchTimer);
+            }, { passive: true });
 
             // ===== 初始化 Three.js =====
             function init() {
@@ -371,7 +826,6 @@
                 scene = new THREE.Scene();
                 camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 0.1, 1100);
 
-                // 球体内侧贴图
                 var geometry = new THREE.SphereGeometry(500, 64, 40);
                 geometry.scale(-1, 1, 1);
 
@@ -380,9 +834,11 @@
                 scene.add(sphere);
             }
 
-            // ===== 加载全景图 =====
+            // ===== 加载全景图（引导期间后台悄悄加载） =====
             function loadPanorama(url) {
-                showLoading('加载校园全景…');
+                // 注意：这里不主动显示 loading 遮罩
+                // 引导层 z-index 100 > loading z-index 15，所以引导显示时用户看不到 loading
+                // 用户点开始后如果还没加载完，loading 会露出来
 
                 var loader = new THREE.TextureLoader();
                 loader.setCrossOrigin('anonymous');
@@ -399,38 +855,31 @@
                         sphere.material.needsUpdate = true;
 
                         hasImage = true;
+                        isImageLoaded = true;
                         hideLoading();
 
-                        // 重置视角
-                        lon = 0;
-                        lat = 0;
-                        targetFov = 75;
-                        fov = 75;
+                        lon = INIT_LON;
+                        lat = INIT_LAT;
+                        targetFov = INIT_FOV;
+                        fov = INIT_FOV;
                         velocityLon = 0;
                         velocityLat = 0;
-
-                        // 提示几秒后自动淡出
-                        hintEl.classList.remove('hide');
-                        clearTimeout(hintEl._timer);
-                        hintEl._timer = setTimeout(function() {
-                            hintEl.classList.add('hide');
-                        }, 6000);
                     },
                     function(xhr) {
-                        // 进度
                         if (xhr && xhr.total) {
                             var pct = Math.round((xhr.loaded / xhr.total) * 100);
                             loadingText.textContent = '加载中 ' + pct + '%';
                         }
                     },
                     function() {
+                        isImageLoaded = true;
                         hideLoading();
                         showError('全景图加载失败，请确认链接可访问');
                     }
                 );
             }
 
-            // ===== 加载遮罩控制 =====
+            // ===== 加载遮罩 =====
             function showLoading(text) {
                 loadingText.textContent = text || '加载中…';
                 loadingEl.classList.add('show');
@@ -460,7 +909,6 @@
                 lastFrameTime = now;
 
                 if (!isUserInteracting) {
-                    // 惯性衰减
                     if (Math.abs(velocityLon) > 0.001 || Math.abs(velocityLat) > 0.001) {
                         lon += velocityLon;
                         lat += velocityLat;
@@ -469,23 +917,18 @@
                     } else {
                         velocityLon = 0;
                         velocityLat = 0;
-
-                        // 自动旋转
                         if (autoRotate && hasImage) {
-                            lon += 4 * dt; // 每秒 4 度
+                            lon += 4 * dt;
                         }
                     }
                 }
 
-                // 纬度限制
                 if (lat > 85) lat = 85;
                 if (lat < -85) lat = -85;
 
-                // 经度循环
                 if (lon > 180) lon -= 360;
                 if (lon < -180) lon += 360;
 
-                // 相机朝向
                 var phi = THREE.MathUtils.degToRad(90 - lat);
                 var theta = THREE.MathUtils.degToRad(lon);
 
@@ -495,7 +938,6 @@
 
                 camera.lookAt(targetX, targetY, targetZ);
 
-                // 视野平滑过渡
                 if (Math.abs(camera.fov - targetFov) > 0.05) {
                     camera.fov += (targetFov - camera.fov) * 0.15;
                     camera.updateProjectionMatrix();
@@ -504,7 +946,7 @@
                 renderer.render(scene, camera);
             }
 
-            // ===== 指针事件：拖动旋转 =====
+            // ===== 指针事件 =====
             function getPinchDistance() {
                 var pts = Array.from(pointers.values());
                 if (pts.length < 2) return 0;
@@ -514,6 +956,7 @@
             }
 
             canvas.addEventListener('pointerdown', function(e) {
+                if (e.button === 2) return;
                 e.preventDefault();
                 canvas.setPointerCapture(e.pointerId);
                 pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -543,7 +986,6 @@
                     var newLon = downLon - dx * 0.1;
                     var newLat = downLat + dy * 0.1;
 
-                    // 计算惯性速度（换算成每帧位移）
                     var now = performance.now();
                     var elapsed = Math.max(now - lastMoveTime, 8);
                     velocityLon = (newLon - lon) / elapsed * 16;
@@ -568,7 +1010,6 @@
                 if (pointers.size === 0) {
                     isUserInteracting = false;
                 } else if (pointers.size === 1) {
-                    // 双指变单指：重置起点，避免跳变
                     var p = pointers.values().next().value;
                     downX = p.x;
                     downY = p.y;
@@ -582,13 +1023,11 @@
             canvas.addEventListener('pointerup', endPointer);
             canvas.addEventListener('pointercancel', endPointer);
 
-            // ===== 滚轮缩放 =====
             canvas.addEventListener('wheel', function(e) {
                 e.preventDefault();
                 targetFov = Math.max(30, Math.min(100, targetFov + e.deltaY * 0.05));
             }, { passive: false });
 
-            // ===== 窗口尺寸变化 =====
             window.addEventListener('resize', function() {
                 if (!renderer || !camera) return;
                 camera.aspect = window.innerWidth / window.innerHeight;
@@ -604,9 +1043,9 @@
             });
 
             document.getElementById('btnReset').addEventListener('click', function() {
-                lon = 0;
-                lat = 0;
-                targetFov = 75;
+                lon = INIT_LON;
+                lat = INIT_LAT;
+                targetFov = INIT_FOV;
                 velocityLon = 0;
                 velocityLat = 0;
             });
@@ -628,15 +1067,14 @@
                 }
             });
 
-            // ===== 键盘快捷键 =====
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && document.fullscreenElement) {
                     document.exitFullscreen();
                 }
                 if (e.key === 'r' || e.key === 'R') {
-                    lon = 0;
-                    lat = 0;
-                    targetFov = 75;
+                    lon = INIT_LON;
+                    lat = INIT_LAT;
+                    targetFov = INIT_FOV;
                     velocityLon = 0;
                     velocityLat = 0;
                 }
@@ -646,7 +1084,7 @@
             init();
             animate();
 
-            // 固定加载校园全景图（可通过 ?src= 参数覆盖）
+            // 立即开始后台加载全景图（不等引导关闭）
             try {
                 var params = new URLSearchParams(window.location.search);
                 var srcParam = params.get('src');
