@@ -683,15 +683,18 @@
         }
 
         /* ============================================================
-           HERO（保留主站布局，卡片数据动态）
+           HERO（首页背景全屏全景 + 自动旋转）
            ============================================================ */
         .hero {
-            padding: 150px 0 80px;
-            background: var(--color-surface);
+            min-height: 100vh;
+            padding: 120px 0 60px;
+            background: transparent;
             border-bottom: 1px solid var(--color-border);
             position: relative;
             overflow: hidden;
             z-index: 1;
+            display: flex;
+            align-items: center;
             opacity: 0;
             animation: heroFadeIn 1.2s 0.3s forwards cubic-bezier(0.22, 1, 0.36, 1);
         }
@@ -705,6 +708,32 @@
                 transform: scale(1) translateY(0);
             }
         }
+        /* 全景 canvas 背景 */
+        .hero-pano-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            display: block;
+            cursor: grab;
+            touch-action: pan-y;
+        }
+        .hero-pano-canvas:active {
+            cursor: grabbing;
+        }
+        /* 深色遮罩，保证文字可读 */
+        .hero-pano-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(120deg,
+                    rgba(18, 18, 18, 0.88) 0%,
+                    rgba(18, 18, 18, 0.7) 45%,
+                    rgba(18, 18, 18, 0.45) 100%);
+        }
         .hero::before {
             content: '';
             position: absolute;
@@ -713,9 +742,10 @@
             width: 400px;
             height: 400px;
             background: var(--color-red);
-            opacity: 0.04;
+            opacity: 0.06;
             transform: rotate(25deg) skewX(-12deg);
             pointer-events: none;
+            z-index: 1;
             animation: heroShapeFloat 20s ease-in-out infinite alternate;
         }
         @keyframes heroShapeFloat {
@@ -733,6 +763,12 @@
             align-items: center;
             position: relative;
             z-index: 2;
+            width: 100%;
+            pointer-events: none;
+        }
+        .hero-text,
+        .hero-cards {
+            pointer-events: auto;
         }
         .hero-text .label {
             display: inline-block;
@@ -740,7 +776,7 @@
             font-weight: 600;
             letter-spacing: 4px;
             color: var(--color-red);
-            background: rgba(192, 57, 43, 0.12);
+            background: rgba(192, 57, 43, 0.16);
             padding: 2px 16px;
             text-transform: uppercase;
             margin-bottom: 12px;
@@ -748,6 +784,7 @@
             transition: transform var(--transition-fast);
             opacity: 0;
             animation: heroItemFade 0.8s 0.5s forwards cubic-bezier(0.22, 1, 0.36, 1);
+            backdrop-filter: blur(4px);
         }
         .hero-text .label:hover {
             transform: skewX(-6deg) scale(1.02);
@@ -763,6 +800,7 @@
             letter-spacing: 0.5px;
             color: var(--color-text);
             opacity: 0;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
             animation: heroItemFade 0.8s 0.7s forwards cubic-bezier(0.22, 1, 0.36, 1);
         }
         .hero-text h1 .hl {
@@ -783,6 +821,7 @@
             line-height: 1.8;
             margin: 16px 0 28px;
             opacity: 0;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
             animation: heroItemFade 0.8s 0.9s forwards cubic-bezier(0.22, 1, 0.36, 1);
             letter-spacing: 0.2px;
         }
@@ -798,7 +837,7 @@
             font-weight: 600;
             font-size: 13px;
             border: 1px solid var(--color-border);
-            background: var(--color-surface);
+            background: rgba(26, 26, 26, 0.75);
             color: var(--color-text-light);
             cursor: pointer;
             font-family: var(--font-body);
@@ -811,6 +850,8 @@
             white-space: nowrap;
             flex: 0 0 auto;
             letter-spacing: 0.3px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
         }
         .hero-buttons .btn-hero .inner {
             display: inline-block;
@@ -855,13 +896,110 @@
             }
         }
 
+        /* ===== Hero 右下角「查看全景」按钮 ===== */
+        .hero-pano-btn-wrap {
+            position: absolute;
+            right: 32px;
+            bottom: 40px;
+            z-index: 5;
+            opacity: 0;
+            animation: heroItemFade 0.8s 1.4s forwards cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: auto;
+        }
+        .hero-pano-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 26px;
+            background: rgba(18, 18, 18, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(192, 57, 43, 0.65);
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transform: skewX(-6deg);
+            transition: transform var(--transition-fast),
+                        background var(--transition-fast),
+                        border-color var(--transition-fast),
+                        box-shadow var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+        }
+        .hero-pano-btn .inner {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transform: skewX(6deg);
+            position: relative;
+            z-index: 1;
+        }
+        .hero-pano-btn .pano-icon {
+            width: 20px;
+            height: 20px;
+            stroke: #e74c3c;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke var(--transition-fast), transform var(--transition-fast);
+            flex-shrink: 0;
+        }
+        .hero-pano-btn .pano-text {
+            display: inline-flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+        .hero-pano-btn .pano-text .zh {
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+        .hero-pano-btn .pano-text .en {
+            font-weight: 400;
+            font-size: 9px;
+            letter-spacing: 2px;
+            opacity: 0.65;
+            margin-top: 2px;
+            color: rgba(240, 236, 230, 0.7);
+        }
+        .hero-pano-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--color-red);
+            transform: translateX(-101%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 0;
+        }
+        .hero-pano-btn:hover {
+            transform: skewX(-6deg) translateY(-3px) scale(1.03);
+            border-color: var(--color-red);
+            box-shadow: 0 12px 36px rgba(192, 57, 43, 0.5);
+        }
+        .hero-pano-btn:hover::before {
+            transform: translateX(0);
+        }
+        .hero-pano-btn:hover .pano-icon {
+            stroke: #fff;
+            transform: rotate(-8deg);
+        }
+        .hero-pano-btn:active {
+            transform: skewX(-6deg) scale(0.97);
+        }
+
         /* ===== Hero 右侧卡片 ===== */
         .hero-cards {
             position: relative;
             height: 320px;
             overflow: hidden;
             border: 1px solid var(--color-border);
-            background: var(--color-bg);
+            background: rgba(18, 18, 18, 0.85);
             transform: skewX(-1deg);
             transition: transform var(--transition-fast);
             opacity: 0;
@@ -869,10 +1007,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
         .hero-cards:hover {
             transform: skewX(0deg) scale(1.004);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
         }
         .hero-cards .slide {
             position: absolute;
@@ -885,7 +1025,7 @@
             transform: translateX(40px) scale(0.96);
             transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
             pointer-events: none;
-            background: var(--color-bg);
+            background: rgba(18, 18, 18, 0.85);
         }
         .hero-cards .slide.active {
             opacity: 1;
@@ -3141,13 +3281,11 @@
             }
             .hero-buttons {
                 flex-wrap: wrap;
-                justify-content: center;
+                justify-content: flex-start;
             }
-            .hero-buttons .btn-hero {
-                flex: 1 1 calc(50% - 6px);
-                max-width: calc(50% - 6px);
-                text-align: center;
-                justify-content: center;
+            .hero-pano-btn-wrap {
+                right: 24px;
+                bottom: 28px;
             }
             .profile-modal-box {
                 grid-template-columns: 1fr;
@@ -3302,10 +3440,6 @@
                 flex: 0 0 200px;
                 min-width: 160px;
             }
-            .hero-buttons .btn-hero {
-                flex: 1 1 calc(50% - 6px);
-                max-width: calc(50% - 6px);
-            }
             .countdown-wrapper {
                 grid-template-columns: 1fr;
                 gap: 16px;
@@ -3336,6 +3470,24 @@
             .profile-right .scroll-container .work-card {
                 flex: 0 0 160px;
             }
+            .hero-pano-btn-wrap {
+                right: 18px;
+                bottom: 20px;
+            }
+            .hero-pano-btn {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+            .hero-pano-btn .pano-text .zh {
+                font-size: 13px;
+            }
+            .hero-pano-btn .pano-text .en {
+                font-size: 8px;
+            }
+            .hero-pano-btn .pano-icon {
+                width: 18px;
+                height: 18px;
+            }
         }
 
         @media (max-width: 600px) {
@@ -3347,7 +3499,7 @@
                 height: 56px;
             }
             .hero {
-                padding: 110px 0 48px;
+                padding: 90px 0 40px;
             }
             .section {
                 padding: 48px 0 40px;
@@ -3453,10 +3605,8 @@
                 min-width: 140px;
             }
             .hero-buttons .btn-hero {
-                flex: 1 1 calc(50% - 6px);
-                max-width: calc(50% - 6px);
-                font-size: 11px;
-                padding: 6px 12px;
+                font-size: 12px;
+                padding: 7px 14px;
             }
             .hero-buttons .btn-hero .en {
                 font-size: 8px;
@@ -3535,6 +3685,25 @@
             .profile-right .scroll-container .work-card {
                 flex: 0 0 140px;
             }
+            .hero-pano-btn-wrap {
+                right: 12px;
+                bottom: 16px;
+            }
+            .hero-pano-btn {
+                padding: 9px 16px;
+                font-size: 12px;
+            }
+            .hero-pano-btn .pano-text .zh {
+                font-size: 12px;
+            }
+            .hero-pano-btn .pano-text .en {
+                font-size: 7px;
+                letter-spacing: 1.5px;
+            }
+            .hero-pano-btn .pano-icon {
+                width: 16px;
+                height: 16px;
+            }
         }
     </style>
 </head>
@@ -3570,9 +3739,11 @@
     </div>
 
     <!-- ============================================================
-    HERO（保留主站布局，卡片数据动态）
+    HERO（首页背景全屏全景 + 自动旋转）
     ============================================================ -->
     <section class="hero" id="hero">
+        <canvas class="hero-pano-canvas" id="heroPanoCanvas"></canvas>
+        <div class="hero-pano-overlay"></div>
         <div class="container">
             <div class="hero-text">
                 <div class="label"><span class="inner">建宸高级中学</span></div>
@@ -3592,6 +3763,24 @@
                 <div class="dots" id="heroDots"></div>
                 <div class="empty-tip" style="display:none;">暂时没有热点</div>
             </div>
+        </div>
+
+        <!-- ★ 右下角「查看全景」按钮 ★ -->
+        <div class="hero-pano-btn-wrap">
+            <a href="/JCGZ/pano.html" class="hero-pano-btn">
+                <span class="inner">
+                    <svg class="pano-icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M3.6 9c5.6 2 11.2 2 16.8 0"/>
+                        <path d="M3.6 15c5.6-2 11.2-2 16.8 0"/>
+                        <ellipse cx="12" cy="12" rx="4" ry="9"/>
+                    </svg>
+                    <span class="pano-text">
+                        <span class="zh">查看全景</span>
+                        <span class="en">PANORAMA</span>
+                    </span>
+                </span>
+            </a>
         </div>
     </section>
 
@@ -5823,6 +6012,207 @@
             console.log('博雅阳光 | 知行合一');
             console.log('数据源: GitHub Issues (宸光博客 / 明德专栏 / 校园资讯 / 树洞留言)');
 
+        })();
+    </script>
+
+    <!-- ============================================================
+    首页全景背景（Three.js）
+    ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            // 首页全景背景：加载失败或 WebGL 不可用时优雅降级为纯色背景
+            var canvas = document.getElementById('heroPanoCanvas');
+            var hero = document.getElementById('hero');
+            if (!canvas || !hero) return;
+
+            // Three.js 是否可用
+            if (typeof THREE === 'undefined') return;
+
+            // WebGL 支持检测
+            try {
+                var testCanvas = document.createElement('canvas');
+                var gl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
+                if (!gl) return;
+            } catch (e) {
+                return;
+            }
+
+            // 全景图地址（与 pano.html 一致）
+            var PANO_URL = 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/refs/heads/main/dji_fly_20251129_134936_558_1764404326078_pano_op.jpg';
+
+            // 初始视角：与 pano.html 保持一致
+            var INIT_LON = 180;
+            var INIT_LAT = 0;
+            var AUTO_ROTATE_SPEED = 3; // 度/秒
+
+            var scene, camera, renderer, sphere, texture;
+            var lon = INIT_LON;
+            var lat = INIT_LAT;
+            var velocityLon = 0;
+            var velocityLat = 0;
+            var isUserInteracting = false;
+            var pointers = new Map();
+            var downX = 0, downY = 0;
+            var downLon = INIT_LON, downLat = INIT_LAT;
+            var lastMoveTime = 0;
+            var loaded = false;
+
+            function getSize() {
+                var w = hero.clientWidth || window.innerWidth;
+                var h = hero.clientHeight || window.innerHeight;
+                if (w <= 0) w = window.innerWidth;
+                if (h <= 0) h = window.innerHeight;
+                return { w: w, h: h };
+            }
+
+            function init() {
+                var size = getSize();
+
+                renderer = new THREE.WebGLRenderer({
+                    canvas: canvas,
+                    antialias: true,
+                    alpha: false,
+                    powerPreference: 'high-performance'
+                });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+                renderer.setSize(size.w, size.h);
+                renderer.outputEncoding = THREE.sRGBEncoding;
+                renderer.setClearColor(0x0a0a0a, 1);
+
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(75, size.w / size.h, 0.1, 1100);
+
+                var geometry = new THREE.SphereGeometry(500, 48, 32);
+                geometry.scale(-1, 1, 1);
+                var material = new THREE.MeshBasicMaterial({ color: 0x1a1a1a });
+                sphere = new THREE.Mesh(geometry, material);
+                scene.add(sphere);
+
+                // 加载全景图
+                var loader = new THREE.TextureLoader();
+                loader.setCrossOrigin('anonymous');
+                loader.load(
+                    PANO_URL,
+                    function(tex) {
+                        tex.encoding = THREE.sRGBEncoding;
+                        texture = tex;
+                        sphere.material.map = tex;
+                        sphere.material.color.set(0xffffff);
+                        sphere.material.needsUpdate = true;
+                        loaded = true;
+                    },
+                    undefined,
+                    function() {
+                        // 加载失败，保持深色球体，页面依然可用
+                        console.warn('首页全景背景加载失败，已使用纯色背景降级');
+                    }
+                );
+
+                animate();
+            }
+
+            var lastFrame = performance.now();
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                var now = performance.now();
+                var dt = Math.min((now - lastFrame) / 1000, 0.1);
+                lastFrame = now;
+
+                if (!isUserInteracting) {
+                    // 惯性
+                    if (Math.abs(velocityLon) > 0.001 || Math.abs(velocityLat) > 0.001) {
+                        lon += velocityLon;
+                        lat += velocityLat;
+                        velocityLon *= 0.94;
+                        velocityLat *= 0.94;
+                    } else {
+                        velocityLon = 0;
+                        velocityLat = 0;
+                        // 自动旋转
+                        if (loaded) {
+                            lon += AUTO_ROTATE_SPEED * dt;
+                        }
+                    }
+                }
+
+                if (lat > 85) lat = 85;
+                if (lat < -85) lat = -85;
+                if (lon > 180) lon -= 360;
+                if (lon < -180) lon += 360;
+
+                var phi = THREE.MathUtils.degToRad(90 - lat);
+                var theta = THREE.MathUtils.degToRad(lon);
+                var tx = 500 * Math.sin(phi) * Math.cos(theta);
+                var ty = 500 * Math.cos(phi);
+                var tz = 500 * Math.sin(phi) * Math.sin(theta);
+                camera.lookAt(tx, ty, tz);
+
+                renderer.render(scene, camera);
+            }
+
+            // 拖动旋转（移动端 touch-action: pan-y 让垂直滑动仍然滚动页面）
+            canvas.addEventListener('pointerdown', function(e) {
+                if (e.button === 2) return; // 右键交给浏览器
+                canvas.setPointerCapture(e.pointerId);
+                pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+                if (pointers.size === 1) {
+                    isUserInteracting = true;
+                    downX = e.clientX;
+                    downY = e.clientY;
+                    downLon = lon;
+                    downLat = lat;
+                    velocityLon = 0;
+                    velocityLat = 0;
+                    lastMoveTime = performance.now();
+                }
+            });
+
+            canvas.addEventListener('pointermove', function(e) {
+                if (!pointers.has(e.pointerId)) return;
+                pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+                if (pointers.size === 1 && isUserInteracting) {
+                    var dx = e.clientX - downX;
+                    var dy = e.clientY - downY;
+                    var newLon = downLon - dx * 0.12;
+                    var newLat = downLat + dy * 0.12;
+                    var now = performance.now();
+                    var elapsed = Math.max(now - lastMoveTime, 8);
+                    velocityLon = (newLon - lon) / elapsed * 16;
+                    velocityLat = (newLat - lat) / elapsed * 16;
+                    lastMoveTime = now;
+                    lon = newLon;
+                    lat = newLat;
+                }
+            });
+
+            function endPointer(e) {
+                pointers.delete(e.pointerId);
+                if (pointers.size === 0) {
+                    isUserInteracting = false;
+                }
+            }
+            canvas.addEventListener('pointerup', endPointer);
+            canvas.addEventListener('pointercancel', endPointer);
+
+            // 窗口尺寸变化
+            var resizeTimer = null;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (!renderer || !camera) return;
+                    var size = getSize();
+                    camera.aspect = size.w / size.h;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(size.w, size.h);
+                }, 150);
+            });
+
+            init();
         })();
     </script>
 
