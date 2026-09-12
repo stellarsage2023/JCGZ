@@ -1333,6 +1333,19 @@
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
         }
 
+        /* ===== 树洞留言墙投稿区（滚动进入后淡入） ===== */
+        .wall-submit-area {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow var(--transition-fast);
+        }
+        .section.visible .wall-submit-area {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* ============================================================
            倒计时（保留主站）
            ============================================================ */
@@ -3721,7 +3734,7 @@
                 <button class="scroll-arrow next" data-target="wallScroll">›</button>
             </div>
             <!-- ★ 留言墙投稿按钮（补全） ★ -->
-            <div class="wall-submit-area" style="margin-top:24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:16px 20px;background:var(--color-surface);border:1px solid var(--color-border);transition:transform var(--transition-fast),box-shadow var(--transition-fast);opacity:0;transform:translateY(20px);transition:opacity 0.7s cubic-bezier(0.22,1,0.36,1),transform 0.7s cubic-bezier(0.22,1,0.36,1),box-shadow var(--transition-fast);">
+            <div class="wall-submit-area" style="margin-top:24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:16px 20px;background:var(--color-surface);border:1px solid var(--color-border);">
                 <div class="inner" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;width:100%;">
                     <span class="hint" style="font-size:14px;color:var(--color-text-light);flex:1;letter-spacing:0.2px;">想留下你的声音？<strong style="color:var(--color-text);">树洞投稿</strong> 至 stellarsage2023@hotmail.com</span>
                     <button class="btn" id="openWallSubmitBtn"><span class="inner">树洞 | 投稿 <span class="en">Submit</span></span></button>
@@ -3783,7 +3796,7 @@
                     <span class="sep">|</span>
                     <a data-action="legal" data-type="terms">使用条款</a>
                     <br />
-                    <span style="font-size:11px;">外部法律文件加载路径：/legal/disclaimer.txt &nbsp; /legal/privacy.txt &nbsp; /legal/terms.txt</span>
+                    <span style="font-size:11px;">外部法律文件加载路径：GitHub Issues #5 / #6 / #7</span>
                 </div>
             </div>
         </div>
@@ -4296,27 +4309,41 @@
             const legalClose = document.getElementById('legalCloseBtn');
             const legalConfirm = document.getElementById('legalConfirmBtn');
 
+            // 法律文件对应的 GitHub Issue 编号：免责声明 #5 / 隐私政策 #6 / 使用条款 #7
+            const LEGAL_ISSUE_MAP = {
+                disclaimer: 5,
+                privacy: 6,
+                terms: 7
+            };
+
             function loadLegalFile(type) {
-                const paths = {
-                    disclaimer: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/disclaimer.txt',
-                    privacy: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/privacy.txt',
-                    terms: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/terms.txt'
-                };
                 const titles = { disclaimer: '免责声明', privacy: '隐私政策', terms: '使用条款' };
                 legalTitle.textContent = titles[type] || '法律文件';
                 legalContent.textContent = '加载中...';
 
+                const issueNumber = LEGAL_ISSUE_MAP[type];
+                if (!issueNumber) {
+                    legalContent.textContent = '未找到对应的法律文件。';
+                    return;
+                }
+
+                const url =
+                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}`;
+
                 const controller = new AbortController();
                 const timeoutId = setTimeout(function() { controller.abort(); }, 8000);
 
-                fetch(paths[type], { signal: controller.signal })
+                fetch(url, {
+                        signal: controller.signal,
+                        headers: { 'Accept': 'application/vnd.github.v3+json' }
+                    })
                     .then(function(res) {
                         clearTimeout(timeoutId);
                         if (!res.ok) throw new Error('HTTP ' + res.status);
-                        return res.text();
+                        return res.json();
                     })
-                    .then(function(text) {
-                        legalContent.textContent = text;
+                    .then(function(issue) {
+                        legalContent.textContent = (issue && issue.body) ? issue.body : '（暂无内容）';
                     })
                     .catch(function() {
                         legalContent.innerHTML =
@@ -4990,7 +5017,6 @@
                     var profileUid = document.getElementById('profileUid');
                     var profileBio = document.getElementById('profileBio');
                     var profileEnroll = document.getElementById('profileEnroll');
-                    var profileCountdownNum = document.getElementById('profileCountdownNum');
                     var profileAvatarWrap = document.getElementById('profileAvatarWrap');
                     var profileHonorArea = document.getElementById('profileHonorArea');
 
@@ -5002,9 +5028,13 @@
                     profileUid.textContent = '编号：' + (profile.code || '待分配');
                     profileBio.textContent = profile.bio || '这个人很懒，什么都没有写。';
 
+                    // ---- 年级 / 高考倒计时 ----
+                    // 注意：这里必须使用 innerHTML 重建倒计时结构，
+                    // 否则 #profileCountdownNum 会被 textContent 覆盖，
+                    // 导致第二次打开档案时取不到该元素并中断渲染。
                     var gradeText = '—';
-                    var countdownText = '—';
                     var countdownNum = '—';
+                    var countdownSuffix = '';
                     var idVal = profile.idField || '';
                     if (/^\d{4}$/.test(idVal)) {
                         var enrollYear = parseInt(idVal);
@@ -5023,28 +5053,29 @@
                         var diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
                         if (diff > 0) {
                             countdownNum = diff;
-                            countdownText = diff + ' 天后高考';
+                            countdownSuffix = '天后高考';
                         } else if (diff === 0) {
                             countdownNum = '🎯';
-                            countdownText = '高考今天！';
+                            countdownSuffix = '高考今天！';
                         } else {
                             countdownNum = '🎓';
-                            countdownText = '已毕业';
+                            countdownSuffix = '已毕业';
                         }
                     } else if (idVal && idVal.length > 0) {
                         gradeText = 'ID: ' + idVal;
-                        countdownText = '—';
                         countdownNum = '—';
+                        countdownSuffix = '';
                     } else {
                         gradeText = '未知';
-                        countdownText = '—';
                         countdownNum = '—';
+                        countdownSuffix = '';
                     }
                     profileEnroll.textContent = gradeText;
-                    profileCountdownNum.textContent = countdownNum;
-                    var countdownLabel = document.querySelector('#profileCountdown');
+
+                    var countdownLabel = document.getElementById('profileCountdown');
                     if (countdownLabel) {
-                        countdownLabel.textContent = countdownText;
+                        countdownLabel.innerHTML = '<span class="num" id="profileCountdownNum">' +
+                            countdownNum + '</span>' + (countdownSuffix ? ' ' + countdownSuffix : '');
                     }
 
                     var avatarUrl = '';
@@ -5161,6 +5192,7 @@
                 }).join('');
             }
 
+            // ---- 个人档案横向滚动条（事件只绑定一次，避免多次打开时叠加） ----
             function initProfileScroll(containerSelector) {
                 try {
                     document.querySelectorAll(containerSelector).forEach(function(wrapper) {
@@ -5203,28 +5235,40 @@
                             thumb.style.marginLeft = pos + '%';
                         }
 
-                        function scrollBy(amount) {
-                            container.scrollBy({ left: amount, behavior: 'smooth' });
-                        }
+                        // 事件只绑定一次
+                        if (!container.dataset.scrollBound) {
+                            container.dataset.scrollBound = '1';
 
-                        if (prevBtn) prevBtn.addEventListener('click', function() { scrollBy(-200); });
-                        if (nextBtn) nextBtn.addEventListener('click', function() { scrollBy(200); });
-
-                        container.addEventListener('scroll', updateThumb);
-                        window.addEventListener('resize', updateThumb);
-
-                        if (scrollbar) {
-                            scrollbar.addEventListener('click', function(e) {
-                                var rect = scrollbar.getBoundingClientRect();
-                                var x = (e.clientX - rect.left) / rect.width;
-                                var scrollWidth = container.scrollWidth;
-                                var clientWidth = container.clientWidth;
-                                var maxScroll = scrollWidth - clientWidth;
-                                container.scrollLeft = x * maxScroll;
+                            if (prevBtn) prevBtn.addEventListener('click', function() {
+                                container.scrollBy({ left: -container.clientWidth * 0.8, behavior: 'smooth' });
                             });
+                            if (nextBtn) nextBtn.addEventListener('click', function() {
+                                container.scrollBy({ left: container.clientWidth * 0.8, behavior: 'smooth' });
+                            });
+
+                            container.addEventListener('scroll', function() {
+                                if (typeof container.__updateThumb === 'function') container.__updateThumb();
+                            });
+                            window.addEventListener('resize', function() {
+                                if (typeof container.__updateThumb === 'function') container.__updateThumb();
+                            });
+
+                            if (scrollbar) {
+                                scrollbar.addEventListener('click', function(e) {
+                                    var rect = scrollbar.getBoundingClientRect();
+                                    var x = (e.clientX - rect.left) / rect.width;
+                                    var scrollWidth = container.scrollWidth;
+                                    var clientWidth = container.clientWidth;
+                                    var maxScroll = scrollWidth - clientWidth;
+                                    container.scrollLeft = x * maxScroll;
+                                });
+                            }
                         }
 
-                        setTimeout(updateThumb, 100);
+                        container.__updateThumb = updateThumb;
+                        setTimeout(function() {
+                            if (typeof container.__updateThumb === 'function') container.__updateThumb();
+                        }, 100);
                     });
                 } catch (e) {
                     console.warn('initProfileScroll 出错:', e);
