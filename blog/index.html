@@ -2554,7 +2554,7 @@
             min-width: 80px;
         }
 
-        /* 法律文件弹窗（⚖ 已移除） */
+        /* 法律文件弹窗 */
         .legal-modal-box {
             max-width: 580px;
             background: var(--color-surface);
@@ -2593,7 +2593,6 @@
             color: var(--color-text);
             transform: rotate(90deg);
         }
-        /* 移除了 .modal-icon */
         .legal-modal-box h3 {
             font-weight: 700;
             font-size: 22px;
@@ -2723,22 +2722,22 @@
             <img src="https://www.hnfudu.com/images/product/202606/02/211_input_1780391475532610.png?cache=1780389371" alt="建宸高级中学校徽" class="nav-logo" />
         </div>
         <ul class="nav-links">
-            <li><a href="/index.html">主站</a></li>
-            <li><a href="#" class="active">宸光博客 <span class="sub">子站</span></a></li>
-            <li><a href="/mingde/">明德专栏 <span class="sub">子站</span></a></li>
-            <li><a href="/news/">校园资讯 <span class="sub">子站</span></a></li>
-            <li><a href="/wall/">留言墙</a></li>
+            <li><a href="/JCGZ/">主站</a></li>
+            <li><a href="/JCGZ/blog/" class="active">宸光博客 <span class="sub">子站</span></a></li>
+            <li><a href="/JCGZ/mingde/">明德专栏 <span class="sub">子站</span></a></li>
+            <li><a href="/JCGZ/news/">校园资讯 <span class="sub">子站</span></a></li>
+            <li><a href="/JCGZ/wall/">留言墙</a></li>
         </ul>
         <button class="nav-toggle" id="navToggle">☰</button>
     </nav>
 
     <!-- ===== 移动端抽屉 ===== -->
     <div class="nav-drawer" id="navDrawer">
-        <a href="/index.html">主站</a>
-        <a href="#" class="active">宸光博客 <span class="sub">子站</span></a>
-        <a href="/mingde/">明德专栏 <span class="sub">子站</span></a>
-        <a href="/news/">校园资讯 <span class="sub">子站</span></a>
-        <a href="/wall/">留言墙</a>
+        <a href="/JCGZ/">主站</a>
+        <a href="/JCGZ/blog/" class="active">宸光博客 <span class="sub">子站</span></a>
+        <a href="/JCGZ/mingde/">明德专栏 <span class="sub">子站</span></a>
+        <a href="/JCGZ/news/">校园资讯 <span class="sub">子站</span></a>
+        <a href="/JCGZ/wall/">留言墙</a>
     </div>
 
     <!-- ===== 页面标题 ===== -->
@@ -2836,7 +2835,7 @@
                     <span class="sep">|</span>
                     <a data-action="legal" data-type="terms">使用条款</a>
                     <br />
-                    <span style="font-size:11px;">外部法律文件加载路径：/legal/disclaimer.txt &nbsp; /legal/privacy.txt &nbsp; /legal/terms.txt</span>
+                    <span style="font-size:11px;">外部法律文件加载路径：GitHub Issues #5 / #6 / #7</span>
                 </div>
             </div>
         </div>
@@ -3162,7 +3161,7 @@
         </div>
     </div>
 
-    <!-- 法律文件弹窗（无⚖） -->
+    <!-- 法律文件弹窗 -->
     <div class="custom-modal-overlay" id="legalModal">
         <div class="legal-modal-box">
             <button class="close-btn" id="legalCloseBtn">✕</button>
@@ -3495,7 +3494,7 @@
                                 if (match) {
                                     window.open(match[1], '_blank');
                                 } else {
-                                    window.location.href = 'post.html?id=' + post.id;
+                                    window.location.href = '/JCGZ/post.html?id=' + post.id + '&source=blog';
                                 }
                             }
                         });
@@ -3631,7 +3630,8 @@
                             content: p.content,
                             cover: p.cover,
                             tags: p.tags,
-                            isFeatured: isFeatured(p.title)
+                            isFeatured: isFeatured(p.title),
+                            id: p.id
                         };
                     });
                     showProfileModal(found, works);
@@ -3653,7 +3653,6 @@
                     const profileUid = document.getElementById('profileUid');
                     const profileBio = document.getElementById('profileBio');
                     const profileEnroll = document.getElementById('profileEnroll');
-                    const profileCountdownNum = document.getElementById('profileCountdownNum');
                     const profileAvatarWrap = document.getElementById('profileAvatarWrap');
                     const profileHonorArea = document.getElementById('profileHonorArea');
 
@@ -3668,8 +3667,8 @@
 
                     // ---- 年级 / 高考倒计时 ----
                     let gradeText = '—';
-                    let countdownText = '—';
                     let countdownNum = '—';
+                    let countdownSuffix = '';
                     const idVal = profile.idField || '';
                     if (/^\d{4}$/.test(idVal)) {
                         const enrollYear = parseInt(idVal);
@@ -3688,28 +3687,30 @@
                         const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
                         if (diff > 0) {
                             countdownNum = diff;
-                            countdownText = diff + ' 天后高考';
+                            countdownSuffix = '天后高考';
                         } else if (diff === 0) {
                             countdownNum = '🎯';
-                            countdownText = '高考今天！';
+                            countdownSuffix = '高考今天！';
                         } else {
                             countdownNum = '🎓';
-                            countdownText = '已毕业';
+                            countdownSuffix = '已毕业';
                         }
                     } else if (idVal && idVal.length > 0) {
                         gradeText = 'ID: ' + idVal;
-                        countdownText = '—';
                         countdownNum = '—';
+                        countdownSuffix = '';
                     } else {
                         gradeText = '未知';
-                        countdownText = '—';
                         countdownNum = '—';
+                        countdownSuffix = '';
                     }
                     profileEnroll.textContent = gradeText;
-                    profileCountdownNum.textContent = countdownNum;
-                    const countdownLabel = document.querySelector('#profileCountdown');
+
+                    // 重建倒计时结构，避免第二次打开时残留
+                    const countdownLabel = document.getElementById('profileCountdown');
                     if (countdownLabel) {
-                        countdownLabel.textContent = countdownText;
+                        countdownLabel.innerHTML = '<span class="num" id="profileCountdownNum">' +
+                            countdownNum + '</span>' + (countdownSuffix ? ' ' + countdownSuffix : '');
                     }
 
                     // ---- 头像 ----
@@ -3800,7 +3801,7 @@
                                 if (match) {
                                     window.open(match[1], '_blank');
                                 } else {
-                                    window.location.href = 'post.html?id=' + id;
+                                    window.location.href = '/JCGZ/post.html?id=' + id + '&source=blog';
                                 }
                             }
                         });
@@ -3914,7 +3915,7 @@
                                     if (match) {
                                         window.open(match[1], '_blank');
                                     } else {
-                                        window.location.href = 'post.html?id=' + id;
+                                        window.location.href = '/JCGZ/post.html?id=' + id + '&source=blog';
                                     }
                                 }
                             });
@@ -4334,7 +4335,8 @@
                         content: p.content,
                         cover: p.cover,
                         tags: p.tags,
-                        isFeatured: isFeatured(p.title)
+                        isFeatured: isFeatured(p.title),
+                        id: p.id
                     };
                 });
 
@@ -4502,37 +4504,47 @@
                 }
             });
 
-            // ---- 法律文件（超时重新加载，不刷新页面） ----
+            // ---- 法律文件（GitHub Issues #5 / #6 / #7） ----
             const legalModal = document.getElementById('legalModal');
             const legalTitle = document.getElementById('legalTitle');
             const legalContent = document.getElementById('legalContent');
             const legalClose = document.getElementById('legalCloseBtn');
             const legalConfirm = document.getElementById('legalConfirmBtn');
 
+            const LEGAL_ISSUE_MAP = {
+                disclaimer: 5,
+                privacy: 6,
+                terms: 7
+            };
+
             function loadLegalFile(type) {
-                const paths = {
-                    disclaimer: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/disclaimer.txt',
-                    privacy: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/privacy.txt',
-                    terms: 'https://raw.githubusercontent.com/stellarsage2023/JCGZ/main/legal/terms.txt'
-                };
                 const titles = { disclaimer: '免责声明', privacy: '隐私政策', terms: '使用条款' };
                 legalTitle.textContent = titles[type] || '法律文件';
                 legalContent.textContent = '加载中...';
 
+                const issueNumber = LEGAL_ISSUE_MAP[type];
+                if (!issueNumber) {
+                    legalContent.textContent = '未找到对应的法律文件。';
+                    return;
+                }
+
+                const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}`;
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-                fetch(paths[type], { signal: controller.signal })
+                fetch(url, {
+                        signal: controller.signal,
+                        headers: { 'Accept': 'application/vnd.github.v3+json' }
+                    })
                     .then(function(res) {
                         clearTimeout(timeoutId);
                         if (!res.ok) throw new Error('HTTP ' + res.status);
-                        return res.text();
+                        return res.json();
                     })
-                    .then(function(text) {
-                        legalContent.textContent = text;
+                    .then(function(issue) {
+                        legalContent.textContent = (issue && issue.body) ? issue.body : '（暂无内容）';
                     })
-                    .catch(function(err) {
-                        // 显示错误并提供重新加载按钮
+                    .catch(function() {
                         legalContent.innerHTML =
                             '加载失败，<span style="color:var(--color-red);cursor:pointer;text-decoration:underline;" onclick="window._retryLegal(\'' +
                             type + '\')">点击重新加载</span>';
@@ -4543,7 +4555,7 @@
                 legalModal.classList.remove('closing');
                 legalModal.classList.add('open');
                 document.body.style.overflow = 'hidden';
-                window._retryLegal = loadLegalFile; // 暴露给内联点击
+                window._retryLegal = loadLegalFile;
                 loadLegalFile(type);
             }
 
@@ -4590,12 +4602,19 @@
                 e.stopPropagation();
                 drawerOpen = !drawerOpen;
                 drawer.classList.toggle('open', drawerOpen);
-                toggle.textContent = drawerOpen ? '✕' : '☰';
+                if (drawerOpen) {
+                    toggle.classList.add('active');
+                    toggle.textContent = '✕';
+                } else {
+                    toggle.classList.remove('active');
+                    toggle.textContent = '☰';
+                }
             });
             drawer.querySelectorAll('a').forEach(function(a) {
                 a.addEventListener('click', function() {
                     drawer.classList.remove('open');
                     drawerOpen = false;
+                    toggle.classList.remove('active');
                     toggle.textContent = '☰';
                 });
             });
@@ -4603,6 +4622,7 @@
                 if (drawerOpen && !drawer.contains(e.target) && e.target !== toggle) {
                     drawer.classList.remove('open');
                     drawerOpen = false;
+                    toggle.classList.remove('active');
                     toggle.textContent = '☰';
                 }
             });
